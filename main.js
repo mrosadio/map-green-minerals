@@ -41,7 +41,7 @@ import {
 } from "./modules/globals.js";
 import { showThirdColumn, removeThirdColumn } from "./modules/layout.js";
 import { showPickerBilateral, showPickerMultilateral, showPickerAfrica } from "./modules/picker.js";
-
+//import { initAboutModal } from "./modules/about.js";
 const euGeojsonPath = `${themeUrl}/db/eu.geojson`;
 
 let partnerMap = {};
@@ -74,6 +74,7 @@ function resetToInitialView() {
   clearCardContent();
   addLegend(svg, colorScale); // Añade la leyenda
   removeThirdColumn(); // Oculta la tercera columna
+  //initAboutModal();
   // zoomToCountry(svg, path, filteredGeoJSON, "Chad");
 }
 document.addEventListener("DOMContentLoaded", function () {
@@ -89,6 +90,12 @@ document.addEventListener("DOMContentLoaded", function () {
         (wheelElement.clientHeight - scrollbarElement.clientHeight) +
       "px";
   });
+  // // Init modal once
+  //initAboutModal();
+
+  // // Wire About button in header
+  // document.getElementById("about")
+  //   ?.addEventListener("click", openAboutModal);
 });
 function refresh() {
   if (/Mobi|Android/i.test(navigator.userAgent)) {
