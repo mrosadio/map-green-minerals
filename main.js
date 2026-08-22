@@ -444,85 +444,85 @@ document.getElementById("zoomIn").addEventListener("mouseout", function () {
   zoomInIcon.src = `${themeUrl}/img/icons/zoom-off.svg`;
 });
 
-document.getElementById("printPage").addEventListener("click", function () {
-  printDiv("#printable");
-});
-function printDiv(divId) {
-  console.log("Generando impresión...");
+// document.getElementById("printPage").addEventListener("click", function () {
+//   printDiv("#printable");
+// });
+// function printDiv(divId) {
+//   console.log("Generando impresión...");
 
-  // Verificar si el div existe
-  var divElement = document.querySelector(divId);
-  if (!divElement) {
-    console.error("Elemento no encontrado: " + divId);
-    return;
-  }
+//   // Verificar si el div existe
+//   var divElement = document.querySelector(divId);
+//   if (!divElement) {
+//     console.error("Elemento no encontrado: " + divId);
+//     return;
+//   }
 
-  // Usar html2canvas para generar el canvas
-  html2canvas(divElement)
-    .then(function (canvas) {
-      // Crear una imagen a partir del canvas
-      var imgData = canvas.toDataURL("image/png");
+//   // Usar html2canvas para generar el canvas
+//   html2canvas(divElement)
+//     .then(function (canvas) {
+//       // Crear una imagen a partir del canvas
+//       var imgData = canvas.toDataURL("image/png");
 
-      // Crear un iframe oculto para imprimir
-      var iframe = document.createElement("iframe");
-      iframe.style.position = "absolute";
-      iframe.style.top = "-10000px"; // Ocultar fuera de la pantalla
-      document.body.appendChild(iframe);
+//       // Crear un iframe oculto para imprimir
+//       var iframe = document.createElement("iframe");
+//       iframe.style.position = "absolute";
+//       iframe.style.top = "-10000px"; // Ocultar fuera de la pantalla
+//       document.body.appendChild(iframe);
 
-      var iframeWindow = iframe.contentWindow || iframe.contentDocument;
-      var iframeDoc = iframeWindow.document || iframe.contentDocument;
+//       var iframeWindow = iframe.contentWindow || iframe.contentDocument;
+//       var iframeDoc = iframeWindow.document || iframe.contentDocument;
 
-      // Pasar la imagen generada al iframe
-      iframeDoc.open();
-	  iframeDoc.write(`
-		<!DOCTYPE html>
-		<html>
-		<head>
-		  <title>Mind the Map: Charting Africa’s Critical Mineral Partnerships</title>
-		  <style>
-			@page {
-			  margin: 0; /* Elimina los márgenes de la página */
-			  size: landscape; /* Forzar orientación landscape */
-			}
-			body {
-			  margin: 0; 
-			  display: flex;
-			  flex-direction: column;
-			  justify-content: center;
-			  align-items: center;
-			  height: 100vh;
-			  overflow: hidden;
-			}
-			.title {
-			  font-size: 12px;
-			  font-weight: normal;
-			  margin-bottom: 20px;
-			  font-family: "RalewayItalic", sans-serif;
-			}
-			img {
-			  max-width: 100%;
-			  max-height: 100%;
-			}
-		  </style>
-		</head>
-		<body>
-		  <img src="${imgData}" alt="Contenido a imprimir" />
-		</body>
-		</html>
-	  `);
-      iframeDoc.close();
+//       // Pasar la imagen generada al iframe
+//       iframeDoc.open();
+// 	  iframeDoc.write(`
+// 		<!DOCTYPE html>
+// 		<html>
+// 		<head>
+// 		  <title>Mind the Map: Charting Africa’s Critical Mineral Partnerships</title>
+// 		  <style>
+// 			@page {
+// 			  margin: 0; /* Elimina los márgenes de la página */
+// 			  size: landscape; /* Forzar orientación landscape */
+// 			}
+// 			body {
+// 			  margin: 0; 
+// 			  display: flex;
+// 			  flex-direction: column;
+// 			  justify-content: center;
+// 			  align-items: center;
+// 			  height: 100vh;
+// 			  overflow: hidden;
+// 			}
+// 			.title {
+// 			  font-size: 12px;
+// 			  font-weight: normal;
+// 			  margin-bottom: 20px;
+// 			  font-family: "RalewayItalic", sans-serif;
+// 			}
+// 			img {
+// 			  max-width: 100%;
+// 			  max-height: 100%;
+// 			}
+// 		  </style>
+// 		</head>
+// 		<body>
+// 		  <img src="${imgData}" alt="Contenido a imprimir" />
+// 		</body>
+// 		</html>
+// 	  `);
+//       iframeDoc.close();
 
-      // Esperar a que el contenido cargue antes de imprimir
-      iframe.onload = function () {
-        iframeWindow.focus();
-        iframeWindow.print();
-        document.body.removeChild(iframe); // Eliminar el iframe después de imprimir
-      };
-    })
-    .catch(function (error) {
-      console.error("Error al generar el canvas:", error);
-    });
-}
+//       // Esperar a que el contenido cargue antes de imprimir
+//       iframe.onload = function () {
+//         iframeWindow.focus();
+//         iframeWindow.print();
+//         document.body.removeChild(iframe); // Eliminar el iframe después de imprimir
+//       };
+//     })
+//     .catch(function (error) {
+//       console.error("Error al generar el canvas:", error);
+//     });
+// }
 
 if (window.innerWidth <= 768) {
   // Contamos las palabras del texto
@@ -592,21 +592,21 @@ if (window.innerWidth <= 768) {
 } else {
   //document.getElementById("viewLessBtn2").style.visibility = "hidden";
 
-  document.getElementById("viewMoreBtn").addEventListener("click", function () {
-    console.log("Prueba");
-    document.getElementById("descriptionText3").classList.remove("hidden");
-    document.getElementById("descriptionText2").classList.remove("hidden");
+  // document.getElementById("viewMoreBtn").addEventListener("click", function () {
+  //   console.log("Prueba");
+  //   document.getElementById("descriptionText3").classList.remove("hidden");
+  //   document.getElementById("descriptionText2").classList.remove("hidden");
 
-    this.style.visibility = "hidden"; // Ocultar el botón después de hacer clic
-    document.getElementById("viewLessBtn").style.visibility = "visible";
-  });
-  document.getElementById("viewLessBtn").addEventListener("click", function () {
-    document.getElementById("descriptionText2").classList.add("hidden");
-    document.getElementById("descriptionText3").classList.add("hidden");
+  //   this.style.visibility = "hidden"; // Ocultar el botón después de hacer clic
+  //   document.getElementById("viewLessBtn").style.visibility = "visible";
+  // });
+  // document.getElementById("viewLessBtn").addEventListener("click", function () {
+  //   document.getElementById("descriptionText2").classList.add("hidden");
+  //   document.getElementById("descriptionText3").classList.add("hidden");
 
-    this.style.visibility = "hidden"; // Ocultar el botón después de hacer clic
-    document.getElementById("viewMoreBtn").style.visibility = "visible";
-  });
+  //   this.style.visibility = "hidden"; // Ocultar el botón después de hacer clic
+  //   document.getElementById("viewMoreBtn").style.visibility = "visible";
+  // });
 }
 
 window.addEventListener("resize", changeButtonText);
