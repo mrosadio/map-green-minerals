@@ -1,0 +1,233 @@
+[
+{
+"blocName": "BRICS Geological Platform",
+"description": "The BRICS countries (Brazil, Russia, India, China and South Africa) are establishing a collaborative geological platform to enhance cooperation in resource exploration, technology and knowledge-sharing. This initiative arose from the roundtable \"Prospects for BRICS Cooperation in the Study, Development, and Sustainable Use of Mineral Resources\" held in Moscow in July 2024 during Russia's BRICS Chairmanship. The platform will include councils and working groups focused on joint ventures, critical minerals and technology transfer. The platform aims to support geological exploration, strategic mineral mapping and digitalization in the geology sector.",
+"link": "https://brics-russia2024.ru/en/news/v-moskve-proshla-pervaya-vstrecha-glav-geologicheskikh-sluzhb-briks/",
+"members": [
+"Russia",
+"South Africa",
+"China",
+"India",
+"United Arab Emirates",
+"Egypt",
+"Brazil",
+"Ethiopia",
+"Iran"
+],
+"date": "2024"
+},
+{
+"blocName": "Minerals Security Partnership",
+"description": "The Minerals Security Partnership is a US-led global initiative aimed at strengthening critical mineral supply chains essential for the clean energy transition. It brings together governments and private sector stakeholders to promote sustainable, transparent and secure sourcing of critical minerals. The MSP operates through project-focused groups that evaluate initiatives across the entire value chain, from extraction and processing to recycling. Key objectives include: supporting global supply chain diversification; mobilizing investment in sustainable mineral projects; enforcing strong Environmental, Social and Governance (ESG) standards and promoting recycling to reduce reliance on primary extraction. The European Union and several individual EU member states (including Estonia, Finland, France, Germany, Italy and Sweden) are members in the MSP.",
+"link": "https://www.state.gov/minerals-security-partnership/",
+"members": {
+"countries": [
+"Australia",
+"Canada",
+"Finland",
+"France",
+"Germany",
+"Japan",
+"India",
+"Estonia",
+"Italy",
+"Norway",
+"South Korea",
+"Sweden",
+"England",
+"USA"
+],
+"EU": [
+"Austria",
+"Belgium",
+"Bulgaria",
+"Croatia",
+"Cyprus",
+"Czech Republic",
+"Denmark",
+"Estonia",
+"Finland",
+"France",
+"Germany",
+"Greece",
+"Hungary",
+"Ireland",
+"Italy",
+"Latvia",
+"Lithuania",
+"Luxembourg",
+"Malta",
+"Netherlands",
+"Poland",
+"Portugal",
+"Romania",
+"Slovakia",
+"Slovenia",
+"Spain",
+"Sweden"
+]
+},
+"date": "2022"
+},
+{
+"blocName": "Energy Resource Governance Initiative",
+"description": "The Energy Resource Governance Initiative (ERGI), led by the United States Department of State, aims to strengthen governance and resilience in energy mineral supply chains to meet the rising global demand for renewable energy technologies, electric vehicles and battery storage. It focuses on three key goals: promoting responsible mineral governance in resource-rich countries; enhancing resilient and diversified supply chains; and supporting clean energy technology demand. By sharing best practices, encouraging sustainable mining and supporting investment, ERGI seeks to reduce supply risks and foster secure, responsible sourcing of critical energy minerals.",
+"link": "https://www.state.gov/wp-content/uploads/2019/06/Energy-Resource-Governance-Initiative-ERGI-Fact-Sheet.pdf",
+"members": [
+"USA",
+"Canada",
+"Australia",
+"Peru",
+"Botswana"
+],
+"date": "2020"
+},
+{
+"blocName": "Indo-Pacific Economic Framework for Prosperity (IPEF) Critical Minerals Dialogue",
+"description": "Launched in 2022, the IPEF is a framework that aims to promote resilience, sustainability and economic growth across the Indo-Pacific region. To strengthen regional mineral supply chains and enhance economic competitiveness, IPEF member countries established the Critical Minerals Dialogue, emphasizing sustainable development and inclusive growth. They plan to explore further initiatives aimed at advancing cooperation and dialogue in areas of shared interest, such as energy security and technology. Plans for an annual IPEF Council meeting highlight the commitment to collaboration and fostering closer ties across the Indo-Pacific.",
+"link": "https://www.whitehouse.gov/briefing-room/statements-releases/2023/11/16/leaders-statement-on-indo-pacific-economic-framework-for-prosperity/",
+"members": [
+"Australia",
+"Brunei",
+"Fiji",
+"India",
+"Indonesia",
+"Japan",
+"Malaysia",
+"New Zealand",
+"Philippines",
+"Singapore",
+"South Korea",
+"Thailand",
+"USA",
+"Vietnam"
+],
+"date": "2023"
+},
+{
+"blocName": "Sustainable Critical Mineral Alliance",
+"description": "The Sustainable Critical Minerals Alliance (SCMA) is a Canada-led initiative launched at the United Nations Biodiversity Conference (COP15) to advance environmentally sustainable, socially inclusive and responsible practices in critical mineral mining, processing and recycling. This initiative supports the G7’s 2030 target to reverse biodiversity loss and emphasizes ecosystem protection, indigenous and local community support, emissions reduction and circular economy principles. The alliance promotes ethical sourcing, transparent reporting and international collaboration to build sustainable supply chains for minerals vital to clean energy technologies. It invites other nations to join in fostering a responsible and resilient global critical minerals economy.",
+"link": "https://www.canada.ca/en/campaign/critical-minerals-in-canada/our-critical-minerals-strategic-partnerships.html#scma",
+"members": [
+"Australia",
+"Canada",
+"France",
+"Germany",
+"Japan",
+"England",
+"USA",
+"Sweden"
+],
+"date": "2022"
+},
+{
+"blocName": "Conference on Critical Materials and Minerals",
+"description": "The Conference on Critical Materials and Minerals (CCMM) is a platform for international collaboration established in response to rising prices for critical materials like rare earth elements. The CCMM fosters knowledge exchange and collaborative efforts among participating nations on policies, research and development to address challenges in critical material supply and sustainability. Held regularly, the CCMM supports coordinated international strategies to strengthen global supply chains and advance innovation in critical material management.",
+"link": "https://www.meti.go.jp/english/press/2022/0623_003.html",
+"members": {
+"countries": [
+"Australia",
+"Canada",
+"Japan",
+"USA"
+],
+"EU": [
+"Austria",
+"Belgium",
+"Bulgaria",
+"Croatia",
+"Cyprus",
+"Czech Republic",
+"Denmark",
+"Estonia",
+"Finland",
+"France",
+"Germany",
+"Greece",
+"Hungary",
+"Ireland",
+"Italy",
+"Latvia",
+"Lithuania",
+"Luxembourg",
+"Malta",
+"Netherlands",
+"Poland",
+"Portugal",
+"Romania",
+"Slovakia",
+"Slovenia",
+"Spain",
+"Sweden"
+]
+},
+"date": "2011"
+},
+{
+"blocName": "France-Germany-Italy Joint Communique on Critical Raw Materials",
+"description": "France, Germany and Italy have committed to enhancing their cooperation on the sustainable supply of critical raw materials. This commitment is outlined in a Joint Communiqué issued by the countries’ economic ministers, focusing on strengthening extraction, processing and recycling efforts. Key commitments include: setting targets for strategic raw material extraction and recycling; enforcing environmental, social and governance standards; and expanding the list of critical materials, such as aluminum. To drive these initiatives, the countries established a trilateral working group of experts to coordinate and ensure effective implementation of the outlined objectives.",
+"link": "https://www.iea.org/policies/18086-france-germany-italy-joint-communique-on-critical-raw-materials",
+"members": [
+"France",
+"Germany",
+"Italy"
+],
+"date": "2023"
+},
+{
+"blocName": "Critical Minerals Mapping Initiative",
+"description": "The Critical Minerals Mapping initiative (CMMI) is a collaborative effort between the United States Geological Survey, Geoscience Australia and the Geological Survey of Canada. The initiative focuses on developing a global geochemical database, creating classification schemes for mineral deposits and evaluating trends across different mineral systems by combining expertise of three national geoscience surveys. The initiative also works on advanced modeling approaches to assess mineral potential, combining data layers and geologic criteria for prospectivity analysis and aims to better understand, map and discover critical mineral resources.",
+"link": "https://www.usgs.gov/centers/gggsc/science/critical-minerals-mapping-initiative-cmmi",
+"members": [
+"Australia",
+"Canada",
+"USA"
+],
+"date": "2019"
+},
+{
+"blocName": "Lobito Corridor Project",
+"description": "The Lobito Corridor is a key initiative under the G7's Partnership for Global Infrastructure and Investment (PGII), announced at the G20 Summit in India. Co-led by the EU and the US and supported by the African Development Bank and Africa Finance Corporation, the project focuses on infrastructure development, trade facilitation and promoting sustainable growth in Angola, the Democratic Republic of Congo and Zambia. Investments will target key sectors including agriculture, energy, transport, logistics and education. The Memorandum of Understanding signed at the Global Gateway Forum, formalizes roles and sets objectives for expanding the corridor, strengthening regional connectivity and fostering economic cooperation.",
+"link": "https://www.state.gov/signing-of-the-memorandum-of-understanding-on-the-development-of-the-lobito-corridor-and-the-zambia-lobito-rail-line/",
+"members": {
+"countries": [
+"USA",
+"Angola",
+"Democratic Republic of the Congo",
+"Zambia",
+"AfDB",
+"AFC"
+],
+"EU": [
+"Austria",
+"Belgium",
+"Bulgaria",
+"Croatia",
+"Cyprus",
+"Czech Republic",
+"Denmark",
+"Estonia",
+"Finland",
+"France",
+"Germany",
+"Greece",
+"Hungary",
+"Ireland",
+"Italy",
+"Latvia",
+"Lithuania",
+"Luxembourg",
+"Malta",
+"Netherlands",
+"Poland",
+"Portugal",
+"Romania",
+"Slovakia",
+"Slovenia",
+"Spain",
+"Sweden"
+]
+},
+"date": "2023"
+}
+]

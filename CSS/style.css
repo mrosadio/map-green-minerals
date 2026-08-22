@@ -1,0 +1,1383 @@
+.cf-page-bg,.cat-page-bg,.post-list-bg {
+    background-color: #21201e;
+    background-image: url(https://afripoli.org/assets/img/bg/apri-post-list-bg.webp);
+    background-repeat: no-repeat;
+    background-position: top right
+}
+
+.cf-page-bg {
+    background-color: #4c3912;
+}
+
+.btn-select {
+    justify-content: center;
+}
+.drop-and-map {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: auto;
+    height: auto;
+    justify-content: center;
+    /* .col-3.info-partner {
+      flex: 1;
+      border: black 0.5px solid;
+      border-top-right-radius: 7px;
+      border-bottom-right-radius: 7px;
+      /* overflow-y: auto; */
+}
+.hidenthings {
+    display: none;
+}
+.intro-text {
+    margin-bottom: 20px;
+    max-width: auto;
+}
+.intro-text {
+    .col-center {
+        width: 100%;
+    }
+}
+h2.accordion-header.partner-header {
+    .accordion-button2 {
+        font-size: 14pt;
+        font-weight: normal;
+        font-family: var(--vr-font-primary);
+        color: #252525;
+        justify-content: space-between;
+        /* Esto separa los elementos a los extremos */
+    }
+    .african-button {
+        font-size: 14pt;
+        font-weight: normal;
+        font-family: var(--vr-font-primary);
+        color: #252525;
+        justify-content: space-between;
+        /* Esto separa los elementos a los extremos */
+    }
+}
+.partner-select {
+    font-size: 22pt;
+    font-weight: bolder;
+    font-family: var(--vr-font-primary);
+}
+.fix-col {
+    max-height: 700px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+.card-subTitle {
+    font-size: 11pt;
+    padding: 0px;
+    padding-bottom: 8px;
+    margin: 0px;
+    font-family: var(--vr-font-primary);
+}
+.custom-scroll {
+    overflow-x: hidden;
+    /* Ocultar el scrollbar horizontal */
+}
+.custom-scroll-accordion {
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Webkit scrollbar styling for bilateral accordion */
+.custom-scroll-accordion::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-scroll-accordion::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.custom-scroll-accordion::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.custom-scroll-accordion::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Firefox scrollbar */
+.custom-scroll-accordion {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+
+/* Multilateral accordion scrolling */
+.accordion-multilateral {
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.accordion-multilateral::-webkit-scrollbar {
+    width: 8px;
+}
+
+.accordion-multilateral::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.accordion-multilateral::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.accordion-multilateral::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.accordion-multilateral {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+
+/* EU Groups styling for expandable EU list */
+.eu-group {
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+}
+
+.eu-group::before {
+    content: "▶ ";
+    display: inline-block;
+    transition: transform 0.3s;
+    margin-right: 5px;
+}
+
+.eu-group.expanded::before {
+    transform: rotate(90deg);
+}
+
+.eu-countries {
+    display: none;
+    padding-left: 20px;
+    margin-top: 5px;
+}
+
+.eu-countries.show {
+    display: block;
+}
+
+.eu-country-item {
+    font-size: 10pt;
+    padding: 2px 0;
+    color: #757575;
+    cursor: pointer;
+}
+
+.eu-country-item:hover {
+    color: #fcc12c;
+    text-decoration: underline;
+    text-decoration-color: #fcc12c;
+}
+
+.custom-scroll::-webkit-scrollbar {
+    width: 8px;
+    /* Ancho del scrollbar */
+    height: 8px;
+    /* Altura del scrollbar (si es un scroll horizontal) */
+}
+.custom-scroll::-webkit-scrollbar-button {
+    display: none;
+    /* Ocultar las flechas */
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    /* Color del thumb */
+    border-radius: 10px;
+    /* Bordes redondeados para el thumb */
+}
+.custom-scroll::-webkit-scrollbar-track {
+    background: #ccc;
+    /* Fondo de la pista */
+}
+.accordion {
+    height: 100%;
+    padding: 0px;
+    width: 450px;
+    margin-bottom: 0px;
+}
+.african-button, .accordion-button2 {
+    display: flex;
+    box-shadow: none;
+    width: 100%;
+    background-color: #ffdc94;
+    /* Color inicial */
+    padding: 18.5px;
+    border: none;
+    border-radius: 2.9px !important;
+    font-size: 10pt !important;
+    text-align: left;
+    outline: none;
+    height: 50px;
+    font-family: var(--vr-font-primary);
+}
+.accordion-button2:focus, .accordion-button2.active {
+    background-color: #fec03c !important;
+    font-family: var(--vr-font-primary) !important;
+    font-weight: bold !important;
+    box-shadow: none !important;
+}
+/* Estilo cuando un botón no tiene foco */
+
+.african-button:not(:focus), .accordion-button2:not(:focus) {
+    background-color: #ffdc94;
+    /* Color al no estar en foco */
+}
+.african-button:not(:focus).active {
+    background-color: #ffdc94;
+    /* Restablece el color si pierde foco */
+}
+.list-partners {
+    font-size: 16pt;
+    font-family: var(--vr-font-primary);
+}
+.list-partners {
+    .list-group-item {
+        font-size: 30pt;
+        font-family: var(--vr-font-primary);
+    }
+}
+.card.partnership {
+    display: flex;
+    border: 1px solid lightgray;
+    /* Cambia el borde a gris claro */
+    border-radius: 7px;
+    padding: 0px 10px 10px 10px;
+    width: 140px;
+}
+.card.partnership.expanded {
+    width: 100%;
+    border: none;
+    /* Cambia el borde a gris claro */
+    /*padding: 0px 0px 10px 0px;*/
+}
+.card-body.partner {
+    margin: 0;
+    padding: 2px;
+    border: none;
+    border-bottom: #252525 solid 0.5px;
+    margin-right: 10px;
+    padding: 15px 10px 15px 0px !important;
+}
+/* Quitar el borde del último ítem */
+
+.card-body.partner:last-child {
+    border-bottom: none;
+    margin-bottom: 0px !important;
+}
+.card-subtitle.agreement {
+    font-weight: 400;
+    font-size: 11pt;
+    line-height: 1.5;
+    /* Ajusta el valor para aumentar el interlineado */
+    padding-top: 10px;
+    padding-bottom: 0.25rem !important;
+    padding-left: 0rem !important;
+}
+.drop-and-map {
+    display: flex;
+}
+.accordion-body .accordion-bilateral {
+    border: black solid 0.5px;
+    padding: 0.75rem 0.75rem;
+}
+.accordion-body .accordion-multilateral {
+    border: black solid 0.5px;
+    padding: 0.75rem 0.75rem;
+}
+.list-group-item {
+    border: none;
+    cursor: pointer;
+    margin: 2px 2px;
+}
+.col-3 .info-partner {
+    display: none;
+    border: black solid 1px;
+    border-radius: 7px;
+    /* max-width: 100%;
+    height: 100%;
+    border: black solid .5px;
+    border-radius: 7px;
+    width: 25%; 
+    transition: opacity 0.3s ease, width 0.3s ease; 
+    padding-left: 0;
+    text-align: start; */
+}
+.width-third-col .col-3 .info-partner {
+    height: 100%;
+    transition: opacity 0.3s ease, width 0.3s ease;
+    /* Smooth transition */
+    padding-left: 0;
+    text-align: start;
+}
+/* #accordionFlushExample {
+    width: 25%;
+  } */
+
+.first-col.col-2 {
+    padding: 0;
+    margin: 0 0;
+    border-top: none;
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+}
+.second-col.col-8 {
+    border-left: none;
+    border-right: none;
+}
+.third-col {
+    display: block;
+    justify-content: flex-end;
+}
+.nuevo {
+    display: flex;
+    /* border: 3px solid lightgray; /* Cambia el borde a gris claro */
+    width: 100%;
+    height: 100%;
+}
+/* #map {
+    width: 60%; card.partnershi
+    height: auto;
+    transition: width 0.3s ease; 
+  } */
+
+#map {
+    /*width: 50px; */
+    width: 50%;
+    margin-left: 8px;
+    height: auto;
+    padding: 0px;
+    position: relative;
+    /* flex-grow: 1;*/
+    /*transition: width 0.5s ease, height 0.5s ease;*/
+}
+.width-third-col #map {
+    width: 70%;
+}
+.hidden {
+    display: none;
+}
+.expanded {
+    width: 75%;
+    height: 100% !important;
+    /* Expanded width for the second column when the third is hidden */
+}
+.card-title.tooltip-title {
+    color: #fff;
+}
+.card-title.list-partners {
+    font-weight: bold;
+    font-family: var(--vr-font-primary);
+    font-size: 15pt;
+}
+.tooltip-text {
+    color: #fff;
+}
+.allview {
+    display: flex;
+    box-sizing: border-box;
+    border: 0.5px solid #d7d7d7;
+    /* Cambia el borde a gris claro */
+    border-radius: 10px;
+    /* Curva las esquinas */
+    padding: 20px;
+    justify-content: space-between;
+    margin: 0 60px 0 60px;
+    box-sizing: border-box;
+    /* Asegura que los bordes no causen desbordamiento */
+    height: 640px;
+}
+.selectores {
+    width: 250px;
+}
+.accordion-item {
+    border: none;
+    margin-top: 3px;
+}
+.divAfrican {
+    margin-top: 0px !important;
+}
+.print-div {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 4rem;
+    margin-right: 4rem;
+    margin-bottom: 1rem;
+}
+.list-group-item.bloc-select {
+    color: #757575;
+    /* Color original de texto */
+    text-decoration: none;
+    /* Sin subrayado por defecto */
+    transition: color 0.3s, text-decoration-color 0.3s;
+    padding-left: 0px;
+    margin-top: 0px;
+    padding-top: 0px;
+    font-size: 10pt;
+}
+.africantriangle {
+    display: none;
+}
+.list-group-item.bloc-select:hover {
+    color: #fcc12c;
+    /* Cambia el color del texto a rojo */
+    text-decoration: underline;
+    /* Agrega subrayado */
+    text-decoration-color: #fcc12c;
+    /* Subrayado en rojo */
+    text-underline-offset: 4px;
+    /* Ajusta la distancia del subrayado */
+}
+.list-group-item.country-select {
+    color: #757575;
+    /* Color original de texto */
+    text-decoration: none;
+    /* Sin subrayado por defecto */
+    transition: color 0.3s, text-decoration-color 0.3s;
+    padding-left: 0px;
+    padding-top: 0px;
+    margin: 0px;
+    font-size: 10pt;
+}
+.list-group-item.country-select:hover {
+    color: #fcc12c;
+    /* Cambia el color del texto a rojo */
+    text-decoration: underline;
+    /* Agrega subrayado */
+    text-decoration-color: r#fcc12ced;
+    /* Subrayado en rojo */
+    text-underline-offset: 10px;
+    /* Ajusta la distancia del subrayado */
+}
+.line {
+    width: 100%;
+    /* Hace que la línea ocupe el ancho completo de las opciones */
+    height: 3px;
+    /* Altura de la línea */
+    background-color: #fcc12c;
+    /* Color rojo */
+    margin-bottom: 14px;
+    /* Espacio opcional encima de la línea */
+}
+.line-black {
+    width: 100%;
+    /* Hace que la línea ocupe el ancho completo de las opciones */
+    height: 1px;
+    /* Altura de la línea */
+    background-color: #000000;
+    /* Color rojo */
+}
+.print-button {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    background-color: #ffdc94;
+    /* Color de fondo amarillo */
+    color: #000;
+    /* Color de texto */
+    font-weight: normal;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    gap: 12px;
+    /* Espacio entre el texto y el ícono */
+    transition: background-color 0.3s;
+    width: 95px;
+    height: 28px;
+    font-family: var(--vr-font-primary);
+}
+.print-button:hover {
+    background-color: #fec03c;
+    /* Color de fondo al pasar el mouse */
+}
+.print-icon {
+    height: 18px;
+    /* Altura del ícono */
+}
+/* Conflicting with apri-style
+.container {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;  
+}
+.left {
+    width: 300px;
+
+}
+.center {
+    flex-grow: 1;
+    text-align: center;
+}
+.right {
+    width: fit-content;
+    margin-left: 14px;
+    justify-content: flex-end;
+}
+*/
+.right.bilateral {
+    width: 450px;
+    margin-left: 12px;
+    justify-content: flex-end;
+}
+.tag {
+    position: relative;
+    display: inline-block;
+    background-color: #e0f7fa;
+    padding: 1px 10px;
+    margin: 0.5px;
+    border-radius: 5px;
+    color: #00796b;
+    font-size: 0.7em;
+    cursor: pointer;
+    font-family: var(--vr-font-primary);
+}
+.tooltip {
+    position: absolute;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border-radius: 3px;
+    font-size: 10pt;
+}
+.tag .tooltip {
+    position: absolute;
+    font-family: var(--vr-font-primary);
+    visibility: hidden;
+    line-height: 1;
+    /* Reducir interlineado */
+    text-align: left;
+    /* Alineación del texto a la izquierda */
+    padding: 8px 10px;
+    /* Espaciado interno en el tooltip */
+    font-size: 8pt;
+    background-color: #333;
+    color: #fff;
+    border-radius: 2px;
+    width: 250px;
+    position: absolute;
+    bottom: 125%;
+    /* Ajusta la posición del tooltip */
+    transform: translateX(-4%);
+    z-index: 9999;
+    /* Asegura que el tooltip esté encima de otros elementos */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.lastUpdate {
+    font-size: 12pt;
+    font-family: var(--vr-font-primary);
+    text-align: right;
+    padding-right: 4rem;
+    padding-top: 1rem;
+}
+.tag:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+.controls {
+    position: absolute;
+    top: 0px;
+    right: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background-color: rgba(255, 255, 255, 0.8);
+    /* Opcional, para visibilidad */
+    border-radius: 5px;
+    align-items: flex-end;
+    background-color: transparent;
+    pointer-events: none;
+}
+.controls * {
+    pointer-events: auto;
+    /* Habilita eventos del mouse en todos los elementos hijos */
+}
+/* Contenedor de los botones de zoom */
+
+.btnZoom {
+    top: 10px;
+    /* Ajusta la posición según tus necesidades */
+    right: 10px;
+    /* Ajusta la posición según tus necesidades */
+    display: flex;
+    flex-direction: column;
+}
+/* Estilos comunes para los botones */
+
+.btnZoom button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: transparent;
+    padding: 0px;
+    /* Elimina el padding para que el botón no tenga espacio extra */
+    border: none;
+    /* Borde negro */
+    margin: 0px;
+}
+/* Estilos para los iconos SVG dentro de los botones */
+
+.btnZoom button img {
+    width: 30px;
+    /* Ajusta el tamaño del icono */
+    height: 30px;
+}
+.instruccions {
+    display: none;
+}
+.nameMobile {
+    display: none;
+}
+.toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+    /* Fondo gris para el contenedor del toggle */
+    padding: 3px;
+    border-radius: 20px;
+    width: 45px;
+    cursor: pointer;
+}
+.toggle-button {
+    width: 16px;
+    height: 16px;
+    background-color: #f2f2f2;
+    /* Verde cuando está inactivo */
+    border-radius: 50%;
+    transition: background-color 0.3s, transform 0.3s;
+}
+.toggle-container.active .toggle-button {
+    background-color: #4b4b4b;
+    /* Amarillo cuando está activo */
+    transform: translateX(18px);
+    /* Mueve el botón a la derecha */
+}
+.label {
+    font-size: 14px;
+    color: #000;
+    margin: 0px;
+    margin-right: 12px;
+    font-family: var(--vr-font-primary);
+    margin-left: 12px;
+}
+.control-toggle {
+    display: flex;
+    align-items: center;
+    background-color: #f2f2f2;
+    padding: 3px 5px 3px 5px;
+    border-radius: 7px;
+    border: 1pt solid #fff;
+    /* Borde negro */
+    margin-top: 6px;
+}
+
+
+.downloadButton {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    color: #333;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: fit-content;
+    font-family: "UncutSans Semibold";
+}
+.downloadButton img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+.imgDownload {
+    margin-left: 10px;
+}
+.tooltip {
+    font-family: "UncutSans Semibold";
+    font-size: 12px;
+}
+.tooltip h3 {
+    font-size: 14px;
+    margin: 0;
+}
+.tooltip ul {
+    list-style: none;
+    padding: 0;
+}
+.tooltip ul li {
+    font-size: 11px;
+    line-height: 1.4;
+}
+/* Alinea el triángulo al borde derecho */
+
+.triangle-icon {
+    margin-left: auto;
+    /* Empuja el triángulo hacia el extremo derecho */
+    width: 16px;
+    /* Ajusta el tamaño del triángulo */
+    height: 16px;
+    transition: transform 0.3s ease;
+    /* Suaviza la animación */
+}
+/* Rotación dependiendo del estado del botón */
+
+.accordion-button2[aria-expanded="true"] .triangle-icon {
+    transform: rotate(-180deg);
+}
+.accordion-button2[aria-expanded="false"] .triangle-icon {
+    transform: rotate(0deg);
+}
+.list-group-item:focus, .list-group-item.activeDetail {
+    color: #fcc12c;
+    /* Cambia el color del texto a rojo */
+    text-decoration: underline;
+    /* Agrega subrayado */
+    text-decoration-color: #fcc12c;
+    /* Subrayado en rojo */
+    text-underline-offset: 4px;
+    /* Ajusta la distancia del subrayado */
+}
+/* Estilos para los íconos SVG */
+
+img.zoom-active {
+    filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(180deg);
+    /* Cambia el color */
+}
+img.zoom-in-active {
+    filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(0deg);
+    /* Color para zoom-in */
+}
+img.zoom-out-active {
+    filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(180deg);
+    /* Color para zoom-out */
+}
+#toggleDescription {
+    visibility: hidden;
+}
+.overlay {
+    display: none;
+}
+#viewMoreBtn {
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 10pt;
+    font-family: var(--vr-font-primary);
+}
+#viewLessBtn {
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 10pt;
+    font-family: var(--vr-font-primary);
+}
+#viewLessBtn2 {
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 10pt;
+    font-family: var(--vr-font-primary);
+}
+.country-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* Alinear el contenido al inicio */
+    margin-bottom: 5px;
+}
+.country-name {
+    margin: 0;
+    font-size: 11pt;
+    display: flex;
+}
+.country-name2 {
+    margin: 0;
+    font-size: 11pt;
+    display: inline-block;
+}
+.tooltipMulti {
+    visibility: hidden;
+    width: 150px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 10px;
+    position: absolute;
+    /* Cambiado a absolute para posicionar relativo al viewport */
+    z-index: 1000;
+    /* Asegura que el tooltip esté por encima de otros elementos */
+    bottom: 125%;
+    /* Mostrar sobre el ícono */
+    left: 1%;
+    font-family: "UncutSans Semibold";
+    transform: translateX(-40%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 8px;
+}
+.tooltipMulti.active {
+    visibility: visible;
+    opacity: 1;
+    font-family: "UncutSans Semibold";
+    font-size: 8pt;
+    padding: 8px 10px;
+}
+.tooltipMulti::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    /* Flecha del tooltip */
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+.info-icon {
+    cursor: pointer;
+    width: 20px;
+    height: 25px;
+    display: inline-block;
+    margin: 0;
+    padding-left: 5px;
+    padding-bottom: 3px;
+}
+.tooltipMulti .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    font-size: 12px;
+    cursor: pointer;
+}
+/*para movil */
+
+@media (max-width: 768px) {
+   
+    
+    .description {
+        padding-right: 0px;
+        margin-bottom: 20px;
+    }
+    .title {
+        font-size: 24pt;
+    }
+    .subtitle {
+        font-size: 17pt;
+    }
+    #toggleDescription {
+        background-color: transparent;
+        /* Fondo transparente */
+        border: none;
+        /* Sin borde */
+        color: #007bff;
+        /* Color del texto */
+        cursor: pointer;
+        font-size: 10pt;
+        text-decoration: none;
+        /* Elimina el subrayado */
+        font-family: var(--vr-font-primary);
+        margin: 0;
+        padding-left: 1px;
+        visibility: visible;
+    }
+    .downloadButton {
+        font-size: 10pt;
+    }
+    .imgPdf {
+        width: 24px !important;
+        height: 24px !important;
+        margin-right: 8px !important;
+    }
+    .imgDownload {
+        width: 15px !important;
+        height: 15px !important;
+        margin-left: 10px !important;
+    }
+    .print-div {
+        display: none;
+    }
+    .allview {
+        border: 0px;
+        border-radius: 0px;
+        /* Curva las esquinas */
+        padding: 0px;
+        justify-content: space-between;
+        margin: 0 0px 0 0px;
+        box-sizing: border-box;
+        /* Asegura que los bordes no causen desbordamiento */
+        height: 100%;
+        width: 100%;
+        display: grid;
+        grid-template-rows: auto auto auto;
+        gap: 10px;
+    }
+    .selectores {
+        width: 100%;
+    }
+    .accordion {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        padding: 10px 12px;
+        width: 100%;
+    }
+    .accordion-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        height: 100%;
+    }
+    .accordion-button2 {
+        width: 100%;
+        padding: 10px;
+    }
+    .accordion-button2 img {
+        margin-left: 10px;
+    }
+    .first-col, .second-col, .right {
+        display: flex;
+        flex-direction: column;
+        /* Aseguramos que los elementos internos se dispongan verticalmente */
+        justify-content: flex-start;
+        /* Alineamos al inicio de la columna */
+    }
+    .second-col {
+        border-bottom: 1px solid lightgray;
+        border-top: 1px solid lightgray;
+    }
+    .second-col {
+        justify-content: center;
+        /* Centrar contenido si es necesario */
+        align-items: center;
+        /* Alinea horizontalmente */
+    }
+    .third-col {
+        width: 100vw;
+        display: block;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        /* Centrado de los elementos dentro de la tercera columna */
+        padding: 0px 0px 15px 0px;
+    }
+    #map {
+        width: 100vw;
+        margin-left: 0px;
+        height: 300px;
+    }
+    .african-button, .accordion-button2 {
+        font-size: 10pt !important;
+        text-align: left;
+        outline: none;
+        height: 35px !important;
+        font-family: "UncutSans Semibold";
+        border-radius: 7px !important;
+    }
+    h2.accordion-header.partner-header {
+        .accordion-button2 {
+            margin-top: 0px;
+        }
+    }
+    .card.partnership {
+        width: 100%;
+        /* Asegura que abarque todo el ancho del viewport */
+        padding: 0px 0px 0px 0px;
+        margin: 0px;
+        padding: 0px 20px 0px 20px;
+        border-radius: 5px !important;
+        border: 0px solid lightgray;
+        /* Cambia el borde a gris claro */
+    }
+    .right {
+        width: 100vw;
+        margin-left: 0px;
+        margin: 0px;
+        padding: 0px;
+        /*margin: 10px;*/
+    }
+    .right.bilateral {
+        margin-left: 0px;
+        width: 100vw;
+        padding: 0 0px 0 0px;
+        /*margin: 10px;*/
+    }
+    .controls {
+        bottom: 0px;
+        /* Mover a la parte inferior */
+        right: 6px;
+        /* Mantener en el borde derecho */
+        top: auto;
+        flex-direction: column;
+        /* Asegurarse de que se apilen verticalmente */
+        margin-bottom: 6px;
+        margin-right: 6px;
+    }
+    /* Si quieres cambiar el orden de los elementos, puedes usar order */
+    .btnZoom {
+        order: 1;
+        /* Asegura que BtnZoom esté por encima */
+    }
+    .control-toggle {
+        order: 2;
+        /* Poner control-toggle debajo de BtnZoom */
+        display: none;
+    }
+    .control-toggle {
+        margin-top: 0px;
+        margin-bottom: 6px;
+    }
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .picker {
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 100;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        text-align: center;
+        font-size: 14px;
+        background-color: rgba(37, 38, 45, 0.4);
+        display: none;
+    }
+    .picker-panel {
+        position: absolute;
+        z-index: 600;
+        bottom: 0;
+        width: 100%;
+        height: 273px;
+        background: white;
+    }
+    .picker-choose {
+        position: relative;
+        height: 60px;
+        color: #999;
+    }
+    .picker-title {
+        margin: 0;
+        line-height: 60px;
+        font-weight: normal;
+        text-align: center;
+        font-size: 18px;
+        color: #333;
+    }
+    .confirm, .cancel {
+        position: absolute;
+        top: 6px;
+        padding: 16px;
+        font-size: 14px;
+        color: #fec03c;
+        /* Color de fondo al pasar el mouse */
+        font-family: var(--vr-font-primary);
+    }
+    .confirm {
+        right: 0;
+    }
+    .cancel {
+        left: 0;
+    }
+    .picker-content {
+        position: relative;
+        top: 20px;
+        padding-right: 10px;
+    }
+    .mask-top, .mask-bottom {
+        width: 100%;
+        height: 68px;
+        pointer-events: none;
+        position: absolute;
+    }
+    .mask-top {
+        top: 0;
+        background: linear-gradient( to top, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.8));
+    }
+    .mask-bottom {
+        bottom: 1px;
+        background: linear-gradient( to bottom, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.8));
+    }
+    .wheel-wrapper {
+        position: relative;
+        padding-left: 20px;
+    }
+    .wheel::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 20px;
+        pointer-events: none;
+        /* Asegura que no interfiera con los clics */
+    }
+    .wheel::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 20px;
+        pointer-events: none;
+        /* Asegura que no interfiera con los clics */
+    }
+    .wheel {
+        flex: 1;
+        height: 173px;
+        overflow-y: scroll;
+        /* Asegúrate de tener overflow-y en scroll */
+        -webkit-overflow-scrolling: touch;
+        /* Utiliza touch para tener el desplazamiento suave en iOS */
+        scrollbar-width: thin;
+        /* Esto funciona para algunos navegadores para mostrar el scrollbar delgado */
+    }
+    .wheel-scroll {
+        margin-top: 0px;
+        line-height: 36px;
+        list-style: circle;
+        padding: 0;
+    }
+    .wheel {
+        flex: 1;
+        height: 173px;
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+    .wheel-scrollbar {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 8px;
+        /* Ancho del scrollbar */
+        height: 100%;
+        background: #ccc;
+        border-radius: 4px;
+    }
+    .wheel::-webkit-scrollbar {
+        width: 0;
+        /* Ocultar el scrollbar predeterminado */
+    }
+    .wheel-item {
+        height: 36px;
+        overflow: hidden;
+        white-space: nowrap;
+        color: #cbcbcbf3;
+        cursor: pointer;
+        font-family: var(--vr-font-primary);
+    }
+    .wheel-disabled-item {
+        opacity: 1;
+    }
+    .selected-item {
+        color: #737373;
+        text-decoration: underline;
+    }
+    .accordion-collapse {
+        display: none;
+    }
+    .triangle-icon {
+        margin-left: auto;
+        /* Empuja el triángulo hacia el extremo derecho */
+        width: 16px;
+        /* Ajusta el tamaño del triángulo */
+        height: 16px;
+        transition: transform 0.3s ease;
+        /* Suaviza la animación */
+        transform: rotate(-90deg);
+    }
+    /* Rotación dependiendo del estado del botón */
+    .accordion-button2[aria-expanded="true"] .triangle-icon {
+        transform: rotate(-90deg);
+    }
+    .accordion-button2[aria-expanded="false"] .triangle-icon {
+        transform: rotate(-90deg);
+    }
+    .titleButton {
+        font-size: 18pt;
+        margin-bottom: 0px;
+        color: #000;
+        /*font-weight: bold;*/
+        font-family: var(--vr-font-primary);
+        font-weight: bold;
+    }
+    .nameMobile {
+        display: flex;
+        justify-content: space-between;
+        /* Esto separa los elementos a los extremos */
+        padding: 15px;
+        align-items: center;
+        /* Centra los elementos verticalmente */
+    }
+    .buttonChange {
+        color: #007bff;
+        align-items: center;
+        /* Centra los elementos verticalmente */
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+    }
+    .africantriangle {
+        display: flex;
+    }
+    .instruccions {
+        display: block;
+        align-items: center;
+        font-family: var(--vr-font-primary);
+        margin-top: 0px;
+        width: 100%;
+        padding: 10px 15px 10px 15px;
+        font-size: 8.5pt;
+        text-align: justify;
+    }
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(160, 160, 160, 0.8);
+        backdrop-filter: blur(3px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+        cursor: pointer;
+    }
+    .overlay-text {
+        text-align: center;
+    }
+    .hidden {
+        display: none;
+    }
+    .hand {
+        transition: transform 0.3s ease;
+    }
+    .overlay .hand {
+        width: 80px;
+        height: 80px;
+        transition: transform 0.3s ease;
+    }
+    .overlay:hover .hand {
+        transform: scale(1.2);
+        /* Escala la imagen al 150% */
+    }
+    .titleBlur {
+        color: #ffffff;
+        font-size: 14px;
+        font-family: var(--vr-font-primary);
+        margin: 5px;
+        font-weight: bold;
+    }
+    .subtitleBlur {
+        color: #ffffff;
+        font-size: 12px;
+        font-family: var(--vr-font-primary);
+        margin: 0px;
+        font-weight: normal;
+    }
+    .divAfrican {
+        margin-top: 3px !important;
+    }
+    .ms-2 {
+        margin-left: 3px !important;
+    }
+    #viewMoreBtn {
+        display: none;
+    }
+    .lastUpdate {
+        font-size: 8.5pt;
+        font-family: var(--vr-font-primary);
+        text-align: left;
+        padding-left: 15px;
+        padding-top: 0.5rem;
+    }
+    
+    /* CRM Hero Map Theme */
+    .breadcrumb-area.hero-africa-map {
+        background-color: #4b351d !important;
+        background-image:
+            linear-gradient(104deg, rgba(46, 31, 16, 0.95) 0%, rgba(74, 51, 26, 0.9) 42%, rgba(105, 71, 35, 0.66) 72%, rgba(139, 95, 46, 0.48) 100%),
+            radial-gradient(circle at 14% 18%, rgba(252, 193, 44, 0.22) 0%, rgba(252, 193, 44, 0) 34%),
+            url("../img/bg/africa-map-pattern.svg") !important;
+        background-repeat: no-repeat, no-repeat, no-repeat !important;
+        background-size: cover, cover, 100% 100% !important;
+        background-position: center, center, center !important;
+    }
+    
+    .breadcrumb-area.hero-africa-map .title,
+    .breadcrumb-area.hero-africa-map .subtitle,
+    .breadcrumb-area.hero-africa-map .description,
+    .breadcrumb-area.hero-africa-map .downloadButton,
+    .breadcrumb-area.hero-africa-map .downloadButton a {
+        color: #f8fbff !important;
+    }
+    
+    #viewMoreBtn.hero-cta-toggle,
+    #viewLessBtn.hero-cta-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        margin-top: 0.55rem;
+        padding: 0.62rem 1rem;
+        border-radius: 999px;
+        border: 1px solid #fcc12c;
+        background: #fcc12c;
+        color: #3b2812;
+        font-size: 0.7rem;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.01em;
+        text-decoration: none;
+        transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    #viewMoreBtn.hero-cta-toggle:hover,
+    #viewLessBtn.hero-cta-toggle:hover {
+        background: #ffe2a0;
+        color: #2d1d0b;
+        border-color: #ffe2a0;
+        box-shadow: 0 0 0 3px rgba(252, 193, 44, 0.26);
+        transform: translateY(-1px);
+    }
+    
+    #viewMoreBtn.hero-cta-toggle:focus-visible,
+    #viewLessBtn.hero-cta-toggle:focus-visible {
+        outline: 3px solid #ffffff;
+        outline-offset: 2px;
+    }
+    
+    #viewMoreBtn.hero-cta-toggle i,
+    #viewLessBtn.hero-cta-toggle i {
+        font-size: 0.82em;
+    }
