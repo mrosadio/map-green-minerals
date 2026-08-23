@@ -75,8 +75,6 @@ function resetToInitialView() {
   clearCardContent();
   addLegend(svg, colorScale); // Añade la leyenda
   removeThirdColumn(); // Oculta la tercera columna
-  //initAboutModal();
-  // zoomToCountry(svg, path, filteredGeoJSON, "Chad");
 }
 document.addEventListener("DOMContentLoaded", function () {
   const wheelElement = document.querySelector(".wheel");
@@ -100,30 +98,21 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 function refresh() {
   if (/Mobi|Android/i.test(navigator.userAgent)) {
-    // El usuario está en un dispositivo móvil
-    //console.log("Estás en un dispositivo móvil");
-    // simulateCountryClick(svg, filteredGeoJSON, "Chad");
-    console.log("refreshing in main.js") // not showing in console
+    console.log("refreshing in main.js")
     showPickerAfrica();
     //button.scrollIntoView({ behavior: "smooth", block: "center" });
   } else {
-    console.log("test222222");
-
     window.location.href = window.location.href;
   }
 }
 //document.getElementById("africaButton").addEventListener("click", refresh);
 
 const buttonScroll = document.getElementById("africaButton");
-
-// Asigna el evento click
 buttonScroll.addEventListener("click", () => {
-  //console.log("test");
   refresh();
   buttonScroll.scrollIntoView({ behavior: "smooth", block: "start" });
   const selectedBlock = document.getElementById("blockNameNowTemp");
   selectedBlock.innerText = "African countries overview";
-  // console.log(selectedBlock);
 });
 
 // Load and merge data
@@ -230,7 +219,6 @@ Promise.all([
             const toggleButton = document.getElementById("toggleLabels");
             toggleButton.classList.remove("active");
             //updateLabel(svg, path, filteredCountryGeoJSON);
-
             populatePartnerships(biData, selectedCountry);
             hideLegend();
           }
