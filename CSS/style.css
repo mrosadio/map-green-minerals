@@ -1,3 +1,23 @@
+.body {
+     height: 100% !important;
+  min-height: 100vh !important;
+}
+/* The container-fluid Bootstrap injects needs height too */
+.container-fluid.position-relative {
+  min-height: calc(100vh - 62px) !important;
+  flex: 1 !important;
+}
+
+/* #map needs explicit height since its parent .second-col is auto */
+#map {
+  height: 600px !important; /* or whatever height works for your layout */
+  min-height: 600px !important;
+}
+
+.second-col {
+  height: 600px !important;
+  min-height: 600px !important;
+}
 .cf-page-bg,.cat-page-bg,.post-list-bg {
     background-color: #21201e;
     background-image: url(https://afripoli.org/assets/img/bg/apri-post-list-bg.webp);
@@ -395,7 +415,8 @@ h2.accordion-header.partner-header {
     margin: 0 60px 0 60px;
     box-sizing: border-box;
     /* Asegura que los bordes no causen desbordamiento */
-    height: 640px;
+    height: 600px;
+    width: 100%;
 }
 .selectores {
     width: 250px;
@@ -1381,3 +1402,4 @@ img.zoom-out-active {
     #viewLessBtn.hero-cta-toggle i {
         font-size: 0.82em;
     }
+}

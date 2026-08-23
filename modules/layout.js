@@ -22,15 +22,3 @@ export function showThirdColumn() {
     right.classList.add('bilateral');
     thirdColumn.classList.add('nuevo');
 }
-
-/*
-export function showThirdColumn() {
-    let firstColumn = document.querySelector('.first-col');
-    let secondColumn = document.querySelector('.second-col');
-    let thirdColumn = document.querySelector('.third-col');
-    firstColumn.classList.remove('col-4');
-    firstColumn.classList.add('col-2');
-    secondColumn.classList.remove('col-9');
-    secondColumn.classList.add('col-7');
-    thirdColumn.classList.add('nuevo');
-}*/

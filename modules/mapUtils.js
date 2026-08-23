@@ -63,54 +63,6 @@ function zoomed(event) {
   }, 300); // 300 ms después de que el usuario haya terminado el movimiento del zoom
 }
 
-function zoomedBorrar(event) {
-  const { transform } = event;
-  g.attr("transform", transform);
-  g.attr("stroke-width", 1 / transform.k);
-  // Ocultar el tooltip inmediatamente al comenzar el movimiento del zoom
-  const tooltip = d3.select(".tooltip2");
-  tooltip.style("display", "none").style("pointer-events", "none");
-  console.log(banderaClick);
-  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-  if (isMobile) {
-    // Mostrar nombres de países si el zoom es 3 o más
-    console.log(transform.k);
-    if (transform.k >= 2) {
-      d3.selectAll(".city-label")
-        .transition()
-        .duration(300)
-        .style("opacity", 1); // Hacer visibles las etiquetas
-      if (banderaClick) {
-        // Mostrar el tooltip después de la animación del zoom
-        setTimeout(() => {
-          //   selectedText.innerText = "Bilateral Parnerships";
-          tooltip.style("display", "block").style("pointer-events", "auto"); // Hacer visible el tooltip
-          // Usamos una segunda función de `setTimeout` para asegurarnos de que `banderaClick` cambie después de haber mostrado el tooltip
-          setTimeout(() => {
-            banderaClick = false;
-            //console.log("MUESTRAAA" + banderaClick);
-          }, 30); // Retraso adicional para asegurar que se haya completado la animación del tooltip
-        }, 1000); // Retraso para sincronizar con la animación de la etiqueta
-      }
-    } else {
-      d3.selectAll(".city-label")
-        .transition()
-        .duration(300)
-        .style("opacity", 0); // Ocultar las etiquetas
-    }
-  } else {
-    setTimeout(() => {
-      if (!banderaBoton) {
-        tooltip.style("display", "block").style("pointer-events", "auto"); // Hacer visible el tooltip
-        // Usamos una segunda función de `setTimeout` para asegurarnos de que `banderclick` cambie después de haber mostrado el tooltip
-        setTimeout(() => {
-          banderaClick = false;
-          //    console.log("MUESTRAAA");
-        }, 500); // Retraso adicional para asegurar que se haya completado la animación del tooltip
-      }
-    }, 500); // Retraso para sincronizar con la animación de la etiqueta
-  }
-}
 //aumentar un parametro para identificar el pais y con ello hacer el zoom mas personalizado para cada uno
 export function drawMap(geojson, filteredCountryGeoJSON, partner) {
   banderaBoton = true;

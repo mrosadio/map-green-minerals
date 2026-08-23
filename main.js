@@ -68,6 +68,7 @@ const tooltip = d3
 // Función para restablecer el mapa a su estado inicial
 
 function resetToInitialView() {
+  console.log('reseting in main.js')
   destroyMap();
   filteredGeoJSON = filterAfrica(mergedBiData, numberData); // Filtra África
   drawMapWithPartnerColors(svg, path, filteredGeoJSON, numberData); // Dibuja el mapa inicial
@@ -102,6 +103,7 @@ function refresh() {
     // El usuario está en un dispositivo móvil
     //console.log("Estás en un dispositivo móvil");
     // simulateCountryClick(svg, filteredGeoJSON, "Chad");
+    console.log("refreshing in main.js") // not showing in console
     showPickerAfrica();
     //button.scrollIntoView({ behavior: "smooth", block: "center" });
   } else {
@@ -125,7 +127,8 @@ buttonScroll.addEventListener("click", () => {
 });
 
 // Load and merge data
-console.log('multi json', multiJsonFilePath)
+//console.log('multi json', multiJsonFilePath)
+console.log('console before promise')
 Promise.all([
   loadAndMergeData(geojsonUrl, jsonFilePath, noPartnerFilePath),
   mergeMulti(geojsonUrl, multiJsonFilePath),
@@ -195,6 +198,7 @@ Promise.all([
               (filteredCountryGeoJSON) => {
                 deleteCountryLabels(filteredCountryGeoJSON);
                 destroyMap();
+                console.log('drawmap in main.js')
                 drawMap(mergedBiData, filteredCountryGeoJSON, "EU");
                 highlightEu(svg, filteredCountryGeoJSON);
 
@@ -346,18 +350,6 @@ document.querySelectorAll("a.list-group-item").forEach((link) => {
   });
 });
 
-/*
-// Detectar clics fuera del tooltip
-document.addEventListener("click", function(event) {
-	const tooltipElement = document.querySelector(".tooltip2"); // Seleccionamos el tooltip
-	const overlayElement = document.querySelector(".overlay");  // Si usas un overlay puedes agregar esta validación
-  
-	// Si el clic ocurrió fuera del tooltip y del overlay
-	if (tooltipElement && !tooltipElement.contains(event.target) && !overlayElement.contains(event.target)) {
-	  tooltipElement.style("display", "none");  // Ocultar el tooltip
-	}
-  });
-*/
 // Al hacer clic en "Bilateral partnerships", simulamos el clic en el primer botón de la lista "EU"
 document
   .querySelector('.accordion-button2[data-bs-target="#flush-collapseOne"]')
@@ -526,53 +518,53 @@ document.getElementById("zoomIn").addEventListener("mouseout", function () {
 
 if (window.innerWidth <= 768) {
   // Contamos las palabras del texto
-  const descriptionText = document.getElementById("descriptionText");
+  // const descriptionText = document.getElementById("descriptionText");
 
-  document.getElementById("descriptionText1").classList.add("hidden");
-  document.getElementById("descriptionText3").classList.add("hidden");
+  // document.getElementById("descriptionText1").classList.add("hidden");
+  // document.getElementById("descriptionText3").classList.add("hidden");
 
-  const words = descriptionText.innerText.split(" ");
+  // const words = descriptionText.innerText.split(" ");
 
   // Encontramos la primera parte del texto y lo separamos
-  const firstPart = words.slice(0, 500).join(" "); // Agregamos '...' al final de las primeras 33 palabras
-  const secondPart = words.slice(500).join(" ");
+  // const firstPart = words.slice(0, 500).join(" "); // Agregamos '...' al final de las primeras 33 palabras
+  // const secondPart = words.slice(500).join(" ");
 
   // Creamos el botón
   const button = document.createElement("button");
   button.id = "toggleDescription";
   //button.style.marginLeft="6px"
 
-  button.textContent = "   Show more";
+  // button.textContent = "   Show more";
 
   // Insertamos el texto inicial con el botón
-  descriptionText.innerHTML = firstPart;
-  descriptionText.appendChild(button);
+  // descriptionText.innerHTML = firstPart;
+  // descriptionText.appendChild(button);
 
   // Función para alternar entre mostrar más o menos texto
-  function toggleText() {
-    if (button.textContent === "   Show more") {
-      // Mostrar todo el texto sin los tres puntos y cambiar el texto del botón a "Show less"
-      descriptionText.innerHTML = firstPart + secondPart; // Eliminar los '...' de firstPart
-      descriptionText.appendChild(button);
-      //document.getElementById("descriptionText2").classList.remove("hidden");
-      document.getElementById("descriptionText3").classList.remove("hidden");
-      document.getElementById("descriptionText2").classList.remove("hidden");
-      document.getElementById("descriptionText1").classList.remove("hidden");
+  // function toggleText() {
+  //   if (button.textContent === "   Show more") {
+  //     // Mostrar todo el texto sin los tres puntos y cambiar el texto del botón a "Show less"
+  //     descriptionText.innerHTML = firstPart + secondPart; // Eliminar los '...' de firstPart
+  //     descriptionText.appendChild(button);
+  //     //document.getElementById("descriptionText2").classList.remove("hidden");
+  //     document.getElementById("descriptionText3").classList.remove("hidden");
+  //     document.getElementById("descriptionText2").classList.remove("hidden");
+  //     document.getElementById("descriptionText1").classList.remove("hidden");
 
-      document.getElementById("viewLessBtn").style.visibility = "visible";
+  //     document.getElementById("viewLessBtn").style.visibility = "visible";
 
-      button.textContent = "";
-    } else {
-      console.log("testt");
-      // Mostrar solo la primera parte con '...' y cambiar el texto del botón a "Read more"
-      descriptionText.innerHTML = firstPart;
-      descriptionText.appendChild(button);
-      document.getElementById("descriptionText2").classList.add("hidden");
-      document.getElementById("descriptionText3").classList.add("hidden");
+  //     button.textContent = "";
+  //   } else {
+  //     console.log("testt");
+  //     // Mostrar solo la primera parte con '...' y cambiar el texto del botón a "Read more"
+  //     descriptionText.innerHTML = firstPart;
+  //     descriptionText.appendChild(button);
+  //     document.getElementById("descriptionText2").classList.add("hidden");
+  //     document.getElementById("descriptionText3").classList.add("hidden");
 
-      button.textContent = "   Show more";
-    }
-  }
+  //     button.textContent = "   Show more";
+  //   }
+  // }
   // Añadimos el evento de alternar el texto y el texto del botón al hacer clic
   button.addEventListener("click", toggleText);
 
@@ -644,60 +636,60 @@ function changeButtonText() {
 const mySpan = document.getElementById("africanCountry");
 
 // Configura el MutationObserver
-const observer = new MutationObserver((mutationsList) => {
-  for (const mutation of mutationsList) {
-    // console.log("cambio estado");
-    if (mutation.type === "childList") {
-      const selectedBlock = document.getElementById("blockName");
-      console.log("entra aqui");
+// const observer = new MutationObserver((mutationsList) => {
+//   for (const mutation of mutationsList) {
+//     // console.log("cambio estado");
+//     if (mutation.type === "childList") {
+//       const selectedBlock = document.getElementById("blockName");
+//       console.log("entra aqui");
 
-      // console.log(selectedBlock.textContent);
+//       // console.log(selectedBlock.textContent);
 
-      if (selectedBlock.textContent.trim() == "African countries Overview") {
-        //resetToInitialView();
-      } else {
-      }
-      //simulateCountryClick(svg, filteredGeoJSON, mySpan.textContent);
+//       if (selectedBlock.textContent.trim() == "African countries Overview") {
+//         //resetToInitialView();
+//       } else {
+//       }
+//       //simulateCountryClick(svg, filteredGeoJSON, mySpan.textContent);
 
-      //console.log("El texto del span cambió a:", mySpan);
-      // Aquí puedes agregar cualquier acción adicional
-    }
-  }
-});
+//       //console.log("El texto del span cambió a:", mySpan);
+//       // Aquí puedes agregar cualquier acción adicional
+//     }
+//   }
+// });
 
 // Observa cambios en los hijos del span (como el texto)
-observer.observe(mySpan, { childList: true });
+// observer.observe(mySpan, { childList: true });
 
 // Función para cambiar el texto del span
 
 // Obtén el elemento span
-const mySpan2 = document.getElementById("blockNameTemp");
+// const mySpan2 = document.getElementById("blockNameTemp");
 
 // Configura el MutationObserver
-const observer2 = new MutationObserver((mutationsList) => {
-  for (const mutation of mutationsList) {
-    if (mutation.type === "childList") {
-      const selectedBlock = document.getElementById("blockName");
-      console.log("entra aqui");
-      selectedBlock.innerText = mySpan2.textContent.trim();
+// const observer2 = new MutationObserver((mutationsList) => {
+//   for (const mutation of mutationsList) {
+//     if (mutation.type === "childList") {
+//       const selectedBlock = document.getElementById("blockName");
+//       console.log("entra aqui");
+//       selectedBlock.innerText = mySpan2.textContent.trim();
 
-      if (selectedBlock.textContent.trim() == "African countries overview") {
-        //destroyMap();
-        //filteredGeoJSON = filterAfrica(mergedBiData, numberData); // Filtra África
-        //clearCardContent();
-        //addLegend(svg, colorScale); // Añade la leyenda
-        //removeThirdColumn(); // Oculta la tercera columna
-        resetToInitialView();
-      }
-      simulateCountryClick(svg, filteredGeoJSON, mySpan.textContent);
-      //console.log("El texto del span cambió a:", mySpan);
-      // Aquí puedes agregar cualquier acción adicional
-    }
-  }
-});
+//       if (selectedBlock.textContent.trim() == "African countries overview") {
+//         //destroyMap();
+//         //filteredGeoJSON = filterAfrica(mergedBiData, numberData); // Filtra África
+//         //clearCardContent();
+//         //addLegend(svg, colorScale); // Añade la leyenda
+//         //removeThirdColumn(); // Oculta la tercera columna
+//         resetToInitialView();
+//       }
+//       simulateCountryClick(svg, filteredGeoJSON, mySpan.textContent);
+//       //console.log("El texto del span cambió a:", mySpan);
+//       // Aquí puedes agregar cualquier acción adicional
+//     }
+//   }
+// });
 
 // Observa cambios en los hijos del span (como el texto)
-observer2.observe(mySpan2, { childList: true });
+//observer2.observe(mySpan2, { childList: true });
 
 // Función para cambiar el texto del span - with null check
 const buttonChangeElement = document.querySelector(".buttonChange");
