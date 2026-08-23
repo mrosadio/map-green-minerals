@@ -42,7 +42,7 @@ import {
 import { showThirdColumn, removeThirdColumn } from "./modules/layout.js";
 import { showPickerBilateral, showPickerMultilateral, showPickerAfrica } from "./modules/picker.js";
 //import { initAboutModal } from "./modules/about.js";
-const euGeojsonPath = `${themeUrl}/db/eu.geojson`;
+const euGeojsonPath = `./db/eu.geojson`;
 
 let partnerMap = {};
 let multilateralMap = {};
@@ -351,56 +351,56 @@ document.querySelectorAll("a.list-group-item").forEach((link) => {
 });
 
 // Al hacer clic en "Bilateral partnerships", simulamos el clic en el primer botón de la lista "EU"
-document
-  .querySelector('.accordion-button2[data-bs-target="#flush-collapseOne"]')
-  .addEventListener("click", function () {
-    const divElement = document.querySelector(".tooltip2");
-    // Comprobar si existe el elemento antes de modificar el estilo
-    if (divElement) {
-      divElement.style.display = "none";
-    }
-    if (/Mobi|Android/i.test(navigator.userAgent)) {
-      // El usuario está en un dispositivo móvil
-      showPickerBilateral();
-      this.scrollIntoView({ behavior: "smooth", block: "start" });
+// document
+//   .querySelector('.accordion-button2[data-bs-target="#flush-collapseOne"]')
+//   .addEventListener("click", function () {
+//     const divElement = document.querySelector(".tooltip2");
+//     // Comprobar si existe el elemento antes de modificar el estilo
+//     if (divElement) {
+//       divElement.style.display = "none";
+//     }
+//     if (/Mobi|Android/i.test(navigator.userAgent)) {
+//       // El usuario está en un dispositivo móvil
+//       showPickerBilateral();
+//       this.scrollIntoView({ behavior: "smooth", block: "start" });
 
-      const selectedText = document.getElementById("blockNameNowTemp");
-      selectedText.innerText = "Bilateral Parnerships";
-    } else {
-      // El usuario está en una web (escritorio o tablet)
-      const firstCountryButton = document.querySelector(".country-select"); // Selecciona el primer botón en la lista de "Bilateral partnerships"
-      if (firstCountryButton) {
-        firstCountryButton.classList.add("activeDetail");
-        firstCountryButton.click(); // Simula un clic en ese botón
-      }
-    }
-  });
+//       const selectedText = document.getElementById("blockNameNowTemp");
+//       selectedText.innerText = "Bilateral Parnerships";
+//     } else {
+//       // El usuario está en una web (escritorio o tablet)
+//       const firstCountryButton = document.querySelector(".country-select"); // Selecciona el primer botón en la lista de "Bilateral partnerships"
+//       if (firstCountryButton) {
+//         firstCountryButton.classList.add("activeDetail");
+//         firstCountryButton.click(); // Simula un clic en ese botón
+//       }
+//     }
+//   });
 // zoomToCountry("CHAD")
 
 // Al hacer clic en "Multilateral partnerships", simulamos el clic en el primer botón de la lista "BRICS Geological Platform"
-document
-  .querySelector('.accordion-button2[data-bs-target="#flush-collapseTwo"]')
-  .addEventListener("click", function () {
-    const divElement = document.querySelector(".tooltip2");
-    // Comprobar si existe el elemento antes de modificar el estilo
-    if (divElement) {
-      divElement.style.display = "none";
-    }
-    if (/Mobi|Android/i.test(navigator.userAgent)) {
-      // El usuario está en un dispositivo móvil
+// document
+//   .querySelector('.accordion-button2[data-bs-target="#flush-collapseTwo"]')
+//   .addEventListener("click", function () {
+//     const divElement = document.querySelector(".tooltip2");
+//     // Comprobar si existe el elemento antes de modificar el estilo
+//     if (divElement) {
+//       divElement.style.display = "none";
+//     }
+//     if (/Mobi|Android/i.test(navigator.userAgent)) {
+//       // El usuario está en un dispositivo móvil
 
-      showPickerMultilateral();
-      const selectedText = document.getElementById("blockNameNowTemp");
-      blockNameNowTemp.innerText = "Multilateral Parnerships";
-      this.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else {
-      const firstBlocButton = document.querySelector(".bloc-select"); // Selecciona el primer botón en la lista de "Multilateral partnerships"
-      if (firstBlocButton) {
-        firstBlocButton.classList.add("activeDetail");
-        firstBlocButton.click(); // Simula un clic en ese botón
-      }
-    }
-  });
+//       showPickerMultilateral();
+//       const selectedText = document.getElementById("blockNameNowTemp");
+//       blockNameNowTemp.innerText = "Multilateral Parnerships";
+//       this.scrollIntoView({ behavior: "smooth", block: "start" });
+//     } else {
+//       const firstBlocButton = document.querySelector(".bloc-select"); // Selecciona el primer botón en la lista de "Multilateral partnerships"
+//       if (firstBlocButton) {
+//         firstBlocButton.classList.add("activeDetail");
+//         firstBlocButton.click(); // Simula un clic en ese botón
+//       }
+//     }
+//   });
 
 const buttons2 = document.querySelectorAll(".list-group-item");
 
