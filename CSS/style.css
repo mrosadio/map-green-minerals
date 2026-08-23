@@ -261,12 +261,12 @@ h2.accordion-header.partner-header {
     font-size: 16pt;
     font-family: var(--vr-font-primary);
 }
-.list-partners {
+/* .list-partners {
     .list-group-item {
         font-size: 30pt;
         font-family: var(--vr-font-primary);
     }
-}
+} */
 .card.partnership {
     display: flex;
     border: 1px solid lightgray;
@@ -315,11 +315,11 @@ h2.accordion-header.partner-header {
     border: black solid 0.5px;
     padding: 0.75rem 0.75rem;
 }
-.list-group-item {
+/* .list-group-item {
     border: none;
     cursor: pointer;
     margin: 2px 2px;
-}
+} */
 .col-3 .info-partner {
     display: none;
     border: black solid 1px;
@@ -435,51 +435,39 @@ h2.accordion-header.partner-header {
     margin-right: 4rem;
     margin-bottom: 1rem;
 }
-.list-group-item.bloc-select {
+/* .list-group-item.bloc-select {
     color: #757575;
-    /* Color original de texto */
     text-decoration: none;
-    /* Sin subrayado por defecto */
     transition: color 0.3s, text-decoration-color 0.3s;
     padding-left: 0px;
     margin-top: 0px;
     padding-top: 0px;
     font-size: 10pt;
-}
+} */
 .africantriangle {
     display: none;
 }
-.list-group-item.bloc-select:hover {
+/* .list-group-item.bloc-select:hover {
     color: #fcc12c;
-    /* Cambia el color del texto a rojo */
     text-decoration: underline;
-    /* Agrega subrayado */
     text-decoration-color: #fcc12c;
-    /* Subrayado en rojo */
     text-underline-offset: 4px;
-    /* Ajusta la distancia del subrayado */
-}
-.list-group-item.country-select {
+} */
+/* .list-group-item.country-select {
     color: #757575;
-    /* Color original de texto */
     text-decoration: none;
-    /* Sin subrayado por defecto */
     transition: color 0.3s, text-decoration-color 0.3s;
     padding-left: 0px;
     padding-top: 0px;
     margin: 0px;
     font-size: 10pt;
-}
-.list-group-item.country-select:hover {
+} */
+/* .list-group-item.country-select:hover {
     color: #fcc12c;
-    /* Cambia el color del texto a rojo */
     text-decoration: underline;
-    /* Agrega subrayado */
     text-decoration-color: r#fcc12ced;
-    /* Subrayado en rojo */
     text-underline-offset: 10px;
-    /* Ajusta la distancia del subrayado */
-}
+} */
 .line {
     width: 100%;
     /* Hace que la línea ocupe el ancho completo de las opciones */
@@ -762,16 +750,12 @@ h2.accordion-header.partner-header {
 .accordion-button2[aria-expanded="false"] .triangle-icon {
     transform: rotate(0deg);
 }
-.list-group-item:focus, .list-group-item.activeDetail {
+/* .list-group-item:focus, .list-group-item.activeDetail {
     color: #fcc12c;
-    /* Cambia el color del texto a rojo */
     text-decoration: underline;
-    /* Agrega subrayado */
     text-decoration-color: #fcc12c;
-    /* Subrayado en rojo */
     text-underline-offset: 4px;
-    /* Ajusta la distancia del subrayado */
-}
+} */
 /* Estilos para los íconos SVG */
 
 img.zoom-active {

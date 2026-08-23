@@ -79,28 +79,57 @@
         <div class="d-flex align-items-center me-md-3 fw-bold flex-column flex-md-row fs-7">
           <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#aboutModal">About</button>
 
-          <button type="button" class="btn btn-secondary">Overview</button>
+          <button type="button" id="africaButton" class="btn btn-secondary">Overview</button>
           <div class="btn-group">
             <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Bilateral <br />
               relationships
             </button>
             <div class="dropdown-menu">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Separated link</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Austria</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Belarus</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Brazil</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Canada</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Chile</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">China</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Cuba</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">East Timor</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">European Union</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">France</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Germany</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">India</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Indonesia</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Iran</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Italy</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Japan</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Netherlands</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Poland</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Portugal</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Qatar</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Russia</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Saudi Arabia</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Spain</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">South Korea</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Turkey</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">United Arab Emirates</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">United Kingdom</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">United States</a>
+              <a href="#" class="dropdown-item country-select" type="button" data-toggle="button" aria-pressed="false">Venezuela</a>
             </div>
           </div>
           <div class="btn-group">
             <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Multilateral <br />relationships</button>
             <div class="dropdown-menu">
               <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Separated link</a>
+              <a href="#" class="dropdown-item bloc-select" type="button">BRICS Geological Platform</a>
+              <a href="#" class="dropdown-item bloc-select" type="button">Minerals Security Partnership</a>
+              <a href="#" class="dropdown-item bloc-select" type="button">Energy Resource Governance Initiative</a>
+              <a href="#" class="dropdown-item bloc-select" type="button">Indo-Pacific Economic Framework for Prosperity (IPEF) Critical Minerals Dialogue</a>
+              <a href="#" class="dropdown-item bloc-select" type="button">Sustainable Critical Mineral Alliance</a>
+              <a href="#" class="dropdown-item bloc-select" type="button">Conference on Critical Materials and Minerals</a>
+              <a href="#" class="dropdown-item bloc-select" type="button">France-Germany-Italy Joint Communique on Critical Raw Materials</a>
+              <a href="#" class="dropdown-item bloc-select" type="button">Critical Minerals Mapping Initiative</a>
+              <a href="#" class="dropdown-item bloc-select" type="button">Lobito Corridor Project</a>
             </div>
           </div>
         </div>
@@ -126,139 +155,135 @@
           <div class="picker-footer"></div>
         </div>
       </div>
-        <div id="printable" class="allview">
-          <div class="first-col d-flex justify-content-end selectores col-4">
-            <div class="accordion accordion-flush" id="accordionFlushExample">
-              <div class="accordion-item divAfrican">
-                <h2 class="accordion-header partner-header" id="flush-headingZero">
-                  <button id="africaButton" class="accordion-button2 main-select active" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseZero" aria-expanded="false" aria-controls="flush-collapseZero">
-                    African countries overview
-                    <!-- <img class="triangle-icon africantriangle" src="https://afripoli.org/projects/crm-mapping/theme/CRM-Updated-V3/img/icons/arrowD.svg" alt="Toggle arrow" /> -->
-                  </button>
-                </h2>
-                <div id="flush-collapseZero" class="accordion-collapse collapse" aria-labelledby="flush-headingZero" data-bs-parent="#accordionFlushExample">
-                  <div class="accordion-bilateral"></div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header partner-header" id="flush-headingOne">
-                  <button class="accordion-button2" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" id="clickable">Bilateral partnerships</button>
-                </h2>
-                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                  <div class="accordion-body accordion-bilateral custom-scroll-accordion">
-                    <div class="list-group list-group-flush list-partners">
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Austria</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Belarus</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Brazil</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Canada</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Chile</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">China</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Cuba</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">East Timor</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">European Union</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">France</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Germany</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">India</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Indonesia</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Iran</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Italy</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Japan</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Netherlands</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Poland</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Portugal</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Qatar</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Russia</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Saudi Arabia</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Spain</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">South Korea</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Turkey</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">United Arab Emirates</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">United Kingdom</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">United States</a>
-                      <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Venezuela</a>
-                    </div>
-                  </div>
-                  <div class="line"></div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header partner-header" id="flush-headingTwo">
-                  <button class="accordion-button2" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" id="multilateral">
-                    Multilateral partnerships
-                    <!-- <img class="triangle-icon" src="https://afripoli.org/projects/crm-mapping/theme/CRM-Updated-V3/img/icons/arrowD.svg" alt="Toggle arrow" /> -->
-                  </button>
-                </h2>
-                <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                  <div class="accordion-body accordion-multilateral">
-                    <div class="list-group list-group-flush list-partners">
-                      <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">BRICS Geological Platform</a>
-                      <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">Minerals Security Partnership</a>
-                      <!-- <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">EU Raw Materials
-              Club</a> -->
-                      <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">Energy Resource Governance Initiative</a>
-                      <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">Indo-Pacific Economic Framework for Prosperity (IPEF) Critical Minerals Dialogue</a>
-                      <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">Sustainable Critical Mineral Alliance</a>
-                      <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">Conference on Critical Materials and Minerals</a>
-                      <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">France-Germany-Italy Joint Communique on Critical Raw Materials</a>
-                      <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">Critical Minerals Mapping Initiative</a>
-                      <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">Lobito Corridor Project</a>
-                    </div>
-                  </div>
-                  <div class="line"></div>
-                  <!-- Línea roja añadida -->
-                </div>
-              </div>
-            </div>
-            <div class="nameMobile">
-              <div>
-                <h2 class="titleButton" id="blockName">African countries overview</h2>
-              </div>
-            </div>
-          </div>
-          <div id="map" class="second-col justify-content-center align-center center">
-            <div class="overlay" id="showScrollable">
-              <div class="overlay-text">
-                <!-- <img class="hand" src="https://afripoli.org/projects/crm-mapping/theme/CRM-Updated-V3/img/icons/hand-touch.svg" alt="Zoom In" /> -->
-                <h1 class="titleBlur">Touch the screen</h1>
-                <h2 class="subtitleBlur">to start exploring the map</h2>
-              </div>
-            </div>
-            <!-- <script type="modules" src="./main.js"></script> -->
-            <div class="controls">
-              <!-- Controles aquí -->
-              <div class="control-toggle">
-                <h1 class="label">Show country names</h1>
-                <div class="toggle-container" id="toggleLabels">
-                  <div class="toggle-button active"></div>
-                </div>
-              </div>
-              <div class="btnZoom">
-                <button id="zoomIn" class="btn btnplus">
-                  <!-- <img src="https://afripoli.org/projects/crm-mapping/theme/CRM-Updated-V3/img/icons/zoom-off.svg" alt="Zoom In" /> -->
+      <div id="printable" class="allview">
+        <!-- <div class="first-col d-flex justify-content-end selectores col-4">
+          <div class="accordion accordion-flush" id="accordionFlushExample">
+            <div class="accordion-item divAfrican">
+              <h2 class="accordion-header partner-header" id="flush-headingZero">
+                <button id="africaButton" class="accordion-button2 main-select active" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseZero" aria-expanded="false" aria-controls="flush-collapseZero">
+                  African countries overview
+                  <img class="triangle-icon africantriangle" src="https://afripoli.org/projects/crm-mapping/theme/CRM-Updated-V3/img/icons/arrowD.svg" alt="Toggle arrow" /> 
                 </button>
-                <button id="zoomOut" class="btn btnminus">
-                  <!-- <img src="https://afripoli.org/projects/crm-mapping/theme/CRM-Updated-V3/img/icons/zoom-out-off.svg" alt="Zoom Out" /> -->
+              </h2>
+              <div id="flush-collapseZero" class="accordion-collapse collapse" aria-labelledby="flush-headingZero" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-bilateral"></div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header partner-header" id="flush-headingOne">
+                <button class="accordion-button2" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" id="clickable">Bilateral partnerships</button>
+              </h2>
+              <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body accordion-bilateral custom-scroll-accordion">
+                  <div class="list-group list-group-flush list-partners">
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Austria</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Belarus</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Brazil</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Canada</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Chile</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">China</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Cuba</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">East Timor</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">European Union</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">France</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Germany</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">India</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Indonesia</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Iran</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Italy</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Japan</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Netherlands</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Poland</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Portugal</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Qatar</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Russia</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Saudi Arabia</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Spain</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">South Korea</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Turkey</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">United Arab Emirates</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">United Kingdom</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">United States</a>
+                    <a href="#" class="list-group-item btn-outline-dark country-select" type="button" data-toggle="button" aria-pressed="false">Venezuela</a>
+                  </div>
+                </div>
+                <div class="line"></div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header partner-header" id="flush-headingTwo">
+                <button class="accordion-button2" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" id="multilateral">
+                  Multilateral partnerships
+                  <img class="triangle-icon" src="https://afripoli.org/projects/crm-mapping/theme/CRM-Updated-V3/img/icons/arrowD.svg" alt="Toggle arrow" />
                 </button>
+              </h2>
+              <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body accordion-multilateral">
+                  <div class="list-group list-group-flush list-partners">
+                    <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">BRICS Geological Platform</a>
+                    <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">Minerals Security Partnership</a>
+                    <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">Energy Resource Governance Initiative</a>
+                    <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">Indo-Pacific Economic Framework for Prosperity (IPEF) Critical Minerals Dialogue</a>
+                    <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">Sustainable Critical Mineral Alliance</a>
+                    <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">Conference on Critical Materials and Minerals</a>
+                    <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">France-Germany-Italy Joint Communique on Critical Raw Materials</a>
+                    <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">Critical Minerals Mapping Initiative</a>
+                    <a href="#" class="list-group-item btn-outline-dark bloc-select" type="button">Lobito Corridor Project</a>
+                  </div>
+                </div>
+                <div class="line"></div>
               </div>
             </div>
           </div>
-          <div class="instruccions">
-            <div style="flex-grow: 1">Explore state-level agreements regarding access to Africa's critical minerals. Select a country on the map or a non-African partner to view specific agreements.</div>
+          <div class="nameMobile">
+            <div>
+              <h2 class="titleButton" id="blockName">African countries overview</h2>
+            </div>
           </div>
-          <div class="right">
-            <div class="third-col">
-              <div class="card partnership"></div>
+        </div> -->
+        <div id="map" class="second-col justify-content-center align-center center">
+          <div class="overlay" id="showScrollable">
+            <div class="overlay-text">
+              <!-- <img class="hand" src="https://afripoli.org/projects/crm-mapping/theme/CRM-Updated-V3/img/icons/hand-touch.svg" alt="Zoom In" /> -->
+              <h1 class="titleBlur">Touch the screen</h1>
+              <h2 class="subtitleBlur">to start exploring the map</h2>
+            </div>
+          </div>
+          <!-- <script type="modules" src="./main.js"></script> -->
+          <div class="controls">
+            <!-- Controles aquí -->
+            <div class="control-toggle">
+              <h1 class="label">Show country names</h1>
+              <div class="toggle-container" id="toggleLabels">
+                <div class="toggle-button active"></div>
+              </div>
+            </div>
+            <div class="btnZoom">
+              <button id="zoomIn" class="btn btnplus">
+                <!-- <img src="https://afripoli.org/projects/crm-mapping/theme/CRM-Updated-V3/img/icons/zoom-off.svg" alt="Zoom In" /> -->
+              </button>
+              <button id="zoomOut" class="btn btnminus">
+                <!-- <img src="https://afripoli.org/projects/crm-mapping/theme/CRM-Updated-V3/img/icons/zoom-out-off.svg" alt="Zoom Out" /> -->
+              </button>
             </div>
           </div>
         </div>
-        <div class="lastUpdate">
-          <span> Last update: 22.06.2026 </span>
+        <div class="instruccions">
+          <div style="flex-grow: 1">Explore state-level agreements regarding access to Africa's critical minerals. Select a country on the map or a non-African partner to view specific agreements.</div>
         </div>
-      
+        <div class="right">
+          <div class="third-col">
+            <div class="card partnership"></div>
+          </div>
+        </div>
+      </div>
+      <div class="lastUpdate">
+        <span> Last update: 22.06.2026 </span>
+      </div>
     </div>
     <!-- <script>
 window.VrConfig = window.VrConfig || {};
 </script> -->
-<script type="module" src="./main.js"></script>
+    <script type="module" src="./main.js"></script>
   </body>
 </html>
