@@ -14,7 +14,6 @@ export function addLegend(svg, colorScale) {
         .style("height", "12px");
   });
   labelRow.append("span").text("1").style("font-size", "11px").style("color", "#5F5E5A");
-
   labelRow.append("span").text("6+").style("font-size", "11px").style("color", "#5F5E5A");
 }
 export function showLegend() {

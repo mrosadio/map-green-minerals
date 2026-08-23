@@ -66,10 +66,16 @@ function zoomed(event) {
 //aumentar un parametro para identificar el pais y con ello hacer el zoom mas personalizado para cada uno
 export function drawMap(geojson, filteredCountryGeoJSON, partner) {
   banderaBoton = true;
-  // Establecer el viewBox inicial
-  svg.attr("viewBox", `-100 0 1000 600`);
+  //svg.attr("viewBox", `-100 0 1000 600`);
+  // In your draw function, read actual dimensions:
+const mapEl = document.querySelector("#map");
+const W = mapEl.clientWidth;
+const H = mapEl.clientHeight;
 
-  // Crear un grupo <g> para contener los paths
+svg
+  .attr("viewBox", `0 0 ${W} ${H}`)
+  .attr("width", "100%")
+  .attr("height", "100%");
   g = svg.append("g");
 
   // Eliminar los caminos existentes (opcional, si deseas eliminar los anteriores)
@@ -77,18 +83,16 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
   const filteredCountryNames = new Set(
       filteredCountryGeoJSON.features.map((d) => d.properties.name) 
   );
-  // Agregar los caminos de GeoJSON dentro del grupo <g>
   const paths = g
     .selectAll("path")
     .data(geojson.features)
     .enter()
     .append("path")
-    .attr("d", path) // Aquí asumo que tienes una variable 'path' definida previamente
+    .attr("d", path) 
     .attr("fill", "#d3d3d3")
     .attr("stroke", "white")
     .attr("stroke-width", 0.5)
     .on("click", function (event, d) {
-      // Comprobar si el país está en la lista de países filtrados
       if (filteredCountryNames.has(d.properties.name)) {
         clicked(event, d); // Solo llamar al método clicked si está en los países filtrados
       }

@@ -2,7 +2,8 @@ import {
   loadAndMergeData,
   mergeMulti,
   createBlocGeoJSON,
-  filterAfrica,
+  // filterAfrica,
+  mergeWorldWithPartnerData,
   filterCountriesByPartner,
   filterEUandPartners,
 } from "./modules/dataUtils.js";
@@ -70,7 +71,7 @@ const tooltip = d3
 function resetToInitialView() {
   console.log('reseting in main.js')
   destroyMap();
-  filteredGeoJSON = filterAfrica(mergedBiData, numberData); // Filtra África
+  filteredGeoJSON = mergeWorldWithPartnerData(mergedBiData, numberData); // Filtra África
   drawMapWithPartnerColors(svg, path, filteredGeoJSON, numberData); // Dibuja el mapa inicial
   clearCardContent();
   addLegend(svg, colorScale); // Añade la leyenda
@@ -129,7 +130,7 @@ Promise.all([
       numberData = bilateralData.nojsonData;
       const multiGeoData = multiData.geojsonMultiData;
       const multiJsonData = multiData.multiJsonData;
-
+      console.log('multi geojson content showing', multiGeoData)
       mergedBiData.features.forEach((feature) => {
         const country = feature.properties.name;
         if (feature.properties.partners) {

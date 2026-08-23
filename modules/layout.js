@@ -1,24 +1,25 @@
 export function removeThirdColumn() {
-    //let secondColumn = document.getElementById('map');
-    // thirdColumn.classList.add('hidden');
-    // secondColumn.classList.add('expanded');
-    let right = document.querySelector('.right');
+  document.querySelector('.right')?.classList.replace('d-flex', 'd-none');
 
-    let thirdColumn = document.querySelector('.third-col');
-    let contenido = document.querySelector('.card.partnership');
-    contenido.classList.remove('expanded');
+    // let right = document.querySelector('.right');
 
-    right.classList.remove('bilateral');
+    // let thirdColumn = document.querySelector('.third-col');
+    // let contenido = document.querySelector('.card.partnership');
+    // contenido.classList.remove('expanded');
 
-    thirdColumn.classList.remove('nuevo');
+    // right.classList.remove('bilateral');
+
+    // thirdColumn.classList.remove('nuevo');
 }
 
 export function showThirdColumn() {
+  document.querySelector('.right')?.classList.replace('d-none', 'd-flex');
+  document.querySelector('.third-col').classList.add('col-3');
 
-    let thirdColumn = document.querySelector('.third-col');
-    let right = document.querySelector('.right');
-    let contenido = document.querySelector('.card.partnership');
-    contenido.classList.add('expanded');
-    right.classList.add('bilateral');
-    thirdColumn.classList.add('nuevo');
+    // let thirdColumn = document.querySelector('.third-col');
+    // let right = document.querySelector('.right');
+    // let contenido = document.querySelector('.card.partnership');
+    // contenido.classList.add('expanded');
+    // right.classList.add('bilateral');
+    // thirdColumn.classList.add('nuevo');
 }

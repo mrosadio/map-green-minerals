@@ -227,34 +227,59 @@ export async function createBlocGeoJSON(
     return null;
   }
 }
-
-export function filterAfrica(geojsonData, partnersNoData) {
-  // console.log(geojsonData);
-
-  // console.log(partnersNoData);
-  const africanCountries = partnersNoData.map(
-    (countryData) => countryData.africanCountry
+export function mergeWorldWithPartnerData(geojsonData, partnersNoData) {
+  // Build a lookup map for fast access: countryName → partnerCount
+  const partnerLookup = new Map(
+    partnersNoData.map((d) => [d.africanCountry, d])
   );
-  //console.log(africanCountries); // lista de todos los paises a marcar, si sale Guinea Bisseau
 
-  const filteredFeatures = geojsonData.features.filter((feature) => {
+  // Keep ALL world features, but attach partnership data where it exists
+  const mergedFeatures = geojsonData.features.map((feature) => {
     const countryName = feature.properties.name;
-    //   console.log(countryName);
+    const partnerData = partnerLookup.get(countryName);
 
-    if (countryName == "Algeria") {
-      // console.log("esta");
-      //console.log(countryName);
-      //console.log(africanCountries.includes(countryName));
-    } else {
-      //console.log( "no esta" + countryName)
-    }
-
-    return africanCountries.includes(countryName);
+    return {
+      ...feature,
+      properties: {
+        ...feature.properties,
+        // If this is an African partner country, attach the data
+        // Otherwise partnerCount stays undefined → colored as default grey
+        partnerCount: partnerData ? partnerData.partnerCount : null,
+        isAfricanPartner: !!partnerData,
+      },
+    };
   });
-  // console.log(filteredFeatures);
 
-  return { ...geojsonData, features: filteredFeatures };
+  return { ...geojsonData, features: mergedFeatures };
 }
+
+// export function filterAfrica(geojsonData, partnersNoData) {
+//   // console.log(geojsonData);
+
+//   // console.log(partnersNoData);
+//   const africanCountries = partnersNoData.map(
+//     (countryData) => countryData.africanCountry
+//   );
+//   //console.log(africanCountries); // lista de todos los paises a marcar, si sale Guinea Bisseau
+
+//   const filteredFeatures = geojsonData.features.filter((feature) => {
+//     const countryName = feature.properties.name;
+//     //   console.log(countryName);
+
+//     if (countryName == "Algeria") {
+//       // console.log("esta");
+//       //console.log(countryName);
+//       //console.log(africanCountries.includes(countryName));
+//     } else {
+//       //console.log( "no esta" + countryName)
+//     }
+
+//     return africanCountries.includes(countryName);
+//   });
+//   // console.log(filteredFeatures);
+
+//   return { ...geojsonData, features: filteredFeatures };
+// }
 
 export function filterCountriesByPartner(mergedBiData, selectedCountry) {
   console.log('Merged Bi data in filterCountriesByPartner', mergedBiData)

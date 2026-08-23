@@ -1,6 +1,15 @@
 // Set up dimensions and projection
-const width = 900;
-const height = 600;
+// In your draw function, read actual dimensions:
+// const mapEl = document.querySelector("#map");
+// const width = mapEl.clientWidth;
+// const height = mapEl.clientHeight;
+
+// svg
+//   .attr("viewBox", `0 0 ${W} ${H}`)
+//   .attr("width", "100%")
+//   .attr("height", "100%");
+const width = 1200;
+const height = 1000;
 // Use the theme URL from the global variable set in template.php
 const themeUrl = window.THEME_URL || ".";
 const geojsonUrl =
@@ -16,7 +25,7 @@ const legendMargin = { top: 20, right: 20, bottom: 40, left: 10 };
 let svg = d3
   .select("#map")
   .append("svg")
-  .attr("viewBox", `100 0 ${width} ${height}`)
+  .attr("viewBox", `-100 0 ${width} ${height}`)
   .attr("preserveAspectRatio", "xMidYMid meet")
   .attr("height", "100%") // Altura fija
   .attr("width", "100%"); // Altura fija
