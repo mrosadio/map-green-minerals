@@ -123,13 +123,13 @@ Promise.all([
         .scaleQuantize()
         .domain([0, d3.max(numberData, (d) => d.partnersNo)])
         .range([
-          "#F2F2F2", //0
-          "#FEE2A4", //1
-          "#FCCA7B", //2
-          "#FCC12C", //3
-          "#EA9B0F", //4
-          "#D68F01", //5
-          "#9E6604", //6
+          "#F0EDEA",  // 0 — warm grey, clearly neutral
+    "#F5DFB8",  // 1 — pale sand
+    "#F0C97A",  // 2
+    "#E8B044",  // 3
+    "#D4891A",  // 4
+    "#B86C0A",  // 5
+    "#8C4D00"
         ]);
 
       resetToInitialView();
@@ -178,13 +178,13 @@ Promise.all([
       document.querySelectorAll(".bloc-select").forEach((item) => {
         item.addEventListener("click", function () {
           showThirdColumn();
-          handleSelection("multilateral", item.textContent);
+          //handleSelection("multilateral", item.textContent);
           const selectedBloc = this.textContent.trim();
           const selectedColor = blocColors[selectedBloc] || "#ccc";
           createBlocGeoJSON(geojsonUrl, multiJsonFilePath, selectedBloc, euGeojsonPath)
             .then((filteredGeoJSON) => {
-              deleteCountryLabels(filteredGeoJSON);
-              destroyMap();
+              //deleteCountryLabels(filteredGeoJSON);
+              //destroyMap();
               
               // Merge filteredGeoJSON features with mergedBiData to include EU feature
               const mergedMapData = {

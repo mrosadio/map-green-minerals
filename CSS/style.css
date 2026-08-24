@@ -397,6 +397,19 @@ h2.accordion-header.partner-header {
   height: 100% !important;
   /* Expanded width for the second column when the third is hidden */
 }
+.tooltip2 {
+  position: absolute;
+  background: white;
+  border: 0.5px solid #D3D1C7;
+  border-radius: 4px;
+  padding: 10px 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  display: none;
+  pointer-events: none;
+  max-width: 180px;
+  font-size: 9pt;
+  z-index: 100;
+}
 .card-title.tooltip-title {
   color: #fff;
 }
