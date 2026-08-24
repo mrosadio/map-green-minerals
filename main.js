@@ -8,15 +8,16 @@ import {
   filterEUandPartners,
 } from "./modules/dataUtils.js";
 import {
-  path,
+  // path,
   drawMap,
   drawMapWithPartnerColors,
-  destroyMap,
+  //destroyMap,
   handleSelection,
   addCountryLabels,
   deleteCountryLabels,
   zoomIn,
   zoomOut,
+  fitSizeMap,
   simulateCountryClick,
 } from "./modules/mapUtils.js";
 import {
@@ -70,9 +71,10 @@ const tooltip = d3
 
 function resetToInitialView() {
   console.log('reseting in main.js')
-  destroyMap();
+  //destroyMap();
   filteredGeoJSON = mergeWorldWithPartnerData(mergedBiData, numberData); // Filtra África
-  drawMapWithPartnerColors(svg, path, filteredGeoJSON, numberData); // Dibuja el mapa inicial
+  fitSizeMap(filteredGeoJSON)
+  drawMapWithPartnerColors(svg, /*path,*/ filteredGeoJSON, numberData); // Dibuja el mapa inicial
   clearCardContent();
   addLegend(svg, colorScale); // Añade la leyenda
   removeThirdColumn(); // Oculta la tercera columna

@@ -1,12 +1,40 @@
-import { width, height, svg, themeUrl } from "./globals.js";
+import { width, height, /*svg,*/ themeUrl } from "./globals.js";
 
-let projection = d3
-  .geoMercator()
-  .scale(400)
-  .translate([width / 2, height / 2]);
-let path = d3.geoPath().projection(projection);
-let zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
+// -- SVG setup --
+// Created once at module load time
+const mapEl = document.querySelector("#map");
+const W = mapEl?.clientWidth || 800;
+const H = mapEl?.clientHeight || 500;
+
+// let svg = d3
+//   .select("#map")
+//   .append("svg")
+//   //.attr("viewBox", `0 0 ${W} ${H}`)
+//   .attr("preserveAspectRatio", "xMidYMid meet")
+//   .attr("height", "100%")
+//   .attr("width", "100%");
+
+// projection and path are module-level so updateProjection() can reassign them
+// and addCountryLabels() can read the current path for centroid calculations.
+export function fitSizeMap(filteredGeoJson) {
+  let projection = d3
+  .geoEqualEarth()
+  .fitSize([W, H], filteredGeoJson);
+  let path = d3.geoPath().projection(projection);
+
+  return path;
+}
+// let projection = d3
+//   .geoEqualEarth()
+//   .fitSize([W, H]);
+//let path = d3.geoPath().projection(projection);
 let g;
+// let projection = d3
+//   .geoMercator()
+//   .scale(400)
+//   .translate([width / 2, height / 2]);
+//let path = d3.geoPath().projection(projection);
+let zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
 let banderaClick = false;
 let banderaBoton = false;
 let zoomEndTimeout;
@@ -21,24 +49,18 @@ function zoomed(event) {
 
   // Ocultar el tooltip inmediatamente al comenzar el movimiento del zoom
   const tooltip = d3.select(".tooltip2");
-  tooltip.style("display", "none").style("pointer-events", "none"); 
+  tooltip.style("display", "none").style("pointer-events", "none");
   console.log(banderaClick);
   const isMobile = /Mobi|Android/i.test(navigator.userAgent);
   if (isMobile) {
     // Mostrar nombres de países si el zoom es 3 o más
     if (transform.k >= 2) {
-      d3.selectAll(".city-label")
-        .transition()
-        .duration(300)
-        .style("opacity", 1); // Hacer visibles las etiquetas
-    /*  if (banderaClick) {
+      d3.selectAll(".city-label").transition().duration(300).style("opacity", 1); // Hacer visibles las etiquetas
+      /*  if (banderaClick) {
         banderaClick = false;
       }*/
     } else {
-      d3.selectAll(".city-label")
-        .transition()
-        .duration(300)
-        .style("opacity", 0); // Ocultar las etiquetas
+      d3.selectAll(".city-label").transition().duration(300).style("opacity", 0); // Ocultar las etiquetas
     }
   } else {
     setTimeout(() => {
@@ -68,27 +90,37 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
   banderaBoton = true;
   //svg.attr("viewBox", `-100 0 1000 600`);
   // In your draw function, read actual dimensions:
-const mapEl = document.querySelector("#map");
-const W = mapEl.clientWidth;
-const H = mapEl.clientHeight;
 
-svg
-  .attr("viewBox", `0 0 ${W} ${H}`)
-  .attr("width", "100%")
-  .attr("height", "100%");
+  const mapEl = document.querySelector("#map");
+  svg.attr("viewBox", getViewBox(mapEl));
+  console.log("console svg", mapEl.clientWidth);
+  svg.selectAll("path").remove();
+  svg.selectAll("text").remove();
+  //g = svg.append("g");
+  const W = mapEl?.clientWidth;
+  const H = mapEl?.clientHeight;
+  // Update projection to match new dimensions
+  let projection = d3
+    .geoMercator()
+    .scale(400)
+    .translate([W / 2, H / 2]);
+  let path = d3.geoPath().projection(projection);
+
+  //svg.attr("viewBox", `0 0 ${W} ${H}`);
+  projection.scale(400).translate([W / 2, H / 2]);
+  // .attr("width", "100%")
+  // .attr("height", "100%");
   g = svg.append("g");
 
   // Eliminar los caminos existentes (opcional, si deseas eliminar los anteriores)
   svg.selectAll("path").remove();
-  const filteredCountryNames = new Set(
-      filteredCountryGeoJSON.features.map((d) => d.properties.name) 
-  );
+  const filteredCountryNames = new Set(filteredCountryGeoJSON.features.map((d) => d.properties.name));
   const paths = g
     .selectAll("path")
     .data(geojson.features)
     .enter()
     .append("path")
-    .attr("d", path) 
+    .attr("d", path)
     .attr("fill", "#d3d3d3")
     .attr("stroke", "white")
     .attr("stroke-width", 0.5)
@@ -135,10 +167,9 @@ svg
 
     .each(function (d) {
       const countryName = d.properties.name;
-        const displayCountryName =
-          countryName === "EU" ? "European Union" : countryName;
-        const name = displayCountryName.toUpperCase();
-        const wrappedText = wrapText(displayCountryName.toUpperCase(), 15); // Ajusta el número de caracteres por línea
+      const displayCountryName = countryName === "EU" ? "European Union" : countryName;
+      const name = displayCountryName.toUpperCase();
+      const wrappedText = wrapText(displayCountryName.toUpperCase(), 15); // Ajusta el número de caracteres por línea
       // Crear un tspan para cada línea de texto
       const textElement = d3.select(this);
       wrappedText.forEach((line, i) => {
@@ -199,7 +230,7 @@ svg
           }
         } else if (partner == "United Kingdom") {
           if (name == "ENGLAND") {
-          textElement
+            textElement
               .append("tspan")
               .attr("x", path.centroid(d)[0] + 5)
               .attr("y", path.centroid(d)[1] + i * 8 + 0) // Ajusta la separación entre líneas
@@ -209,14 +240,14 @@ svg
               .attr("x", path.centroid(d)[0] + 5)
               .attr("y", path.centroid(d)[1] + i * 8 + 7) // Ajusta la separación entre líneas
               .text(" KINGDOM");
-        } else {
-          textElement
-            .append("tspan")
-            .attr("x", path.centroid(d)[0])
-            .attr("y", path.centroid(d)[1] + i * 8) // Ajusta la separación entre líneas
-            .text(line);
-        }
-      } else if (partner == "Minerals Security Partnership") {
+          } else {
+            textElement
+              .append("tspan")
+              .attr("x", path.centroid(d)[0])
+              .attr("y", path.centroid(d)[1] + i * 8) // Ajusta la separación entre líneas
+              .text(line);
+          }
+        } else if (partner == "Minerals Security Partnership") {
           //Canada. India, Japan, South Korea, Australia
           if (name == "CANADA") {
             textElement
@@ -614,10 +645,7 @@ svg
               .attr("y", path.centroid(d)[1] + i * 8 + 17) // Ajusta la separación entre líneas
               .text("OF AMERICA");
           }
-        } else if (
-          partner ==
-          "France-Germany-Italy Joint Communique on Critical Raw Materials"
-        ) {
+        } else if (partner == "France-Germany-Italy Joint Communique on Critical Raw Materials") {
           if (name == "FRANCE") {
             textElement
               .append("tspan")
@@ -772,10 +800,10 @@ svg
         } else if (partner == "Portugal") {
           if (name == "MOZAMBIQUE") {
             textElement
-            .append("tspan")
-            .attr("x", path.centroid(d)[0] + 13)
-            .attr("y", path.centroid(d)[1] + i * 8 + 0) // Ajusta la separación entre líneas
-            .text(line);
+              .append("tspan")
+              .attr("x", path.centroid(d)[0] + 13)
+              .attr("y", path.centroid(d)[1] + i * 8 + 0) // Ajusta la separación entre líneas
+              .text(line);
           } else {
             textElement
               .append("tspan")
@@ -786,10 +814,10 @@ svg
         } else if (partner == "East Timor") {
           if (name == "MOZAMBIQUE") {
             textElement
-            .append("tspan")
-            .attr("x", path.centroid(d)[0] + 13)
-            .attr("y", path.centroid(d)[1] + i * 8 + 0) // Ajusta la separación entre líneas
-            .text(line);
+              .append("tspan")
+              .attr("x", path.centroid(d)[0] + 13)
+              .attr("y", path.centroid(d)[1] + i * 8 + 0) // Ajusta la separación entre líneas
+              .text(line);
           } else {
             textElement
               .append("tspan")
@@ -797,7 +825,7 @@ svg
               .attr("y", path.centroid(d)[1] + i * 8) // Ajusta la separación entre líneas
               .text(line);
           }
-        } else if (partner == "Canada") { 
+        } else if (partner == "Canada") {
           if (name == "CANADA") {
             textElement
               .append("tspan")
@@ -811,9 +839,7 @@ svg
               .attr("y", path.centroid(d)[1] + i * 8) // Ajusta la separación entre líneas
               .text(line);
           }
-        }
-        
-        else {
+        } else {
           if (name == "ZAMBIA") {
             textElement
               .append("tspan")
@@ -1020,15 +1046,9 @@ svg
     if (isMobile) {
       // Mostrar nombres de países si el zoom es 4
       if (transform.k >= 3) {
-        d3.selectAll(".city-label")
-          .transition()
-          .duration(300)
-          .style("opacity", 1); // Hacer visibles las etiquetas
+        d3.selectAll(".city-label").transition().duration(300).style("opacity", 1); // Hacer visibles las etiquetas
       } else {
-        d3.selectAll(".city-label")
-          .transition()
-          .duration(300)
-          .style("opacity", 0); // Ocultar las etiquetas
+        d3.selectAll(".city-label").transition().duration(300).style("opacity", 0); // Ocultar las etiquetas
       }
     }
   }
@@ -1041,43 +1061,52 @@ svg
       .call(
         zoom.transform,
         d3.zoomIdentity
-          .translate(width / 2, height / 2)
-          .scale(
-            Math.min(
-              8,
-              0.9 / Math.max((x1 - x0) / width / 2, (y1 - y0) / height)
-            ) * 0.7
-          )
+          .translate(W / 2, H / 2)
+          .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / W / 2, (y1 - y0) / H)) * 0.7)
           .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
-        d3.pointer(event, svg.node())
+        d3.pointer(event, svg.node()),
       );
   }
 
   console.log("Paths created for map", paths);
 }
-export function destroyMap() {
-  // Selecciona todo dentro del SVG y lo elimina
-  svg.selectAll("*").remove();
-  //console.log("Map destroyed, all paths and elements removed.");
-}
+// export function destroyMap() {
+//   // Selecciona todo dentro del SVG y lo elimina
+//   svg.selectAll("*").remove();
+//   //console.log("Map destroyed, all paths and elements removed.");
+// }
 let currentZoom = "";
 let isCountryLabelsVisible = false; // Las etiquetas están no visibles por defecto
 
-export function drawMapWithPartnerColors(svg, path, geojsonData, numberData) {
+export function drawMapWithPartnerColors(svg, /*path,*/ geojsonData, numberData) {
   banderaBoton = false;
 
-  svg.selectAll("path").remove();
-  //  svg.attr("viewBox", `150 0 800 600`);
-  //console.log("GeoJSON features:", geojsonData.features);
-  console.log("Number data", numberData);
-  svg.selectAll("*").remove();
+  // svg.selectAll("path").remove();
+  // console.log("Number data", numberData);
+  // svg.selectAll("*").remove();
 
   // Reiniciar la proyección a la configuración inicial (centrada en África)
-  projection = d3
-    .geoMercator()
-    .scale(400) // Escala inicial que se estableció para África
-    .translate([450, 300]);
-  path = d3.geoPath().projection(projection);
+  // projection = d3
+  //   .geoMercator()
+  //   .scale(400) // Escala inicial que se estableció para África
+  //   .translate([450, 300]);
+  // Read actual dimensions at draw time
+
+  const mapEl = document.querySelector("#map");
+  svg.attr("viewBox", getViewBox(mapEl));
+  console.log("console svg", mapEl.clientWidth);
+  svg.selectAll("path").remove();
+  svg.selectAll("text").remove();
+  //g = svg.append("g");
+  const W = mapEl?.clientWidth;
+  const H = mapEl?.clientHeight;
+  // Update projection to match new dimensions
+  let path = fitSizeMap(geojsonData)
+  // let projection = d3
+  //   .geoMercator()
+  //   .scale(400)
+  //   .translate([W / 2, H / 2]);
+  // let path = d3.geoPath().projection(projection);
 
   const zoom2 = d3
     .zoom()
@@ -1093,62 +1122,25 @@ export function drawMapWithPartnerColors(svg, path, geojsonData, numberData) {
     //   .domain([0, d3.max(numberData, (d) => d.partnersNo)])
     .domain([0, 6])
 
-    .range([
-      "#F2F2F2",
-      "#FEE2A4",
-      "#FCCA7B",
-      "#FCC12C",
-      "#EA9B0F",
-      "#D68F01",
-      "#9E6604",
-    ]);
-  const colorScaleShalow = d3
-    .scaleQuantize()
-    .domain([0, 6])
-    .range([
-      "#F2F2F2",
-      "#FFF1D4",
-      "#FCE0B1",
-      "#FDDA84",
-      "#F3C471",
-      "#E2B369",
-      "#BC8C46",
-    ]);
+    .range(["#F2F2F2", "#FEE2A4", "#FCCA7B", "#FCC12C", "#EA9B0F", "#D68F01", "#9E6604"]);
+  const colorScaleShalow = d3.scaleQuantize().domain([0, 6]).range(["#F2F2F2", "#FFF1D4", "#FCE0B1", "#FDDA84", "#F3C471", "#E2B369", "#BC8C46"]);
   const partnerCounts = {};
   numberData.forEach((countryData) => {
     partnerCounts[countryData.africanCountry] = countryData.partnersNo;
   });
   console.log(partnerCounts);
 
-  svg.selectAll("g").remove();
+  //svg.selectAll("g").remove();
 
   g = svg.append("g");
   let tooltip = d3.select(".tooltip2");
 
-  // Si no existe, crearlo; si existe, simplemente actualizar sus estilos
   if (tooltip.empty()) {
     // Si no hay ningún tooltip existente, crear uno nuevo
-    tooltip = d3
-      .select("body")
-      .append("div")
-      .attr("class", "tooltip2")
-      .style("position", "absolute")
-      .style("background-color", "white")
-      .style("border", "1px solid #ccc")
-      .style("border-radius", "4px")
-      .style("padding", "10px")
-      .style("box-shadow", "0 4px 8px rgba(0, 0, 0, 0.2)")
-      .style("display", "none");
+    tooltip = d3.select("body").append("div").attr("class", "tooltip2").style("position", "absolute").style("background-color", "white").style("border", "1px solid #ccc").style("border-radius", "4px").style("padding", "10px").style("box-shadow", "0 4px 8px rgba(0, 0, 0, 0.2)").style("display", "none");
   } else {
     // Si el tooltip ya existe, actualizar sus estilos
-    tooltip
-      .style("position", "absolute")
-      .style("background-color", "white")
-      .style("border", "1px solid #ccc")
-      .style("border-radius", "4px")
-      .style("padding", "10px")
-      .style("box-shadow", "0 4px 8px rgba(0, 0, 0, 0.2)")
-      .style("display", "none");
+    tooltip.style("position", "absolute").style("background-color", "white").style("border", "1px solid #ccc").style("border-radius", "4px").style("padding", "10px").style("box-shadow", "0 4px 8px rgba(0, 0, 0, 0.2)").style("display", "none");
   }
 
   const countries = g
@@ -1171,20 +1163,15 @@ export function drawMapWithPartnerColors(svg, path, geojsonData, numberData) {
     .on("click", clicked)
     .on("mouseover", function (event, d) {
       const countryName = d.properties.name;
-      const countryData = numberData.find(
-        (country) => country.africanCountry === countryName
-      );
+      const countryData = numberData.find((country) => country.africanCountry === countryName);
       const partnerCount = countryData ? countryData.partnersNo : 0;
       if (countryName === "Western Sahara") {
         return; // Skip tooltip for Western Sahara
       }
       if (partnerCount > 0) {
-        const partnersList =
-          countryData && countryData.partners ? countryData.partners : [];
+        const partnersList = countryData && countryData.partners ? countryData.partners : [];
         // console.log(partnersList);
-        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(
-          navigator.userAgent
-        );
+        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
         // Generar el contenido del tooltip
 
@@ -1195,13 +1182,9 @@ export function drawMapWithPartnerColors(svg, path, geojsonData, numberData) {
 			  <h3 style="margin: 0; font-weight: bold; font-size: 13pt">${countryName}</h3>
 			  
 			</div>
-			<p style="margin: 5px 0; margin-top: 8px; font-size: 11pt">${partnerCount} partner${
-          partnerCount !== 1 ? "s" : ""
-        }</p>
+			<p style="margin: 5px 0; margin-top: 8px; font-size: 11pt">${partnerCount} partner${partnerCount !== 1 ? "s" : ""}</p>
 			<ul style="padding: 0; margin: 0; margin-top: 8px; font-size: 11pt;">
-			  ${partnersList
-          .map((partner) => `<p style="padding: 0; margin: 0;">${partner}</p>`)
-          .join("")}
+			  ${partnersList.map((partner) => `<p style="padding: 0; margin: 0;">${partner}</p>`).join("")}
 			</ul>
 		  </div>
 		`);
@@ -1249,15 +1232,11 @@ export function drawMapWithPartnerColors(svg, path, geojsonData, numberData) {
               .attr("height", 20)
               .attr(
                 "x",
-                countryName == "Malawi"
-                  ? path.centroid(d)[0] - 12
-                  : path.centroid(d)[0] - 10 // Valor por defecto si no coincide con ninguna condición
+                countryName == "Malawi" ? path.centroid(d)[0] - 12 : path.centroid(d)[0] - 10, // Valor por defecto si no coincide con ninguna condición
               )
               .attr(
                 "y",
-                countryName == "Malawi"
-                  ? path.centroid(d)[1] - 15
-                  : path.centroid(d)[1] - 20 // Valor por defecto si no coincide con ninguna condición
+                countryName == "Malawi" ? path.centroid(d)[1] - 15 : path.centroid(d)[1] - 20, // Valor por defecto si no coincide con ninguna condición
               )
               .style("pointer-events", "none") // Ignora eventos del mouse
               .style("opacity", 0)
@@ -1273,19 +1252,11 @@ export function drawMapWithPartnerColors(svg, path, geojsonData, numberData) {
               .attr("height", 20)
               .attr(
                 "x",
-                countryName == "Morocco"
-                  ? path.centroid(d)[0] - 0
-                  : countryName == "Zambia"
-                  ? path.centroid(d)[0] - 20
-                  : path.centroid(d)[0] - 10 // Valor por defecto si no coincide con ninguna condición
+                countryName == "Morocco" ? path.centroid(d)[0] - 0 : countryName == "Zambia" ? path.centroid(d)[0] - 20 : path.centroid(d)[0] - 10, // Valor por defecto si no coincide con ninguna condición
               )
               .attr(
                 "y",
-                countryName == "Morocco"
-                  ? path.centroid(d)[1] - 30
-                  : countryName == "Zambia"
-                  ? path.centroid(d)[1] - 10
-                  : path.centroid(d)[1] - 10 // Valor por defecto si no coincide con ninguna condición
+                countryName == "Morocco" ? path.centroid(d)[1] - 30 : countryName == "Zambia" ? path.centroid(d)[1] - 10 : path.centroid(d)[1] - 10, // Valor por defecto si no coincide con ninguna condición
               )
               .style("pointer-events", "none") // Ignora eventos del mouse
               .style("opacity", 0)
@@ -1295,9 +1266,7 @@ export function drawMapWithPartnerColors(svg, path, geojsonData, numberData) {
           }
         }
       } else {
-        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(
-          navigator.userAgent
-        );
+        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         if (!isMobile) {
           tooltip.html(`
 			  <div style="display: flex; flex-direction: column; width: 135px; position: relative;">
@@ -1345,11 +1314,7 @@ export function drawMapWithPartnerColors(svg, path, geojsonData, numberData) {
           .style("opacity", 1);
 
         // Ocultar el ícono
-        g.selectAll(".hover-icon")
-          .transition()
-          .duration(300)
-          .style("opacity", 0)
-          .remove();
+        g.selectAll(".hover-icon").transition().duration(300).style("opacity", 0).remove();
       } else {
         g.selectAll(".city-label")
           .filter((label) => label.properties.name === d.properties.name)
@@ -1357,15 +1322,9 @@ export function drawMapWithPartnerColors(svg, path, geojsonData, numberData) {
           .duration(300)
           .style("opacity", 0);
 
-        g.selectAll(".hover-icon")
-          .transition()
-          .duration(300)
-          .style("opacity", 0)
-          .remove();
+        g.selectAll(".hover-icon").transition().duration(300).style("opacity", 0).remove();
       }
-      const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(
-        navigator.userAgent
-      );
+      const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
       if (isMobile) {
         g.selectAll(".city-label")
           .filter((label) => label.properties.name === d.properties.name)
@@ -1381,8 +1340,7 @@ export function drawMapWithPartnerColors(svg, path, geojsonData, numberData) {
 
       if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
         //console.log("City name on mousemove:", countryName);
-        const userAgent =
-          navigator.userAgent || navigator.vendor || window.opera;
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
         // Calcular las posiciones para centrar el tooltip
         const tooltipWidth = tooltip.node().offsetWidth;
@@ -1588,7 +1546,6 @@ export function drawMapWithPartnerColors(svg, path, geojsonData, numberData) {
     console.log(banderaClick);
 
     if (partnerCount === 0) {
-      // No hacer nada si el país no tiene acuerdos
       console.log(`${countryName} no tiene acuerdos, no se hará zoom.`);
       return;
     }
@@ -1606,25 +1563,35 @@ export function drawMapWithPartnerColors(svg, path, geojsonData, numberData) {
         zoom2.transform,
         d3.zoomIdentity
           .translate(width / 2, height / 2)
-          .scale(
-            Math.min(
-              200,
-              0.9 / Math.max((x1 - x0) / width / 2, (y1 - y0) / height)
-            ) * 1
-          )
+          .scale(Math.min(200, 0.9 / Math.max((x1 - x0) / width / 2, (y1 - y0) / height)) * 1)
           .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
-        d3.pointer(event, svg.node())
+        d3.pointer(event, svg.node()),
       );
   }
 }
-
+function getViewBox(el) {
+  const w = el.clientWidth;
+  const h = el.clientHeight
+  // Phone
+  if (w < 576) {
+    svg.attr("preserveAspectRatio", "xMidYMin meet");
+    return "-200 -225 700 900";
+  }
+  // Laptop
+  if (w < 1024) {
+    svg.attr("preserveAspectRatio", "xMidYMin meet");
+    //return "-150 150 775 1000";
+    return `-150 -25 925 600`;
+  }
+  //viewBox="-250 -125 1150 600"
+  //svg.attr("preserveAspectRatio", "xMidYMin meet");
+  //return `0 0 ${el.clientWidth} ${el.clientHeight}`;
+  // large screens
+  return `0 0 2000 1000`;
+}
 function updateProjection(scale, center, translation) {
   //console.log('PROJECTION in function', projection)
-  projection = d3
-    .geoNaturalEarth1()
-    .scale(scale)
-    .center(center)
-    .translate(translation);
+  projection = d3.geoNaturalEarth1().scale(scale).center(center).translate(translation);
   path = d3.geoPath().projection(projection);
   svg.selectAll("path").attr("d", path);
 }
@@ -1663,9 +1630,7 @@ export function handleSelection(type, item) {
     updateProjection(550, [20, 10], [width / 1.35, height / 1.15]);
   } else if (item == "Indo-Pacific Economic Framework for Prosperity (IPEF) Critical Minerals Dialogue") {
     updateProjection(210, [30, 20], [width / 2, height / 2]);
-  } else if (
-    item == "France-Germany-Italy Joint Communique on Critical Raw Materials"
-  ) {
+  } else if (item == "France-Germany-Italy Joint Communique on Critical Raw Materials") {
     updateProjection(450, [20, 20], [width / 1.5, height / 2]);
   } else if (item == "Lobito Corridor Project") {
     updateProjection(340, [20, 20], [width / 1.2, height / 2]);
@@ -1704,15 +1669,6 @@ export function addCountryLabels() {
   isCountryLabelsVisible = true;
   const textElements = d3.selectAll("text");
   textElements.transition().duration(500).style("opacity", 1); // Show the labels
-
-  /* `
-  if (currentZoom > 2) {
-    d3.selectAll("image").transition().duration(500).style("opacity", 0); // Mostrar los íconos
-    d3.selectAll("text").transition().duration(500).style("opacity", 1); // Ocultar las etiquetas
-  } else {
-    d3.selectAll("text").transition().duration(500).style("opacity", 0); // Mostrar las etiquetas
-    d3.selectAll("image").transition().duration(500).style("opacity", 1); // Ocultar los íconos
-  }*/
 }
 
 // Función para ocultar las etiquetas de los nombres de los países
@@ -1723,16 +1679,11 @@ export function deleteCountryLabels() {
 }
 
 export function simulateCountryClick(svg, geojsonData, countryName) {
-  // Buscar el país correspondiente en los datos GeoJSON
-  const countryFeature = geojsonData.features.find(
-    (feature) => feature.properties.name === countryName
-  );
+  const countryFeature = geojsonData.features.find((feature) => feature.properties.name === countryName);
   if (countryFeature) {
     console.log(countryFeature.properties.name);
     // Seleccionar el elemento <path> correspondiente al país
-    const countryPath = svg
-      .selectAll("path")
-      .filter((d) => d === countryFeature);
+    const countryPath = svg.selectAll("path").filter((d) => d === countryFeature);
 
     console.log(countryPath);
 
@@ -1761,7 +1712,6 @@ export function simulateCountryClick(svg, geojsonData, countryName) {
       let currentTransform = g.attr("transform");
       let translateX = -90; // Valor de traslación en X
       let translateY = 30; // Valor de traslación en Y
-      console.error("Aquiiiiiiiiiiiiii");
 
       if (currentTransform) {
         // Si hay una transformación existente, extraer los valores de traslación
@@ -1795,4 +1745,4 @@ export function zoomIn() {
 export function zoomOut() {
   svg.transition().duration(500).call(zoom.scaleBy, 0.75); // Reduce el nivel de zoom
 }
-export { path };
+//export { path };

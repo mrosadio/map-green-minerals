@@ -14,7 +14,9 @@
     <!-- Bootstrap 5 JS bundle (includes Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://d3js.org/d3.v6.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-geo-projection@4"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" type="text/css" href="./CSS/style.css" />
     <style>
@@ -135,7 +137,7 @@
         </div>
       </div>
     </nav>
-    <div class="container-fluid position-relative g-0 flex-grow-1">
+    <div class="container-fluid position-relative g-0 flex-grow-1 container-map">
       <div class="picker" id="picker" style="display: none">
         <div class="picker-panel">
           <div class="picker-choose">
@@ -156,53 +158,53 @@
         </div>
       </div>
       <!-- <div id="printable" class="allview"> -->
-        <!-- Moving legend to this part -->
-        <div class="position-absolute ms-4" id="legend-container">
-          <div id="legend">
-            <div class="d-flex flex-column p-2 fs-7 legend-title">
-              <!-- Number of partnerships -->
-            </div>
-            <div class="d-flex flex-column legend-keys">
-              <div class="d-flex flex-row g-0 legend-bar-row"></div>
-              <div class="d-flex justify-content-between legend-label-row"></div>
-            </div>
+      <!-- Moving legend to this part -->
+      <div class="position-absolute ms-4" id="legend-container">
+        <div id="legend">
+          <div class="d-flex flex-column p-2 fs-7 legend-title">
+            <!-- Number of partnerships -->
+          </div>
+          <div class="d-flex flex-column legend-keys">
+            <div class="d-flex flex-row g-0 legend-bar-row"></div>
+            <div class="d-flex justify-content-between legend-label-row"></div>
           </div>
         </div>
-        <div id="map" class="col-12 h-100 position-relative">
-          <div class="overlay" id="showScrollable">
-            <div class="overlay-text">
-              <!-- <img class="hand" src="https://afripoli.org/projects/crm-mapping/theme/CRM-Updated-V3/img/icons/hand-touch.svg" alt="Zoom In" /> -->
-              <h1 class="titleBlur">Touch the screen</h1>
-              <h2 class="subtitleBlur">to start exploring the map</h2>
-            </div>
-          </div>
-          <!-- <script type="modules" src="./main.js"></script> -->
-          <div class="controls">
-            <!-- Controles aquí -->
-            <div class="control-toggle">
-              <h1 class="label">Show country names</h1>
-              <div class="toggle-container" id="toggleLabels">
-                <div class="toggle-button active"></div>
-              </div>
-            </div>
-            <div class="btnZoom">
-              <button id="zoomIn" class="btn btnplus">
-                <!-- <img src="https://afripoli.org/projects/crm-mapping/theme/CRM-Updated-V3/img/icons/zoom-off.svg" alt="Zoom In" /> -->
-              </button>
-              <button id="zoomOut" class="btn btnminus">
-                <!-- <img src="https://afripoli.org/projects/crm-mapping/theme/CRM-Updated-V3/img/icons/zoom-out-off.svg" alt="Zoom Out" /> -->
-              </button>
-            </div>
+      </div>
+      <div id="map" class="col-12 h-100 position-relative">
+        <div class="overlay" id="showScrollable">
+          <div class="overlay-text">
+            <!-- <img class="hand" src="https://afripoli.org/projects/crm-mapping/theme/CRM-Updated-V3/img/icons/hand-touch.svg" alt="Zoom In" /> -->
+            <h1 class="titleBlur">Touch the screen</h1>
+            <h2 class="subtitleBlur">to start exploring the map</h2>
           </div>
         </div>
-        <div class="instruccions">
-          <div style="flex-grow: 1">Explore state-level agreements regarding access to Africa's critical minerals. Select a country on the map or a non-African partner to view specific agreements.</div>
-        </div>
-        <div class="right d-none">
-          <div class="third-col">
-            <div class="card partnership"></div>
+        <!-- <script type="modules" src="./main.js"></script> -->
+        <div class="controls">
+          <!-- Controles aquí -->
+          <div class="control-toggle">
+            <h1 class="label">Show country names</h1>
+            <div class="toggle-container" id="toggleLabels">
+              <div class="toggle-button active"></div>
+            </div>
+          </div>
+          <div class="btnZoom">
+            <button id="zoomIn" class="btn btnplus">
+              <!-- <img src="https://afripoli.org/projects/crm-mapping/theme/CRM-Updated-V3/img/icons/zoom-off.svg" alt="Zoom In" /> -->
+            </button>
+            <button id="zoomOut" class="btn btnminus">
+              <!-- <img src="https://afripoli.org/projects/crm-mapping/theme/CRM-Updated-V3/img/icons/zoom-out-off.svg" alt="Zoom Out" /> -->
+            </button>
           </div>
         </div>
+      </div>
+      <div class="instruccions">
+        <div style="flex-grow: 1">Explore state-level agreements regarding access to Africa's critical minerals. Select a country on the map or a non-African partner to view specific agreements.</div>
+      </div>
+      <div class="right d-none">
+        <div class="third-col">
+          <div class="card partnership"></div>
+        </div>
+      </div>
       <!-- </div> -->
       <!-- <div class="lastUpdate">
         <span> Last update: 22.06.2026 </span>

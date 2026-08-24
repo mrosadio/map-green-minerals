@@ -3,9 +3,10 @@
   min-height: 100vh !important;
 }
 /* The container-fluid Bootstrap injects needs height too */
-.container-fluid.position-relative {
-  min-height: calc(100vh - 62px) !important;
-  flex: 1 !important;
+.container-fluid.g-0.flex-grow-1.position-relative.container-map {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 #legend-container {
@@ -15,8 +16,15 @@
 #map {
   /* height: 600px !important;  */
   width: 100%;
-  height: auto;
-  padding: 0px;
+  max-width: 100%;
+  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+#map svg {
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 
 .second-col {
@@ -991,7 +999,7 @@ img.zoom-out-active {
   #map {
     width: 100vw;
     margin-left: 0px;
-    height: 300px;
+    /* height: 300px; */
   }
   .african-button,
   .accordion-button2 {

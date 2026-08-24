@@ -1,5 +1,5 @@
 import { svg, themeUrl } from "./globals.js";
-import { path } from "./mapUtils.js";
+//import { path } from "./mapUtils.js";
 
 export function handleSelection(type, item) {
   //console.log(type);
