@@ -15,10 +15,7 @@ import {
   handleSelection,
   addCountryLabels,
   deleteCountryLabels,
-  zoomIn,
-  zoomOut,
-  fitSizeMap,
-  simulateCountryClick,
+  fitSizeMap
 } from "./modules/mapUtils.js";
 import {
   toggleButton,
@@ -43,29 +40,28 @@ import {
 } from "./modules/globals.js";
 import { showThirdColumn, removeThirdColumn } from "./modules/layout.js";
 import { showPickerBilateral, showPickerMultilateral, showPickerAfrica } from "./modules/picker.js";
-//import { initAboutModal } from "./modules/about.js";
 const euGeojsonPath = `./db/eu.geojson`;
 
 let partnerMap = {};
 let multilateralMap = {};
 let filteredGeoJSON;
-let mergedBiData; // Para referencia global
+let mergedBiData; 
 let numberData; // Para referencia global
 let colorScale; // Para referencia global
 
 // Tooltip
-const tooltip = d3
-  .select("body")
-  .append("div")
-  .attr("class", "tooltip")
-  .style("position", "absolute")
-  .style("pointer-events", "none")
-  .style("background", "#fff")
-  .style("border", ".5px solid #ddd")
-  .style("border-radius", "3px")
-  .style("padding", "5px")
-  .style("font-size", "12px")
-  .style("opacity", 0);
+// const tooltip = d3
+//   .select("body")
+//   .append("div")
+//   .attr("class", "tooltip")
+//   .style("position", "absolute")
+//   .style("pointer-events", "none")
+//   .style("background", "#fff")
+//   .style("border", ".5px solid #ddd")
+//   .style("border-radius", "3px")
+//   .style("padding", "5px")
+//   .style("font-size", "12px")
+//   .style("opacity", 0);
 
 // Función para restablecer el mapa a su estado inicial
 
@@ -200,8 +196,8 @@ Promise.all([
                   item.textContent
                 );*/
 
-                const toggleButton = document.getElementById("toggleLabels");
-                toggleButton.classList.remove("active");
+                // const toggleButton = document.getElementById("toggleLabels");
+                // toggleButton.classList.remove("active");
 
                 //updateLabel(svg, path, filteredCountryGeoJSON);
 
@@ -219,8 +215,8 @@ Promise.all([
             destroyMap();
             drawMap(mergedBiData, filteredCountryGeoJSON, internalSelectedCountry);
             highlightPartnership(svg, filteredCountryGeoJSON, item.textContent);
-            const toggleButton = document.getElementById("toggleLabels");
-            toggleButton.classList.remove("active");
+            // const toggleButton = document.getElementById("toggleLabels");
+            // toggleButton.classList.remove("active");
             //updateLabel(svg, path, filteredCountryGeoJSON);
             populatePartnerships(biData, selectedCountry);
             hideLegend();
@@ -255,14 +251,14 @@ Promise.all([
               
               drawMap(mergedMapData, filteredGeoJSON, selectedBloc);
               highlightBloc(svg, filteredGeoJSON, selectedColor, selectedBloc);
-              const toggleButton = document.getElementById("toggleLabels");
-              // Don't force toggle off - let user control persist
-              // Check current state and apply it
-              console.log("Toggle button active?", toggleButton.classList.contains("active"));
-              if (toggleButton.classList.contains("active")) {
-                console.log("Calling addCountryLabels");
-                addCountryLabels(filteredGeoJSON);
-              }
+              // const toggleButton = document.getElementById("toggleLabels");
+              // // Don't force toggle off - let user control persist
+              // // Check current state and apply it
+              // console.log("Toggle button active?", toggleButton.classList.contains("active"));
+              // if (toggleButton.classList.contains("active")) {
+              //   console.log("Calling addCountryLabels");
+              //   addCountryLabels(filteredGeoJSON);
+              // }
               populateMultilateral(
                 filteredGeoJSON,
                 selectedBloc,
@@ -281,27 +277,27 @@ Promise.all([
 
 // --- NUEVO CÓDIGO PARA ZOOM Y MOSTRAR NOMBRES DE PAÍSES --- //
 
-document.getElementById("zoomIn").addEventListener("click", () => {
-  zoomIn();
-});
-document.getElementById("zoomOut").addEventListener("click", () => zoomOut());
+// document.getElementById("zoomIn").addEventListener("click", () => {
+//   zoomIn();
+// });
+// document.getElementById("zoomOut").addEventListener("click", () => zoomOut());
 
 // Mostrar/ocultar nombres de países
-document.addEventListener("DOMContentLoaded", function () {
-  const toggleButton = document.getElementById("toggleLabels");
-  if (toggleButton) {
-    toggleButton.addEventListener("click", function () {
-      this.classList.toggle("active");
-      const showLabels = this.classList.contains("active");
-      if (showLabels) {
-        addCountryLabels(filteredGeoJSON);
-      } else {
-        deleteCountryLabels(filteredGeoJSON);
-      }
-    });
-  } else {
-  }
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//   const toggleButton = document.getElementById("toggleLabels");
+//   if (toggleButton) {
+//     toggleButton.addEventListener("click", function () {
+//       this.classList.toggle("active");
+//       const showLabels = this.classList.contains("active");
+//       if (showLabels) {
+//         addCountryLabels(filteredGeoJSON);
+//       } else {
+//         deleteCountryLabels(filteredGeoJSON);
+//       }
+//     });
+//   } else {
+//   }
+// });
 
 // Función para inicializar eventos
 function initializeOverlayClick() {
@@ -403,109 +399,6 @@ buttons2.forEach((button) => {
   });
 });
 
-document.getElementById("zoomIn").addEventListener("mouseover", function () {
-  const zoomInIcon = this.querySelector("img");
-
-  // Cambiar el ícono de zoom-in al de activado (nuevo SVG)
-  zoomInIcon.src = `${themeUrl}/img/icons/zoom-on.svg`;
-});
-
-document.getElementById("zoomOut").addEventListener("mouseover", function () {
-  const zoomOutIcon = this.querySelector("img");
-  // Cambiar el ícono de zoom-out al de activado (nuevo SVG)
-  zoomOutIcon.src = `${themeUrl}/img/icons/zoom-out-on.svg`;
-});
-
-document.getElementById("zoomOut").addEventListener("mouseout", function () {
-  const zoomOutIcon = this.querySelector("img");
-  zoomOutIcon.src = `${themeUrl}/img/icons/zoom-out-off.svg`;
-});
-document.getElementById("zoomIn").addEventListener("mouseout", function () {
-  const zoomInIcon = this.querySelector("img");
-
-  // Cambiar el ícono de zoom-in al de activado (nuevo SVG)
-  zoomInIcon.src = `${themeUrl}/img/icons/zoom-off.svg`;
-});
-
-// document.getElementById("printPage").addEventListener("click", function () {
-//   printDiv("#printable");
-// });
-// function printDiv(divId) {
-//   console.log("Generando impresión...");
-
-//   // Verificar si el div existe
-//   var divElement = document.querySelector(divId);
-//   if (!divElement) {
-//     console.error("Elemento no encontrado: " + divId);
-//     return;
-//   }
-
-//   // Usar html2canvas para generar el canvas
-//   html2canvas(divElement)
-//     .then(function (canvas) {
-//       // Crear una imagen a partir del canvas
-//       var imgData = canvas.toDataURL("image/png");
-
-//       // Crear un iframe oculto para imprimir
-//       var iframe = document.createElement("iframe");
-//       iframe.style.position = "absolute";
-//       iframe.style.top = "-10000px"; // Ocultar fuera de la pantalla
-//       document.body.appendChild(iframe);
-
-//       var iframeWindow = iframe.contentWindow || iframe.contentDocument;
-//       var iframeDoc = iframeWindow.document || iframe.contentDocument;
-
-//       // Pasar la imagen generada al iframe
-//       iframeDoc.open();
-// 	  iframeDoc.write(`
-// 		<!DOCTYPE html>
-// 		<html>
-// 		<head>
-// 		  <title>Mind the Map: Charting Africa’s Critical Mineral Partnerships</title>
-// 		  <style>
-// 			@page {
-// 			  margin: 0; /* Elimina los márgenes de la página */
-// 			  size: landscape; /* Forzar orientación landscape */
-// 			}
-// 			body {
-// 			  margin: 0; 
-// 			  display: flex;
-// 			  flex-direction: column;
-// 			  justify-content: center;
-// 			  align-items: center;
-// 			  height: 100vh;
-// 			  overflow: hidden;
-// 			}
-// 			.title {
-// 			  font-size: 12px;
-// 			  font-weight: normal;
-// 			  margin-bottom: 20px;
-// 			  font-family: "RalewayItalic", sans-serif;
-// 			}
-// 			img {
-// 			  max-width: 100%;
-// 			  max-height: 100%;
-// 			}
-// 		  </style>
-// 		</head>
-// 		<body>
-// 		  <img src="${imgData}" alt="Contenido a imprimir" />
-// 		</body>
-// 		</html>
-// 	  `);
-//       iframeDoc.close();
-
-//       // Esperar a que el contenido cargue antes de imprimir
-//       iframe.onload = function () {
-//         iframeWindow.focus();
-//         iframeWindow.print();
-//         document.body.removeChild(iframe); // Eliminar el iframe después de imprimir
-//       };
-//     })
-//     .catch(function (error) {
-//       console.error("Error al generar el canvas:", error);
-//     });
-// }
 
 if (window.innerWidth <= 768) {
   // Contamos las palabras del texto

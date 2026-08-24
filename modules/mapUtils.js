@@ -1,4 +1,4 @@
-import { width, height, /*svg,*/ themeUrl } from "./globals.js";
+import { width, height, svg, themeUrl } from "./globals.js";
 
 // -- SVG setup --
 // Created once at module load time
@@ -6,20 +6,10 @@ const mapEl = document.querySelector("#map");
 const W = mapEl?.clientWidth || 800;
 const H = mapEl?.clientHeight || 500;
 
-// let svg = d3
-//   .select("#map")
-//   .append("svg")
-//   //.attr("viewBox", `0 0 ${W} ${H}`)
-//   .attr("preserveAspectRatio", "xMidYMid meet")
-//   .attr("height", "100%")
-//   .attr("width", "100%");
-
 // projection and path are module-level so updateProjection() can reassign them
 // and addCountryLabels() can read the current path for centroid calculations.
 export function fitSizeMap(filteredGeoJson) {
-  let projection = d3
-  .geoEqualEarth()
-  .fitSize([W, H], filteredGeoJson);
+  let projection = d3.geoEqualEarth().fitSize([W, H], filteredGeoJson);
   let path = d3.geoPath().projection(projection);
 
   return path;
@@ -29,61 +19,12 @@ export function fitSizeMap(filteredGeoJson) {
 //   .fitSize([W, H]);
 //let path = d3.geoPath().projection(projection);
 let g;
-// let projection = d3
-//   .geoMercator()
-//   .scale(400)
-//   .translate([width / 2, height / 2]);
-//let path = d3.geoPath().projection(projection);
-let zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
+
 let banderaClick = false;
 let banderaBoton = false;
 let zoomEndTimeout;
 
 let originalOverview = null;
-// Función que maneja el evento de zoom
-
-function zoomed(event) {
-  const { transform } = event;
-  g.attr("transform", transform);
-  g.attr("stroke-width", 1 / transform.k);
-
-  // Ocultar el tooltip inmediatamente al comenzar el movimiento del zoom
-  const tooltip = d3.select(".tooltip2");
-  tooltip.style("display", "none").style("pointer-events", "none");
-  console.log(banderaClick);
-  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-  if (isMobile) {
-    // Mostrar nombres de países si el zoom es 3 o más
-    if (transform.k >= 2) {
-      d3.selectAll(".city-label").transition().duration(300).style("opacity", 1); // Hacer visibles las etiquetas
-      /*  if (banderaClick) {
-        banderaClick = false;
-      }*/
-    } else {
-      d3.selectAll(".city-label").transition().duration(300).style("opacity", 0); // Ocultar las etiquetas
-    }
-  } else {
-    setTimeout(() => {
-      if (!banderaBoton) {
-        tooltip.style("display", "block").style("pointer-events", "auto"); // Hacer visible el tooltip
-        setTimeout(() => {
-          banderaClick = false;
-        }, 500); // Retraso adicional
-      }
-    }, 500); // Retraso para sincronizar con la animación de la etiqueta
-  }
-
-  // Reiniciar el temporizador del "último movimiento del zoom"
-  clearTimeout(zoomEndTimeout);
-  zoomEndTimeout = setTimeout(() => {
-    if (banderaClick) {
-      tooltip.style("display", "block").style("pointer-events", "auto"); // Hacer visible el tooltip
-
-      banderaClick = false;
-    }
-    // Aquí se ejecuta la lógica cuando se detecta el último movimiento del zoom
-  }, 300); // 300 ms después de que el usuario haya terminado el movimiento del zoom
-}
 
 //aumentar un parametro para identificar el pais y con ello hacer el zoom mas personalizado para cada uno
 export function drawMap(geojson, filteredCountryGeoJSON, partner) {
@@ -106,10 +47,7 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
     .translate([W / 2, H / 2]);
   let path = d3.geoPath().projection(projection);
 
-  //svg.attr("viewBox", `0 0 ${W} ${H}`);
   projection.scale(400).translate([W / 2, H / 2]);
-  // .attr("width", "100%")
-  // .attr("height", "100%");
   g = svg.append("g");
 
   // Eliminar los caminos existentes (opcional, si deseas eliminar los anteriores)
@@ -1011,86 +949,35 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
         currentLine = word;
       }
     });
-
     if (currentLine) lines.push(currentLine); // Añadir la última línea
 
     return lines;
   }
-  // Crear el comportamiento de zoom
-  // aca se debe hacer los if para cada pais JORGE PAREDES
-  // const zoom = d3.zoom().scaleExtent([1, 10]).on("zoom", zoomed);
-
-  const zoom = d3
-    .zoom()
-    .scaleExtent([1, 10]) // Límite de escala (zoom mínimo y máximo)
-    .translateExtent([
-      [-60, -100],
-      [900, 650],
-    ]) // Límite de traslación (pan)
-    .on("zoom", zoomed);
-
-  // Llamar al comportamiento de zoom sobre el SVG
-  svg.call(zoom);
   d3.selectAll("text").style("opacity", 0); // Ocultar los nombres de los países
 
-  // Función que maneja el evento de zoom
-  function zoomed(event) {
-    const { transform } = event;
-    // Aplicar la transformación de zoom al grupo <g>
-    g.attr("transform", transform);
-    // Ajustar el grosor de las líneas al hacer zoom
-    g.attr("stroke-width", 1 / transform.k);
-
-    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-
-    if (isMobile) {
-      // Mostrar nombres de países si el zoom es 4
-      if (transform.k >= 3) {
-        d3.selectAll(".city-label").transition().duration(300).style("opacity", 1); // Hacer visibles las etiquetas
-      } else {
-        d3.selectAll(".city-label").transition().duration(300).style("opacity", 0); // Ocultar las etiquetas
-      }
-    }
-  }
-  function clicked(event, d) {
-    const [[x0, y0], [x1, y1]] = path.bounds(d);
-    event.stopPropagation();
-    svg
-      .transition()
-      .duration(1200)
-      .call(
-        zoom.transform,
-        d3.zoomIdentity
-          .translate(W / 2, H / 2)
-          .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / W / 2, (y1 - y0) / H)) * 0.7)
-          .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
-        d3.pointer(event, svg.node()),
-      );
-  }
+  // function clicked(event, d) {
+  //   const [[x0, y0], [x1, y1]] = path.bounds(d);
+  //   event.stopPropagation();
+  //   svg
+  //     .transition()
+  //     .duration(1200)
+  //     .call(
+  //       zoom.transform,
+  //       d3.zoomIdentity
+  //         .translate(W / 2, H / 2)
+  //         .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / W / 2, (y1 - y0) / H)) * 0.7)
+  //         .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
+  //       d3.pointer(event, svg.node()),
+  //     );
+  // }
 
   console.log("Paths created for map", paths);
 }
-// export function destroyMap() {
-//   // Selecciona todo dentro del SVG y lo elimina
-//   svg.selectAll("*").remove();
-//   //console.log("Map destroyed, all paths and elements removed.");
-// }
-let currentZoom = "";
+
 let isCountryLabelsVisible = false; // Las etiquetas están no visibles por defecto
 
 export function drawMapWithPartnerColors(svg, /*path,*/ geojsonData, numberData) {
   banderaBoton = false;
-
-  // svg.selectAll("path").remove();
-  // console.log("Number data", numberData);
-  // svg.selectAll("*").remove();
-
-  // Reiniciar la proyección a la configuración inicial (centrada en África)
-  // projection = d3
-  //   .geoMercator()
-  //   .scale(400) // Escala inicial que se estableció para África
-  //   .translate([450, 300]);
-  // Read actual dimensions at draw time
 
   const mapEl = document.querySelector("#map");
   svg.attr("viewBox", getViewBox(mapEl));
@@ -1101,36 +988,15 @@ export function drawMapWithPartnerColors(svg, /*path,*/ geojsonData, numberData)
   const W = mapEl?.clientWidth;
   const H = mapEl?.clientHeight;
   // Update projection to match new dimensions
-  let path = fitSizeMap(geojsonData)
-  // let projection = d3
-  //   .geoMercator()
-  //   .scale(400)
-  //   .translate([W / 2, H / 2]);
-  // let path = d3.geoPath().projection(projection);
+  let path = fitSizeMap(geojsonData);
 
-  const zoom2 = d3
-    .zoom()
-    .scaleExtent([1, 8]) // Límite de escala (zoom mínimo y máximo)
-    .translateExtent([
-      [-0, -0],
-      [1040, 700],
-    ]) // Límite de traslación (pan)
-    .on("zoom", zoomed);
-
-  const colorScale = d3
-    .scaleQuantize()
-    //   .domain([0, d3.max(numberData, (d) => d.partnersNo)])
-    .domain([0, 6])
-
-    .range(["#F2F2F2", "#FEE2A4", "#FCCA7B", "#FCC12C", "#EA9B0F", "#D68F01", "#9E6604"]);
+  const colorScale = d3.scaleQuantize().domain([0, 6]).range(["#F2F2F2", "#FEE2A4", "#FCCA7B", "#FCC12C", "#EA9B0F", "#D68F01", "#9E6604"]);
   const colorScaleShalow = d3.scaleQuantize().domain([0, 6]).range(["#F2F2F2", "#FFF1D4", "#FCE0B1", "#FDDA84", "#F3C471", "#E2B369", "#BC8C46"]);
   const partnerCounts = {};
   numberData.forEach((countryData) => {
     partnerCounts[countryData.africanCountry] = countryData.partnersNo;
   });
   console.log(partnerCounts);
-
-  //svg.selectAll("g").remove();
 
   g = svg.append("g");
   let tooltip = d3.select(".tooltip2");
@@ -1158,23 +1024,14 @@ export function drawMapWithPartnerColors(svg, /*path,*/ geojsonData, numberData)
     })
     .attr("stroke", "white")
     .attr("stroke-width", 0.5)
-    //.attr("font-family", "Roboto")
-
     .on("click", clicked)
     .on("mouseover", function (event, d) {
       const countryName = d.properties.name;
       const countryData = numberData.find((country) => country.africanCountry === countryName);
       const partnerCount = countryData ? countryData.partnersNo : 0;
-      if (countryName === "Western Sahara") {
-        return; // Skip tooltip for Western Sahara
-      }
       if (partnerCount > 0) {
         const partnersList = countryData && countryData.partners ? countryData.partners : [];
-        // console.log(partnersList);
         const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-        // Generar el contenido del tooltip
-
         tooltip.html(`
 		  <div style="display: flex; flex-direction: column; width: 135px; position: relative;">
 		  
@@ -1198,7 +1055,6 @@ export function drawMapWithPartnerColors(svg, /*path,*/ geojsonData, numberData)
 
         // tooltip.style("display", "block");
         tooltip.style("pointer-events", "none");
-
         d3.select(this).transition().duration(300).style("opacity", 1);
 
         // Cambiar el color con colorScaleShalow
@@ -1212,59 +1068,6 @@ export function drawMapWithPartnerColors(svg, /*path,*/ geojsonData, numberData)
           .duration(300)
           .style("opacity", 0)
           .style("pointer-events", "none"); // Ignora eventos del mouse
-        // Calcular el área del país
-        const area = d3.geoArea(d);
-        const areaInSquareKm = (area * 510072000) / (4 * Math.PI); // Convierte el área en fracción de la esfera a km²
-        /* console.log(
-		`Country: ${countryName}, Area: ${areaInSquareKm.toFixed(2)} km²`
-	  );*/
-        if (!isMobile) {
-          //       console.log(countryName);
-
-          if (areaInSquareKm.toFixed(2) < 250000) {
-            console.log(countryName);
-
-            // Mostrar el ícono en el centro de la ciudad
-            g.append("image")
-              .attr("class", "hover-icon")
-              .attr("xlink:href", `${themeUrl}/img/icons/noun.svg`)
-              .attr("width", 20)
-              .attr("height", 20)
-              .attr(
-                "x",
-                countryName == "Malawi" ? path.centroid(d)[0] - 12 : path.centroid(d)[0] - 10, // Valor por defecto si no coincide con ninguna condición
-              )
-              .attr(
-                "y",
-                countryName == "Malawi" ? path.centroid(d)[1] - 15 : path.centroid(d)[1] - 20, // Valor por defecto si no coincide con ninguna condición
-              )
-              .style("pointer-events", "none") // Ignora eventos del mouse
-              .style("opacity", 0)
-              .transition()
-              .duration(300)
-              .style("opacity", 1);
-          } else {
-            // Mostrar el ícono en el centro de la ciudad
-            g.append("image")
-              .attr("class", "hover-icon")
-              .attr("xlink:href", `${themeUrl}/img/icons/noun.svg`)
-              .attr("width", 20)
-              .attr("height", 20)
-              .attr(
-                "x",
-                countryName == "Morocco" ? path.centroid(d)[0] - 0 : countryName == "Zambia" ? path.centroid(d)[0] - 20 : path.centroid(d)[0] - 10, // Valor por defecto si no coincide con ninguna condición
-              )
-              .attr(
-                "y",
-                countryName == "Morocco" ? path.centroid(d)[1] - 30 : countryName == "Zambia" ? path.centroid(d)[1] - 10 : path.centroid(d)[1] - 10, // Valor por defecto si no coincide con ninguna condición
-              )
-              .style("pointer-events", "none") // Ignora eventos del mouse
-              .style("opacity", 0)
-              .transition()
-              .duration(300)
-              .style("opacity", 1);
-          }
-        }
       } else {
         const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         if (!isMobile) {
@@ -1277,8 +1080,6 @@ export function drawMapWithPartnerColors(svg, /*path,*/ geojsonData, numberData)
 			  </div>
 			`);
           tooltip.style("display", "block");
-          //  tooltip.style("pointer-events", "none");
-
           d3.select(this).transition().duration(300).style("opacity", 1);
 
           // Cambiar el color con colorScaleShalow
@@ -1300,9 +1101,7 @@ export function drawMapWithPartnerColors(svg, /*path,*/ geojsonData, numberData)
 
       // Volver al color original con colorScale
       d3.select(this).attr("fill", colorScale(partnerCount));
-
       tooltip.style("display", "none");
-
       d3.select(this).transition().duration(300).style("opacity", 1);
 
       // Restaurar la visibilidad de los nombres de las ciudades
@@ -1334,12 +1133,8 @@ export function drawMapWithPartnerColors(svg, /*path,*/ geojsonData, numberData)
       }
     })
     .on("mousemove", function (event, d) {
-      // Mostrar el nombre de la ciudad en la consola
       const countryName = d.properties.name;
-      //console.log("City name on mousemove:", countryName);
-
       if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        //console.log("City name on mousemove:", countryName);
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
         // Calcular las posiciones para centrar el tooltip
@@ -1349,23 +1144,15 @@ export function drawMapWithPartnerColors(svg, /*path,*/ geojsonData, numberData)
         let centerY;
         if (/android/i.test(userAgent)) {
           //console.log("android");
-
           centerX = window.innerWidth / 2 - tooltipWidth / 2 + 0;
           centerY = window.innerHeight / 2 - tooltipHeight / 2 + 200; // Agregar 200px más abaj
         } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-          // console.log("IOS");
-
           centerX = window.innerWidth / 2 - tooltipWidth / 2 + 30;
           centerY = window.innerHeight / 2 - tooltipHeight / 2 + 200; // Agregar 200px más abaj
         } else {
-          // console.log("android");
-
           centerX = window.innerWidth / 2 - tooltipWidth / 2 + 30;
           centerY = window.innerHeight / 2 - tooltipHeight / 2 + 200; // Agregar 200px más abaj
         }
-
-        //console.log(centerY);
-
         // Posicionar el tooltip al centro de la pantalla (ajustado)
         tooltip.style("left", centerX + "px").style("top", centerY + "px");
       } else {
@@ -1375,7 +1162,6 @@ export function drawMapWithPartnerColors(svg, /*path,*/ geojsonData, numberData)
             .style("left", event.pageX + 10 + "px") // Desplazar un poco a la derecha
             .style("top", event.pageY - 250 + "px"); // Desplazar un poco hacia abajo
         } else {
-          // Posicionar el tooltip mientras se mueve el mouse
           tooltip
             .style("left", event.pageX + 10 + "px") // Desplazar un poco a la derecha
             .style("top", event.pageY + 10 + "px");
@@ -1533,7 +1319,7 @@ export function drawMapWithPartnerColors(svg, /*path,*/ geojsonData, numberData)
     return lines;
   }
 
-  svg.call(zoom2);
+  //svg.call(zoom2);
   d3.selectAll("text").style("opacity", 0); // Ocultar los nombres de los países
   d3.selectAll("image").style("opacity", 0); // Mostrar los íconos
 
@@ -1571,7 +1357,7 @@ export function drawMapWithPartnerColors(svg, /*path,*/ geojsonData, numberData)
 }
 function getViewBox(el) {
   const w = el.clientWidth;
-  const h = el.clientHeight
+  const h = el.clientHeight;
   // Phone
   if (w < 576) {
     svg.attr("preserveAspectRatio", "xMidYMin meet");
@@ -1598,11 +1384,6 @@ function updateProjection(scale, center, translation) {
 
 //se modifico esta seccion para identificar por cada pais y realizar la proyeccion de cada item y personalizarlo
 export function handleSelection(type, item) {
-  // console.log(type);
-  //console.log(item);
-  // console.log("cesar");
-  //  console.log("input FOR HANDLE SELECTOR", width);
-  //alert(item.trim())
   console.log(item);
   if (item.trim() == "EU") {
     updateProjection(350, [20, 0], [width / 1.5, height / 1.43]);
@@ -1678,71 +1459,5 @@ export function deleteCountryLabels() {
   d3.selectAll("image").transition().duration(500).style("opacity", 0); // Hacer invisibles los íconos
 }
 
-export function simulateCountryClick(svg, geojsonData, countryName) {
-  const countryFeature = geojsonData.features.find((feature) => feature.properties.name === countryName);
-  if (countryFeature) {
-    console.log(countryFeature.properties.name);
-    // Seleccionar el elemento <path> correspondiente al país
-    const countryPath = svg.selectAll("path").filter((d) => d === countryFeature);
 
-    console.log(countryPath);
-
-    if (!countryPath.empty()) {
-      // Simular el evento `click` en el elemento
-      // Crear un evento de clic simulado
-      const clickEvent = new MouseEvent("click", {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-      });
-
-      // Disparar el evento en countryPath
-      countryPath.node().dispatchEvent(clickEvent);
-      console.error(`click en el country`);
-    } else {
-      console.error(`No SVG path found for country: ${countryName}`);
-    }
-  } else {
-    //drawMapWithPartnerColors(svg, path, geojsonData, numberData);
-    let g = svg.select("g");
-
-    // Verificar si el grupo existe
-    if (!g.empty()) {
-      // Obtener la transformación actual del grupo, si existe
-      let currentTransform = g.attr("transform");
-      let translateX = -90; // Valor de traslación en X
-      let translateY = 30; // Valor de traslación en Y
-
-      if (currentTransform) {
-        // Si hay una transformación existente, extraer los valores de traslación
-        const translateRegex = /translate\((-?\d+\.?\d*),\s*(-?\d+\.?\d*)\)/;
-        const match = translateRegex.exec(currentTransform);
-
-        if (match) {
-          translateX = parseFloat(match[1]);
-          translateY = parseFloat(match[2]);
-        }
-      }
-
-      // Ajustar la nueva traslación para mover el grupo hacia la izquierda
-      const newTranslateX = translateX - 100; // Mover hacia la izquierda (100 unidades)
-
-      // Aplicar la nueva transformación al grupo
-      g.attr("transform", `translate(${newTranslateX}, ${translateY})`);
-    } else {
-      console.error("No se encontró el grupo <g> para mover.");
-    }
-  }
-}
-
-// Función para hacer zoom in
-export function zoomIn() {
-  console.log("zONIN");
-  svg.transition().duration(500).call(zoom.scaleBy, 1.5); // Incrementa el nivel de zoom
-}
-
-// Función para hacer zoom out
-export function zoomOut() {
-  svg.transition().duration(500).call(zoom.scaleBy, 0.75); // Reduce el nivel de zoom
-}
 //export { path };
