@@ -1587,7 +1587,7 @@ function getViewBox(el) {
   //svg.attr("preserveAspectRatio", "xMidYMin meet");
   //return `0 0 ${el.clientWidth} ${el.clientHeight}`;
   // large screens
-  return `0 0 2000 1000`;
+  return `0 0 ${w} ${h}`;
 }
 function updateProjection(scale, center, translation) {
   //console.log('PROJECTION in function', projection)
