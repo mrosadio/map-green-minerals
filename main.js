@@ -12,22 +12,17 @@ import {
   drawMap,
   drawMapWithPartnerColors,
   //destroyMap,
-  handleSelection,
-  addCountryLabels,
-  deleteCountryLabels,
   fitSizeMap
 } from "./modules/mapUtils.js";
 import {
-  toggleButton,
   highlightPartnership,
-  updateLabel,
   populatePartnerships,
   populateMultilateral,
   highlightBloc,
   highlightEu,
   clearCardContent,
 } from "./modules/selectionUtils.js";
-import { addLegend, hideLegend } from "./modules/legendUtils.js";
+import { addLegend /*, hideLegend*/ } from "./modules/legendUtils.js";
 import {
   svg,
   customColors,
@@ -75,47 +70,16 @@ function resetToInitialView() {
   addLegend(svg, colorScale); // Añade la leyenda
   removeThirdColumn(); // Oculta la tercera columna
 }
-document.addEventListener("DOMContentLoaded", function () {
-  const wheelElement = document.querySelector(".wheel");
-  const scrollbarElement = document.querySelector(".wheel-scrollbar");
 
-  wheelElement.addEventListener("scroll", function () {
-    const scrollPercentage =
-      wheelElement.scrollTop /
-      (wheelElement.scrollHeight - wheelElement.clientHeight);
-    scrollbarElement.style.top =
-      scrollPercentage *
-        (wheelElement.clientHeight - scrollbarElement.clientHeight) +
-      "px";
-  });
-  // // Init modal once
-  //initAboutModal();
-
-  // // Wire About button in header
-  // document.getElementById("about")
-  //   ?.addEventListener("click", openAboutModal);
-});
 function refresh() {
   if (/Mobi|Android/i.test(navigator.userAgent)) {
     console.log("refreshing in main.js")
     showPickerAfrica();
-    //button.scrollIntoView({ behavior: "smooth", block: "center" });
   } else {
     window.location.href = window.location.href;
   }
 }
-//document.getElementById("africaButton").addEventListener("click", refresh);
 
-const buttonScroll = document.getElementById("africaButton");
-buttonScroll.addEventListener("click", () => {
-  refresh();
-  buttonScroll.scrollIntoView({ behavior: "smooth", block: "start" });
-  const selectedBlock = document.getElementById("blockNameNowTemp");
-  selectedBlock.innerText = "African countries overview";
-});
-
-// Load and merge data
-//console.log('multi json', multiJsonFilePath)
 console.log('console before promise')
 Promise.all([
   loadAndMergeData(geojsonUrl, jsonFilePath, noPartnerFilePath),
@@ -172,8 +136,6 @@ Promise.all([
       document.querySelectorAll(".country-select").forEach((item) => {
         item.addEventListener("click", function () {
           showThirdColumn();
-          toggleButton(this);
-          handleSelection("bilateral", item.textContent);
           let selectedCountry = this.textContent.trim();
           //  console.log(filteredCountryGeoJSON)
           // Map display names back to internal keys used by the data
@@ -189,18 +151,11 @@ Promise.all([
                 console.log('drawmap in main.js')
                 drawMap(mergedBiData, filteredCountryGeoJSON, "EU");
                 highlightEu(svg, filteredCountryGeoJSON);
-
                 /* highlightPartnership(
                   svg,
                   filteredCountryGeoJSON,
                   item.textContent
                 );*/
-
-                // const toggleButton = document.getElementById("toggleLabels");
-                // toggleButton.classList.remove("active");
-
-                //updateLabel(svg, path, filteredCountryGeoJSON);
-
                 populatePartnerships(biData, selectedCountry);
               }
             );
@@ -210,16 +165,12 @@ Promise.all([
               mergedBiData,
               internalSelectedCountry
             );
-
-            deleteCountryLabels(filteredCountryGeoJSON);
-            destroyMap();
+            //deleteCountryLabels(filteredCountryGeoJSON);
+            //destroyMap();
             drawMap(mergedBiData, filteredCountryGeoJSON, internalSelectedCountry);
             highlightPartnership(svg, filteredCountryGeoJSON, item.textContent);
-            // const toggleButton = document.getElementById("toggleLabels");
-            // toggleButton.classList.remove("active");
-            //updateLabel(svg, path, filteredCountryGeoJSON);
             populatePartnerships(biData, selectedCountry);
-            hideLegend();
+            //hideLegend();
           }
         });
       });
@@ -248,23 +199,14 @@ Promise.all([
                   mergedMapData.features.push(feature);
                 }
               });
-              
               drawMap(mergedMapData, filteredGeoJSON, selectedBloc);
               highlightBloc(svg, filteredGeoJSON, selectedColor, selectedBloc);
-              // const toggleButton = document.getElementById("toggleLabels");
-              // // Don't force toggle off - let user control persist
-              // // Check current state and apply it
-              // console.log("Toggle button active?", toggleButton.classList.contains("active"));
-              // if (toggleButton.classList.contains("active")) {
-              //   console.log("Calling addCountryLabels");
-              //   addCountryLabels(filteredGeoJSON);
-              // }
               populateMultilateral(
                 filteredGeoJSON,
                 selectedBloc,
                 multiJsonData
               );
-              hideLegend();
+              //hideLegend();
             })
             .catch((error) =>
               console.error("Error processing filtered GeoJSON:", error)
@@ -275,331 +217,5 @@ Promise.all([
   })
   .catch((error) => console.error("Error processing data:", error));
 
-// --- NUEVO CÓDIGO PARA ZOOM Y MOSTRAR NOMBRES DE PAÍSES --- //
-
-// document.getElementById("zoomIn").addEventListener("click", () => {
-//   zoomIn();
-// });
-// document.getElementById("zoomOut").addEventListener("click", () => zoomOut());
-
-// Mostrar/ocultar nombres de países
-// document.addEventListener("DOMContentLoaded", function () {
-//   const toggleButton = document.getElementById("toggleLabels");
-//   if (toggleButton) {
-//     toggleButton.addEventListener("click", function () {
-//       this.classList.toggle("active");
-//       const showLabels = this.classList.contains("active");
-//       if (showLabels) {
-//         addCountryLabels(filteredGeoJSON);
-//       } else {
-//         deleteCountryLabels(filteredGeoJSON);
-//       }
-//     });
-//   } else {
-//   }
-// });
-
-// Función para inicializar eventos
-function initializeOverlayClick() {
-  // Obtén la referencia al div por su ID
-  const showScrollable = document.getElementById("showScrollable");
-
-  // Verifica que el div exista antes de agregar el evento
-  if (showScrollable) {
-    showScrollable.addEventListener("click", function () {
-      // Acción al hacer clic en el div
-      this.classList.add("hidden");
-      //console.log("Overlay clickeado y ocultado");
-    });
-  } else {
-    //console.error("El elemento con ID 'showScrollable' no se encontró.");
-  }
-}
-
-// Llama a la función cuando el DOM esté listo
-document.addEventListener("DOMContentLoaded", initializeOverlayClick);
-
-const buttons = document.querySelectorAll(".accordion-button2");
-
-buttons.forEach((button) => {
-  button.addEventListener("click", function () {
-    // Removemos la clase 'active' de todos los botones
-    buttons.forEach((btn) => btn.classList.remove("active"));
-
-    // Añadimos la clase 'active' al botón que se hizo clic
-    this.classList.add("active");
-  });
-});
-document.querySelectorAll("a.list-group-item").forEach((link) => {
-  link.addEventListener("click", function (event) {
-    event.preventDefault(); // Previene el comportamiento por defecto (desplazamiento hacia arriba)
-    // Si quieres realizar alguna acción adicional, como mostrar un contenido relacionado, puedes hacerlo aquí
-  });
-});
-
-// Al hacer clic en "Bilateral partnerships", simulamos el clic en el primer botón de la lista "EU"
-// document
-//   .querySelector('.accordion-button2[data-bs-target="#flush-collapseOne"]')
-//   .addEventListener("click", function () {
-//     const divElement = document.querySelector(".tooltip2");
-//     // Comprobar si existe el elemento antes de modificar el estilo
-//     if (divElement) {
-//       divElement.style.display = "none";
-//     }
-//     if (/Mobi|Android/i.test(navigator.userAgent)) {
-//       // El usuario está en un dispositivo móvil
-//       showPickerBilateral();
-//       this.scrollIntoView({ behavior: "smooth", block: "start" });
-
-//       const selectedText = document.getElementById("blockNameNowTemp");
-//       selectedText.innerText = "Bilateral Parnerships";
-//     } else {
-//       // El usuario está en una web (escritorio o tablet)
-//       const firstCountryButton = document.querySelector(".country-select"); // Selecciona el primer botón en la lista de "Bilateral partnerships"
-//       if (firstCountryButton) {
-//         firstCountryButton.classList.add("activeDetail");
-//         firstCountryButton.click(); // Simula un clic en ese botón
-//       }
-//     }
-//   });
-// zoomToCountry("CHAD")
-
-// Al hacer clic en "Multilateral partnerships", simulamos el clic en el primer botón de la lista "BRICS Geological Platform"
-// document
-//   .querySelector('.accordion-button2[data-bs-target="#flush-collapseTwo"]')
-//   .addEventListener("click", function () {
-//     const divElement = document.querySelector(".tooltip2");
-//     // Comprobar si existe el elemento antes de modificar el estilo
-//     if (divElement) {
-//       divElement.style.display = "none";
-//     }
-//     if (/Mobi|Android/i.test(navigator.userAgent)) {
-//       // El usuario está en un dispositivo móvil
-
-//       showPickerMultilateral();
-//       const selectedText = document.getElementById("blockNameNowTemp");
-//       blockNameNowTemp.innerText = "Multilateral Parnerships";
-//       this.scrollIntoView({ behavior: "smooth", block: "start" });
-//     } else {
-//       const firstBlocButton = document.querySelector(".bloc-select"); // Selecciona el primer botón en la lista de "Multilateral partnerships"
-//       if (firstBlocButton) {
-//         firstBlocButton.classList.add("activeDetail");
-//         firstBlocButton.click(); // Simula un clic en ese botón
-//       }
-//     }
-//   });
-
-const buttons2 = document.querySelectorAll(".list-group-item");
-
-buttons2.forEach((button) => {
-  button.addEventListener("click", function () {
-    buttons2.forEach((btn) => btn.classList.remove("activeDetail"));
-
-    this.classList.add("activeDetail");
-  });
-});
-
-
-if (window.innerWidth <= 768) {
-  // Contamos las palabras del texto
-  // const descriptionText = document.getElementById("descriptionText");
-
-  // document.getElementById("descriptionText1").classList.add("hidden");
-  // document.getElementById("descriptionText3").classList.add("hidden");
-
-  // const words = descriptionText.innerText.split(" ");
-
-  // Encontramos la primera parte del texto y lo separamos
-  // const firstPart = words.slice(0, 500).join(" "); // Agregamos '...' al final de las primeras 33 palabras
-  // const secondPart = words.slice(500).join(" ");
-
-  // Creamos el botón
-  const button = document.createElement("button");
-  button.id = "toggleDescription";
-  //button.style.marginLeft="6px"
-
-  // button.textContent = "   Show more";
-
-  // Insertamos el texto inicial con el botón
-  // descriptionText.innerHTML = firstPart;
-  // descriptionText.appendChild(button);
-
-  // Función para alternar entre mostrar más o menos texto
-  // function toggleText() {
-  //   if (button.textContent === "   Show more") {
-  //     // Mostrar todo el texto sin los tres puntos y cambiar el texto del botón a "Show less"
-  //     descriptionText.innerHTML = firstPart + secondPart; // Eliminar los '...' de firstPart
-  //     descriptionText.appendChild(button);
-  //     //document.getElementById("descriptionText2").classList.remove("hidden");
-  //     document.getElementById("descriptionText3").classList.remove("hidden");
-  //     document.getElementById("descriptionText2").classList.remove("hidden");
-  //     document.getElementById("descriptionText1").classList.remove("hidden");
-
-  //     document.getElementById("viewLessBtn").style.visibility = "visible";
-
-  //     button.textContent = "";
-  //   } else {
-  //     console.log("testt");
-  //     // Mostrar solo la primera parte con '...' y cambiar el texto del botón a "Read more"
-  //     descriptionText.innerHTML = firstPart;
-  //     descriptionText.appendChild(button);
-  //     document.getElementById("descriptionText2").classList.add("hidden");
-  //     document.getElementById("descriptionText3").classList.add("hidden");
-
-  //     button.textContent = "   Show more";
-  //   }
-  // }
-  // Añadimos el evento de alternar el texto y el texto del botón al hacer clic
-  button.addEventListener("click", toggleText);
-
-  document.getElementById("viewLessBtn").addEventListener("click", function () {
-    console.log("CLICL");
-    document.getElementById("descriptionText2").classList.add("hidden");
-    document.getElementById("descriptionText3").classList.add("hidden");
-    document.getElementById("descriptionText1").classList.add("hidden");
-
-    descriptionText.innerHTML = firstPart;
-    descriptionText.appendChild(button);
-    document.getElementById("descriptionText2").classList.add("hidden");
-    document.getElementById("descriptionText3").classList.add("hidden");
-
-    button.textContent = "   Show more";
-  });
-} else {
-  //document.getElementById("viewLessBtn2").style.visibility = "hidden";
-
-  // document.getElementById("viewMoreBtn").addEventListener("click", function () {
-  //   console.log("Prueba");
-  //   document.getElementById("descriptionText3").classList.remove("hidden");
-  //   document.getElementById("descriptionText2").classList.remove("hidden");
-
-  //   this.style.visibility = "hidden"; // Ocultar el botón después de hacer clic
-  //   document.getElementById("viewLessBtn").style.visibility = "visible";
-  // });
-  // document.getElementById("viewLessBtn").addEventListener("click", function () {
-  //   document.getElementById("descriptionText2").classList.add("hidden");
-  //   document.getElementById("descriptionText3").classList.add("hidden");
-
-  //   this.style.visibility = "hidden"; // Ocultar el botón después de hacer clic
-  //   document.getElementById("viewMoreBtn").style.visibility = "visible";
-  // });
-}
-
-window.addEventListener("resize", changeButtonText);
-window.addEventListener("load", changeButtonText);
-
-function changeButtonText() {
-  const buttons = document.querySelectorAll(".accordion-button2");
-  buttons.forEach((button) => {
-    // Buscar solo el texto del botón, ignorando las imágenes
-    const buttonTextNode = Array.from(button.childNodes).find(
-      (node) => node.nodeType === Node.TEXT_NODE
-    );
-
-    if (window.innerWidth <= 768) {
-      if (button.id === "africaButton") {
-        buttonTextNode.nodeValue = "Overview"; // Cambiar solo el texto
-      } else if (button.id === "clickable") {
-        buttonTextNode.nodeValue = "Bilateral";
-      } else if (button.id === "multilateral") {
-        buttonTextNode.nodeValue = "Multilateral";
-      }
-    } else {
-      if (button.id === "africaButton") {
-        buttonTextNode.nodeValue = "African countries overview";
-      } else if (button.id === "clickable") {
-        buttonTextNode.nodeValue = "Bilateral partnerships";
-      } else if (button.id === "multilateral") {
-        buttonTextNode.nodeValue = "Multilateral partnerships";
-      }
-    }
-  });
-}
-
-// Obtén el elemento span
-const mySpan = document.getElementById("africanCountry");
-
-// Configura el MutationObserver
-// const observer = new MutationObserver((mutationsList) => {
-//   for (const mutation of mutationsList) {
-//     // console.log("cambio estado");
-//     if (mutation.type === "childList") {
-//       const selectedBlock = document.getElementById("blockName");
-//       console.log("entra aqui");
-
-//       // console.log(selectedBlock.textContent);
-
-//       if (selectedBlock.textContent.trim() == "African countries Overview") {
-//         //resetToInitialView();
-//       } else {
-//       }
-//       //simulateCountryClick(svg, filteredGeoJSON, mySpan.textContent);
-
-//       //console.log("El texto del span cambió a:", mySpan);
-//       // Aquí puedes agregar cualquier acción adicional
-//     }
-//   }
-// });
-
-// Observa cambios en los hijos del span (como el texto)
-// observer.observe(mySpan, { childList: true });
-
-// Función para cambiar el texto del span
-
-// Obtén el elemento span
-// const mySpan2 = document.getElementById("blockNameTemp");
-
-// Configura el MutationObserver
-// const observer2 = new MutationObserver((mutationsList) => {
-//   for (const mutation of mutationsList) {
-//     if (mutation.type === "childList") {
-//       const selectedBlock = document.getElementById("blockName");
-//       console.log("entra aqui");
-//       selectedBlock.innerText = mySpan2.textContent.trim();
-
-//       if (selectedBlock.textContent.trim() == "African countries overview") {
-//         //destroyMap();
-//         //filteredGeoJSON = filterAfrica(mergedBiData, numberData); // Filtra África
-//         //clearCardContent();
-//         //addLegend(svg, colorScale); // Añade la leyenda
-//         //removeThirdColumn(); // Oculta la tercera columna
-//         resetToInitialView();
-//       }
-//       simulateCountryClick(svg, filteredGeoJSON, mySpan.textContent);
-//       //console.log("El texto del span cambió a:", mySpan);
-//       // Aquí puedes agregar cualquier acción adicional
-//     }
-//   }
-// });
-
-// Observa cambios en los hijos del span (como el texto)
-//observer2.observe(mySpan2, { childList: true });
-
-// Función para cambiar el texto del span - with null check
-const buttonChangeElement = document.querySelector(".buttonChange");
-if (buttonChangeElement) {
-  buttonChangeElement.addEventListener("click", () => {
-    const randomValue = Math.random(); // Genera un valor aleatorio entre 0 y 1
-    const selectedBlock = document.getElementById("blockName").textContent.trim();
-
-    if (selectedBlock === "African countries overview") {
-      const africanButton = document.getElementById("africaButton");
-      africanButton.click();
-    } else if (selectedBlock === "Multilateral Parnerships") {
-      const multilateral = document.getElementById("multilateral");
-      multilateral.click();
-    } else {
-      const africanButton = document.getElementById("africaButton");
-      africanButton.click();
-    }
-  });
-}
-
-function closeTooltip() {
-  // Aquí debes definir cómo quieres ocultar o eliminar el tooltip.
-  // Por ejemplo, si el tooltip se encuentra en un contenedor específico:
-  const tooltipContainer = document.querySelector("#tooltip-container");
-  if (tooltipContainer) {
-    tooltipContainer.innerHTML = ""; // Limpia el contenido del tooltip
-  }
-}
+//window.addEventListener("resize", changeButtonText);
+//window.addEventListener("load", changeButtonText);

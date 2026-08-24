@@ -1,22 +1,6 @@
 import { svg, themeUrl } from "./globals.js";
 //import { path } from "./mapUtils.js";
 
-export function handleSelection(type, item) {
-  //console.log(type);
-  //console.log(item);
-  //console.log("cccc");
-  if (type === "bilateral" || type === "multilateral") {
-    updateProjection(210, [0, 0], [width / 2.2, height / 2]);
-  } else {
-    updateProjection(450, [20, 0], [width / 2, height / 2]);
-  }
-}
-
-export function toggleButton(button) {
-  const isPressed = button.getAttribute("aria-pressed") === "true";
-  button.setAttribute("aria-pressed", !isPressed);
-}
-
 export function highlightPartnership(svg, filteredGeoJSON, itemSelected) {
   console.log('Highlighting partnership', itemSelected);
   console.log('Filtered GeoJSON in highlightPartnership', filteredGeoJSON);
@@ -52,30 +36,6 @@ export function highlightPartnership(svg, filteredGeoJSON, itemSelected) {
   //adjustViewbox(itemSelected);
 }
 
-function adjustViewbox(itemSelected) {
-  //console.log("item selected in function", itemSelected);
-  if (itemSelected === "Saudi Arabia") {
-    svg.attr("viewBox", "100 0 600 600");
-  } else if (itemSelected === "United Arab Emirates") {
-    svg.attr("viewBox", "150 0 500 600");
-  } else if (itemSelected === "India") {
-    svg.attr("viewBox", "225 0 500 600");
-  } else if (itemSelected === "South Korea") {
-    svg.attr("viewBox", "300 50 500 350");
-  } else if (itemSelected === "Japan") {
-    svg.attr("viewBox", "325 0 500 600");
-  } else if (itemSelected === "China") {
-    svg.attr("viewBox", "275 -50 500 600");
-  } else if (itemSelected === "Indonesia") {
-    svg.attr("viewBox", "250 0 600 600");
-  } else if (itemSelected === "Russia") {
-    svg.attr("viewBox", "250 -75 600 600");
-  } else if (itemSelected === "USA") {
-    svg.attr("viewBox", "-75 -50 600 600");
-  } else if (itemSelected === "Turkey") {
-    svg.attr("viewBox", "150 -25 500 600");
-  }
-}
 export function highlightEu(svg, filteredGeoJSON) {
   const euCountries = new Set(
     filteredGeoJSON.features.map((f) => f.properties.name)
@@ -109,36 +69,6 @@ export function highlightEu(svg, filteredGeoJSON) {
 
   svg.attr("viewBox", "-100 0 1000 600");
   // svg.attr("viewBox", "100 50 600 350");
-}
-
-export function updateLabel(svg, path, filteredGeoJSON) {
-  if (
-    !filteredGeoJSON ||
-    !filteredGeoJSON.features ||
-    filteredGeoJSON.features.length === 0
-  ) {
-    //console.log("No features found in the filtered GeoJSON.");
-    return;
-  }
-  //console.log(`Number of features to label: ${filteredGeoJSON.features.length}` );
-  svg.selectAll("text").remove();
-  svg
-    .selectAll("text")
-    .data(filteredGeoJSON.features)
-    .enter()
-    .append("text")
-    .attr("transform", (d) => {
-      const centroid = path.centroid(d);
-      /*//console.log(
-        `Labeling country: ${d.properties.name}, Centroid: ${centroid}`
-      );*/
-      return `translate(${centroid})`;
-    })
-    .attr("dy", ".3em")
-    .attr("text-anchor", "middle")
-    .attr("font-size", "10px")
-    .attr("fill", "black")
-    .text((d) => d.properties.name);
 }
 
 export function populatePartnerships(biData, selectedCountry) {

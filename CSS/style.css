@@ -653,33 +653,7 @@ h2.accordion-header.partner-header {
 .nameMobile {
   display: none;
 }
-.toggle-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #ffffff;
-  /* Fondo gris para el contenedor del toggle */
-  padding: 3px;
-  border-radius: 20px;
-  width: 45px;
-  cursor: pointer;
-}
-.toggle-button {
-  width: 16px;
-  height: 16px;
-  background-color: #f2f2f2;
-  /* Verde cuando está inactivo */
-  border-radius: 50%;
-  transition:
-    background-color 0.3s,
-    transform 0.3s;
-}
-.toggle-container.active .toggle-button {
-  background-color: #4b4b4b;
-  /* Amarillo cuando está activo */
-  transform: translateX(18px);
-  /* Mueve el botón a la derecha */
-}
+
 .label {
   font-size: 14px;
   color: #000;
@@ -688,17 +662,6 @@ h2.accordion-header.partner-header {
   font-family: var(--vr-font-primary);
   margin-left: 12px;
 }
-.control-toggle {
-  display: flex;
-  align-items: center;
-  background-color: #f2f2f2;
-  padding: 3px 5px 3px 5px;
-  border-radius: 7px;
-  border: 1pt solid #fff;
-  /* Borde negro */
-  margin-top: 6px;
-}
-
 .downloadButton {
   display: flex;
   align-items: center;
@@ -759,23 +722,7 @@ h2.accordion-header.partner-header {
     text-decoration-color: #fcc12c;
     text-underline-offset: 4px;
 } */
-/* Estilos para los íconos SVG */
 
-img.zoom-active {
-  filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(180deg);
-  /* Cambia el color */
-}
-img.zoom-in-active {
-  filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(0deg);
-  /* Color para zoom-in */
-}
-img.zoom-out-active {
-  filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(180deg);
-  /* Color para zoom-out */
-}
-#toggleDescription {
-  visibility: hidden;
-}
 .overlay {
   display: none;
 }
@@ -896,22 +843,6 @@ img.zoom-out-active {
   }
   .subtitle {
     font-size: 17pt;
-  }
-  #toggleDescription {
-    background-color: transparent;
-    /* Fondo transparente */
-    border: none;
-    /* Sin borde */
-    color: #007bff;
-    /* Color del texto */
-    cursor: pointer;
-    font-size: 10pt;
-    text-decoration: none;
-    /* Elimina el subrayado */
-    font-family: var(--vr-font-primary);
-    margin: 0;
-    padding-left: 1px;
-    visibility: visible;
   }
   .downloadButton {
     font-size: 10pt;
@@ -1049,20 +980,7 @@ img.zoom-out-active {
     margin-bottom: 6px;
     margin-right: 6px;
   }
-  /* Si quieres cambiar el orden de los elementos, puedes usar order */
-  .btnZoom {
-    order: 1;
-    /* Asegura que BtnZoom esté por encima */
-  }
-  .control-toggle {
-    order: 2;
-    /* Poner control-toggle debajo de BtnZoom */
-    display: none;
-  }
-  .control-toggle {
-    margin-top: 0px;
-    margin-bottom: 6px;
-  }
+
   ul {
     list-style: none;
     padding: 0;
@@ -1352,49 +1270,5 @@ img.zoom-out-active {
   .breadcrumb-area.hero-africa-map .downloadButton,
   .breadcrumb-area.hero-africa-map .downloadButton a {
     color: #f8fbff !important;
-  }
-
-  #viewMoreBtn.hero-cta-toggle,
-  #viewLessBtn.hero-cta-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    margin-top: 0.55rem;
-    padding: 0.62rem 1rem;
-    border-radius: 999px;
-    border: 1px solid #fcc12c;
-    background: #fcc12c;
-    color: #3b2812;
-    font-size: 0.7rem;
-    font-weight: 500;
-    line-height: 1;
-    letter-spacing: 0.01em;
-    text-decoration: none;
-    transition:
-      background-color 0.2s ease,
-      color 0.2s ease,
-      transform 0.2s ease,
-      border-color 0.2s ease,
-      box-shadow 0.2s ease;
-  }
-
-  #viewMoreBtn.hero-cta-toggle:hover,
-  #viewLessBtn.hero-cta-toggle:hover {
-    background: #ffe2a0;
-    color: #2d1d0b;
-    border-color: #ffe2a0;
-    box-shadow: 0 0 0 3px rgba(252, 193, 44, 0.26);
-    transform: translateY(-1px);
-  }
-
-  #viewMoreBtn.hero-cta-toggle:focus-visible,
-  #viewLessBtn.hero-cta-toggle:focus-visible {
-    outline: 3px solid #ffffff;
-    outline-offset: 2px;
-  }
-
-  #viewMoreBtn.hero-cta-toggle i,
-  #viewLessBtn.hero-cta-toggle i {
-    font-size: 0.82em;
   }
 }
