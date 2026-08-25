@@ -61,12 +61,12 @@ let colorScale; // Para referencia global
 
 function resetToInitialView() {
   console.log('reseting in main.js')
-  //destroyMap();
+  document.querySelector('.container-map').classList.remove('legend-hidden');
   filteredGeoJSON = mergeWorldWithPartnerData(mergedBiData, numberData); // Filtra África
   fitSizeMap(filteredGeoJSON)
   drawMapWithPartnerColors(svg, /*path,*/ filteredGeoJSON, numberData); // Dibuja el mapa inicial
   clearCardContent();
-  addLegend(svg, colorScale); // Añade la leyenda
+  addLegend(svg, colorScale); 
   removeThirdColumn(); // Oculta la tercera columna
 }
 
@@ -138,9 +138,9 @@ Promise.all([
       })
       document.querySelectorAll(".country-select").forEach((item) => {
         item.addEventListener("click", function () {
+          document.querySelector('#legend-container').classList.add('legend-hidden');
           showThirdColumn();
           let selectedCountry = this.textContent.trim();
-          // Map display names back to internal keys used by the data
           let internalSelectedCountry = selectedCountry;
           if (selectedCountry === "United Kingdom") internalSelectedCountry = "England";
           if (selectedCountry === "European Union") internalSelectedCountry = "EU";

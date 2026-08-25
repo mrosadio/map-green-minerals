@@ -14,7 +14,6 @@
   top: 1em;
 }
 #map {
-  /* height: 600px !important;  */
   width: 100%;
   max-width: 100%;
   height: 100%;
@@ -26,81 +25,15 @@
     width: 100%;
     height: 100%;
 }
-
 .second-col {
   height: 600px !important;
   min-height: 600px !important;
 }
-.cf-page-bg,
-.cat-page-bg,
-.post-list-bg {
-  background-color: #21201e;
-  background-image: url(https://afripoli.org/assets/img/bg/apri-post-list-bg.webp);
-  background-repeat: no-repeat;
-  background-position: top right;
-}
 
-.cf-page-bg {
-  background-color: #4c3912;
-}
-
-.btn-select {
-  justify-content: center;
-}
-.drop-and-map {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  width: auto;
-  height: auto;
-  justify-content: center;
-  /* .col-3.info-partner {
-      flex: 1;
-      border: black 0.5px solid;
-      border-top-right-radius: 7px;
-      border-bottom-right-radius: 7px;
-      /* overflow-y: auto; */
-}
-.hidenthings {
-  display: none;
-}
-.intro-text {
-  margin-bottom: 20px;
-  max-width: auto;
-}
-.intro-text {
-  .col-center {
-    width: 100%;
-  }
-}
-h2.accordion-header.partner-header {
-  .accordion-button2 {
-    font-size: 14pt;
-    font-weight: normal;
-    font-family: var(--vr-font-primary);
-    color: #252525;
-    justify-content: space-between;
-    /* Esto separa los elementos a los extremos */
-  }
-  .african-button {
-    font-size: 14pt;
-    font-weight: normal;
-    font-family: var(--vr-font-primary);
-    color: #252525;
-    justify-content: space-between;
-    /* Esto separa los elementos a los extremos */
-  }
-}
 .partner-select {
   font-size: 22pt;
   font-weight: bolder;
   font-family: var(--vr-font-primary);
-}
-.fix-col {
-  max-height: 700px;
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  padding: 10px;
 }
 .card-subTitle {
   font-size: 11pt;
@@ -111,115 +44,10 @@ h2.accordion-header.partner-header {
 }
 .custom-scroll {
   overflow-x: hidden;
-  /* Ocultar el scrollbar horizontal */
 }
-.custom-scroll-accordion {
-  max-height: 400px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-/* Webkit scrollbar styling for bilateral accordion */
-.custom-scroll-accordion::-webkit-scrollbar {
-  width: 8px;
-}
-
-.custom-scroll-accordion::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.custom-scroll-accordion::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-.custom-scroll-accordion::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* Firefox scrollbar */
-.custom-scroll-accordion {
-  scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
-}
-
-/* Multilateral accordion scrolling */
-.accordion-multilateral {
-  max-height: 400px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.accordion-multilateral::-webkit-scrollbar {
-  width: 8px;
-}
-
-.accordion-multilateral::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.accordion-multilateral::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-.accordion-multilateral::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-.accordion-multilateral {
-  scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
-}
-
-/* EU Groups styling for expandable EU list */
-.eu-group {
-  font-weight: bold;
-  cursor: pointer;
-  position: relative;
-}
-
-.eu-group::before {
-  content: "▶ ";
-  display: inline-block;
-  transition: transform 0.3s;
-  margin-right: 5px;
-}
-
-.eu-group.expanded::before {
-  transform: rotate(90deg);
-}
-
-.eu-countries {
-  display: none;
-  padding-left: 20px;
-  margin-top: 5px;
-}
-
-.eu-countries.show {
-  display: block;
-}
-
-.eu-country-item {
-  font-size: 10pt;
-  padding: 2px 0;
-  color: #757575;
-  cursor: pointer;
-}
-
-.eu-country-item:hover {
-  color: #fcc12c;
-  text-decoration: underline;
-  text-decoration-color: #fcc12c;
-}
-
 .custom-scroll::-webkit-scrollbar {
   width: 8px;
-  /* Ancho del scrollbar */
   height: 8px;
-  /* Altura del scrollbar (si es un scroll horizontal) */
 }
 .custom-scroll::-webkit-scrollbar-button {
   display: none;
@@ -235,46 +63,6 @@ h2.accordion-header.partner-header {
   background: #ccc;
   /* Fondo de la pista */
 }
-.accordion {
-  height: 100%;
-  padding: 0px;
-  width: 450px;
-  margin-bottom: 0px;
-}
-.african-button,
-.accordion-button2 {
-  display: flex;
-  box-shadow: none;
-  width: 100%;
-  background-color: #ffdc94;
-  /* Color inicial */
-  padding: 18.5px;
-  border: none;
-  border-radius: 2.9px !important;
-  font-size: 10pt !important;
-  text-align: left;
-  outline: none;
-  height: 50px;
-  font-family: var(--vr-font-primary);
-}
-.accordion-button2:focus,
-.accordion-button2.active {
-  background-color: #fec03c !important;
-  font-family: var(--vr-font-primary) !important;
-  font-weight: bold !important;
-  box-shadow: none !important;
-}
-/* Estilo cuando un botón no tiene foco */
-
-.african-button:not(:focus),
-.accordion-button2:not(:focus) {
-  background-color: #ffdc94;
-  /* Color al no estar en foco */
-}
-.african-button:not(:focus).active {
-  background-color: #ffdc94;
-  /* Restablece el color si pierde foco */
-}
 .list-partners {
   font-size: 16pt;
   font-family: var(--vr-font-primary);
@@ -289,8 +77,6 @@ h2.accordion-header.partner-header {
 .card.partnership.expanded {
   width: 100%;
   border: none;
-  /* Cambia el borde a gris claro */
-  /*padding: 0px 0px 10px 0px;*/
 }
 .card-body.partner {
   margin: 0;
@@ -300,8 +86,6 @@ h2.accordion-header.partner-header {
   margin-right: 10px;
   padding: 15px 10px 15px 0px !important;
 }
-/* Quitar el borde del último ítem */
-
 .card-body.partner:last-child {
   border-bottom: none;
   margin-bottom: 0px !important;
@@ -310,69 +94,17 @@ h2.accordion-header.partner-header {
   font-weight: 400;
   font-size: 11pt;
   line-height: 1.5;
-  /* Ajusta el valor para aumentar el interlineado */
   padding-top: 10px;
   padding-bottom: 0.25rem !important;
   padding-left: 0rem !important;
-}
-.drop-and-map {
-  display: flex;
-}
-.accordion-body .accordion-bilateral {
-  border: black solid 0.5px;
-  padding: 0.75rem 0.75rem;
-}
-.accordion-body .accordion-multilateral {
-  border: black solid 0.5px;
-  padding: 0.75rem 0.75rem;
-}
-.col-3 .info-partner {
-  display: none;
-  border: black solid 1px;
-  border-radius: 7px;
-}
-.width-third-col .col-3 .info-partner {
-  height: 100%;
-  transition:
-    opacity 0.3s ease,
-    width 0.3s ease;
-  /* Smooth transition */
-  padding-left: 0;
-  text-align: start;
-}
-.first-col.col-2 {
-  padding: 0;
-  margin: 0 0;
-  border-top: none;
-  border-top-left-radius: 7px;
-  border-bottom-left-radius: 7px;
-}
-.second-col.col-8 {
-  border-left: none;
-  border-right: none;
 }
 .third-col {
   width: 100%;
   height: 100%;
   overflow-y: auto;
 }
-.nuevo {
-  display: flex;
-  /* border: 3px solid lightgray; /* Cambia el borde a gris claro */
-  width: 100%;
-  height: 100%;
-}
-
-.width-third-col #map {
-  width: 70%;
-}
 .hidden {
   display: none;
-}
-.expanded {
-  width: 75%;
-  height: 100% !important;
-  /* Expanded width for the second column when the third is hidden */
 }
 .tooltip2 {
   position: absolute;
@@ -410,9 +142,6 @@ h2.accordion-header.partner-header {
   height: 100%;
   width: 100%;
 }
-.selectores {
-  width: 250px;
-}
 .accordion-item {
   border: none;
   margin-top: 3px;
@@ -420,46 +149,6 @@ h2.accordion-header.partner-header {
 .divAfrican {
   margin-top: 0px !important;
 }
-.print-div {
-  display: flex;
-  justify-content: space-between;
-  margin-left: 4rem;
-  margin-right: 4rem;
-  margin-bottom: 1rem;
-}
-/* .list-group-item.bloc-select {
-    color: #757575;
-    text-decoration: none;
-    transition: color 0.3s, text-decoration-color 0.3s;
-    padding-left: 0px;
-    margin-top: 0px;
-    padding-top: 0px;
-    font-size: 10pt;
-} */
-.africantriangle {
-  display: none;
-}
-/* .list-group-item.bloc-select:hover {
-    color: #fcc12c;
-    text-decoration: underline;
-    text-decoration-color: #fcc12c;
-    text-underline-offset: 4px;
-} */
-/* .list-group-item.country-select {
-    color: #757575;
-    text-decoration: none;
-    transition: color 0.3s, text-decoration-color 0.3s;
-    padding-left: 0px;
-    padding-top: 0px;
-    margin: 0px;
-    font-size: 10pt;
-} */
-/* .list-group-item.country-select:hover {
-    color: #fcc12c;
-    text-decoration: underline;
-    text-decoration-color: r#fcc12ced;
-    text-underline-offset: 10px;
-} */
 .line {
   width: 100%;
   /* Hace que la línea ocupe el ancho completo de las opciones */
@@ -472,56 +161,9 @@ h2.accordion-header.partner-header {
 }
 .line-black {
   width: 100%;
-  /* Hace que la línea ocupe el ancho completo de las opciones */
   height: 1px;
-  /* Altura de la línea */
   background-color: #000000;
-  /* Color rojo */
 }
-.print-button {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  background-color: #ffdc94;
-  /* Color de fondo amarillo */
-  color: #000;
-  /* Color de texto */
-  font-weight: normal;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 13px;
-  gap: 12px;
-  /* Espacio entre el texto y el ícono */
-  transition: background-color 0.3s;
-  width: 95px;
-  height: 28px;
-  font-family: var(--vr-font-primary);
-}
-.print-button:hover {
-  background-color: #fec03c;
-  /* Color de fondo al pasar el mouse */
-}
-.print-icon {
-  height: 18px;
-  /* Altura del ícono */
-}
-/* Conflicting with apri-style
-.container {
-    display: flex;
-    width: 100%;
-    box-sizing: border-box;  
-}
-.left {
-    width: 300px;
-
-}
-.center {
-    flex-grow: 1;
-    text-align: center;
-}
-*/
 .right {
   width: 360px;
   background: rgba(255, 255, 255, 0.95);
@@ -555,12 +197,11 @@ h2.accordion-header.partner-header {
   border-radius: 3px;
   font-size: 10pt;
 }
-.tag .tooltip {
+.tag.tooltip {
   position: absolute;
   font-family: var(--vr-font-primary);
   visibility: hidden;
   line-height: 1;
-  /* Reducir interlineado */
   text-align: left;
   /* Alineación del texto a la izquierda */
   padding: 8px 10px;
@@ -586,32 +227,9 @@ h2.accordion-header.partner-header {
   padding-right: 4rem;
   padding-top: 1rem;
 }
-.tag:hover .tooltip {
+.tag:hover.tooltip {
   visibility: visible;
   opacity: 1;
-}
-.controls {
-  position: absolute;
-  top: 0px;
-  right: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  background-color: rgba(255, 255, 255, 0.8);
-  /* Opcional, para visibilidad */
-  border-radius: 5px;
-  align-items: flex-end;
-  background-color: transparent;
-  pointer-events: none;
-}
-
-
-
-.instruccions {
-  display: none;
-}
-.nameMobile {
-  display: none;
 }
 .label {
   font-size: 14px;
@@ -620,9 +238,6 @@ h2.accordion-header.partner-header {
   margin-right: 12px;
   font-family: var(--vr-font-primary);
   margin-left: 12px;
-}
-.imgDownload {
-  margin-left: 10px;
 }
 .tooltip {
   font-family: "UncutSans Semibold";
@@ -640,23 +255,13 @@ h2.accordion-header.partner-header {
   font-size: 11px;
   line-height: 1.4;
 }
-
-.accordion-button2[aria-expanded="true"] .triangle-icon {
-  transform: rotate(-180deg);
-}
-.accordion-button2[aria-expanded="false"] .triangle-icon {
-  transform: rotate(0deg);
-}
-
 .overlay {
   display: none;
 }
-
 .country-item {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  /* Alinear el contenido al inicio */
   margin-bottom: 5px;
 }
 .country-name {
@@ -717,7 +322,7 @@ h2.accordion-header.partner-header {
   padding-left: 5px;
   padding-bottom: 3px;
 }
-.tooltipMulti .close-btn {
+.tooltipMulti.close-btn {
   position: absolute;
   top: 5px;
   right: 5px;
@@ -740,30 +345,12 @@ h2.accordion-header.partner-header {
   margin-bottom: 0;
 }
 /*para movil */
-
 @media (max-width: 768px) {
-  .description {
-    padding-right: 0px;
-    margin-bottom: 20px;
-  }
   .title {
     font-size: 24pt;
   }
   .subtitle {
     font-size: 17pt;
-  }
-  .downloadButton {
-    font-size: 10pt;
-  }
-  .imgPdf {
-    width: 24px !important;
-    height: 24px !important;
-    margin-right: 8px !important;
-  }
-  .imgDownload {
-    width: 15px !important;
-    height: 15px !important;
-    margin-left: 10px !important;
   }
   .print-div {
     display: none;
@@ -783,38 +370,12 @@ h2.accordion-header.partner-header {
     grid-template-rows: auto auto auto;
     gap: 10px;
   }
-  .selectores {
-    width: 100%;
-  }
-  .accordion {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 5px;
-    padding: 10px 12px;
-    width: 100%;
-  }
-  .accordion-item {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    height: 100%;
-  }
-  .accordion-button2 {
-    width: 100%;
-    padding: 10px;
-  }
-  .accordion-button2 img {
-    margin-left: 10px;
-  }
   .first-col,
   .second-col,
   .right {
     display: flex;
     flex-direction: column;
-    /* Aseguramos que los elementos internos se dispongan verticalmente */
     justify-content: flex-start;
-    /* Alineamos al inicio de la columna */
   }
   .second-col {
     border-bottom: 1px solid lightgray;
@@ -840,36 +401,19 @@ h2.accordion-header.partner-header {
     margin-left: 0px;
     /* height: 300px; */
   }
-  .african-button,
-  .accordion-button2 {
-    font-size: 10pt !important;
-    text-align: left;
-    outline: none;
-    height: 35px !important;
-    font-family: "UncutSans Semibold";
-    border-radius: 7px !important;
-  }
-  h2.accordion-header.partner-header {
-    .accordion-button2 {
-      margin-top: 0px;
-    }
-  }
   .card.partnership {
     width: 100%;
-    /* Asegura que abarque todo el ancho del viewport */
     padding: 0px 0px 0px 0px;
     margin: 0px;
     padding: 0px 20px 0px 20px;
     border-radius: 5px !important;
     border: 0px solid lightgray;
-    /* Cambia el borde a gris claro */
   }
   .right {
     width: 100vw;
     margin-left: 0px;
     margin: 0px;
     padding: 0px;
-    /*margin: 10px;*/
   }
   .right.bilateral {
     margin-left: 0px;
@@ -877,18 +421,6 @@ h2.accordion-header.partner-header {
     padding: 0 0px 0 0px;
     /*margin: 10px;*/
   }
-  .controls {
-    bottom: 0px;
-    /* Mover a la parte inferior */
-    right: 6px;
-    /* Mantener en el borde derecho */
-    top: auto;
-    flex-direction: column;
-    /* Asegurarse de que se apilen verticalmente */
-    margin-bottom: 6px;
-    margin-right: 6px;
-  }
-
   ul {
     list-style: none;
     padding: 0;
@@ -935,7 +467,6 @@ h2.accordion-header.partner-header {
     padding: 16px;
     font-size: 14px;
     color: #fec03c;
-    /* Color de fondo al pasar el mouse */
     font-family: var(--vr-font-primary);
   }
   .confirm {
@@ -956,14 +487,6 @@ h2.accordion-header.partner-header {
     pointer-events: none;
     position: absolute;
   }
-  .mask-top {
-    top: 0;
-    background: linear-gradient(to top, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.8));
-  }
-  .mask-bottom {
-    bottom: 1px;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.8));
-  }
   .wheel-wrapper {
     position: relative;
     padding-left: 20px;
@@ -976,7 +499,6 @@ h2.accordion-header.partner-header {
     right: 0;
     height: 20px;
     pointer-events: none;
-    /* Asegura que no interfiera con los clics */
   }
   .wheel::after {
     content: "";
@@ -986,17 +508,13 @@ h2.accordion-header.partner-header {
     right: 0;
     height: 20px;
     pointer-events: none;
-    /* Asegura que no interfiera con los clics */
   }
   .wheel {
     flex: 1;
     height: 173px;
     overflow-y: scroll;
-    /* Asegúrate de tener overflow-y en scroll */
     -webkit-overflow-scrolling: touch;
-    /* Utiliza touch para tener el desplazamiento suave en iOS */
     scrollbar-width: thin;
-    /* Esto funciona para algunos navegadores para mostrar el scrollbar delgado */
   }
   .wheel-scroll {
     margin-top: 0px;
@@ -1039,54 +557,6 @@ h2.accordion-header.partner-header {
     color: #737373;
     text-decoration: underline;
   }
-  .accordion-collapse {
-    display: none;
-  }
-  .triangle-icon {
-    margin-left: auto;
-    /* Empuja el triángulo hacia el extremo derecho */
-    width: 16px;
-    /* Ajusta el tamaño del triángulo */
-    height: 16px;
-    transition: transform 0.3s ease;
-    /* Suaviza la animación */
-    transform: rotate(-90deg);
-  }
-  /* Rotación dependiendo del estado del botón */
-  .accordion-button2[aria-expanded="true"] .triangle-icon {
-    transform: rotate(-90deg);
-  }
-  .accordion-button2[aria-expanded="false"] .triangle-icon {
-    transform: rotate(-90deg);
-  }
-  .titleButton {
-    font-size: 18pt;
-    margin-bottom: 0px;
-    color: #000;
-    /*font-weight: bold;*/
-    font-family: var(--vr-font-primary);
-    font-weight: bold;
-  }
-  .nameMobile {
-    display: flex;
-    justify-content: space-between;
-    /* Esto separa los elementos a los extremos */
-    padding: 15px;
-    align-items: center;
-    /* Centra los elementos verticalmente */
-  }
-  .buttonChange {
-    color: #007bff;
-    align-items: center;
-    /* Centra los elementos verticalmente */
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-  }
-  .africantriangle {
-    display: flex;
-  }
   .instruccions {
     display: block;
     align-items: center;
@@ -1117,18 +587,6 @@ h2.accordion-header.partner-header {
   .hidden {
     display: none;
   }
-  .hand {
-    transition: transform 0.3s ease;
-  }
-  .overlay .hand {
-    width: 80px;
-    height: 80px;
-    transition: transform 0.3s ease;
-  }
-  .overlay:hover .hand {
-    transform: scale(1.2);
-    /* Escala la imagen al 150% */
-  }
   .titleBlur {
     color: #ffffff;
     font-size: 14px;
@@ -1149,9 +607,6 @@ h2.accordion-header.partner-header {
   .ms-2 {
     margin-left: 3px !important;
   }
-  #viewMoreBtn {
-    display: none;
-  }
   .lastUpdate {
     font-size: 8.5pt;
     font-family: var(--vr-font-primary);
@@ -1159,24 +614,402 @@ h2.accordion-header.partner-header {
     padding-left: 15px;
     padding-top: 0.5rem;
   }
+}
+/* ============================================================
+   DESIGN SYSTEM — Green Minerals Map
+   Add these rules to the bottom of style.css
+   They override existing rules via specificity
+   ============================================================ */
 
-  /* CRM Hero Map Theme */
-  .breadcrumb-area.hero-africa-map {
-    background-color: #4b351d !important;
-    background-image: linear-gradient(104deg, rgba(46, 31, 16, 0.95) 0%, rgba(74, 51, 26, 0.9) 42%, rgba(105, 71, 35, 0.66) 72%, rgba(139, 95, 46, 0.48) 100%), radial-gradient(circle at 14% 18%, rgba(252, 193, 44, 0.22) 0%, rgba(252, 193, 44, 0) 34%), url("../img/bg/africa-map-pattern.svg") !important;
-    background-repeat: no-repeat, no-repeat, no-repeat !important;
-    background-size:
-      cover,
-      cover,
-      100% 100% !important;
-    background-position: center, center, center !important;
-  }
+/* ── CSS Variables ── */
+:root {
+  --color-accent:        #C1440E;
+  --color-accent-hover:  #A33A0C;
+  --color-accent-light:  #F2E0D8;
+  --color-accent-border: #E8C4B0;
+  --color-bg:            #FFFFFF;
+  --color-bg-subtle:     #FAFAF8;
+  --color-border:        #E8E4DF;
+  --color-text-primary:  #1C1C1A;
+  --color-text-secondary:#5F5E5A;
+  --color-text-muted:    #B4B2A9;
+  --color-map-default:   #E8E4DF;
+}
 
-  .breadcrumb-area.hero-africa-map .title,
-  .breadcrumb-area.hero-africa-map .subtitle,
-  .breadcrumb-area.hero-africa-map .description,
-  .breadcrumb-area.hero-africa-map .downloadButton,
-  .breadcrumb-area.hero-africa-map .downloadButton a {
-    color: #f8fbff !important;
-  }
+/* ── Global base ── */
+body {
+  background: var(--color-bg-subtle);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--color-text-primary);
+}
+
+/* ── Nav ── */
+#nav {
+  padding: 12px 24px;
+  border-bottom: 0.5px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+h2.title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+/* ── Buttons ── */
+/* Replace Bootstrap danger with terracotta */
+.btn-danger,
+.btn-danger.dropdown-toggle {
+  background-color: var(--color-accent) !important;
+  border-color: var(--color-accent) !important;
+  color: #fff !important;
+}
+
+.btn-danger:hover,
+.btn-danger.dropdown-toggle:hover {
+  background-color: var(--color-accent-hover) !important;
+  border-color: var(--color-accent-hover) !important;
+}
+
+.btn-secondary {
+  background-color: #4A4A47 !important;
+  border-color: #4A4A47 !important;
+  color: #fff !important;
+  font-size: 0.85rem;
+}
+
+.btn-secondary:hover {
+  background-color: #333331 !important;
+  border-color: #333331 !important;
+}
+
+/* ── Dropdowns ── */
+.dropdown-menu {
+  border: 0.5px solid var(--color-border);
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  padding: 4px 0;
+  font-size: 0.875rem;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.dropdown-item {
+  color: var(--color-text-primary);
+  padding: 6px 16px;
+  transition: background 0.12s;
+}
+
+.dropdown-item:hover {
+  background-color: var(--color-accent-light);
+  color: var(--color-accent);
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: var(--color-accent) !important;
+  color: #fff !important;
+}
+
+/* ── Modal ── */
+.modal-dialog {
+  max-width: 640px;
+}
+
+.modal-content {
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+.modal-header {
+  padding: 24px 28px 8px 28px;
+  border-bottom: none;
+}
+
+/* Hide the redundant "About" header label */
+.modal-header .modal-title:first-of-type:not(#aboutModalLabel) {
+  display: none;
+}
+
+/* The real title */
+#aboutModalLabel {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* Accent line under modal title */
+.modal-header::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 3px;
+  background: var(--color-accent);
+  margin-top: 10px;
+}
+
+/* Fix close button */
+.modal-header .close,
+.modal-header .btn-close {
+  opacity: 0.5;
+  transition: opacity 0.15s;
+}
+
+.modal-header .close:hover,
+.modal-header .btn-close:hover {
+  opacity: 1;
+}
+
+.modal-body {
+  padding: 16px 28px 28px 28px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.modal-body p {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  margin-bottom: 14px;
+}
+
+.modal-body .row {
+  padding-top: 16px;
+  border-top: 0.5px solid var(--color-border);
+  margin-top: 8px;
+}
+
+.modal-body .text-uppercase {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+.modal-body .small {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.modal-body a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.modal-body a:hover {
+  color: var(--color-accent-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── Legend ── */
+#legend-container {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(4px);
+  padding: 10px 14px;
+  border-radius: 4px;
+  border: 0.5px solid var(--color-border);
+}
+
+.legend-title {
+  font-size: 0.75rem !important;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0 0 6px 0 !important;
+}
+
+.legend-label-row span {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* Hide legend on bilateral/multilateral views */
+.legend-hidden#legend-container {
+  display: none !important;
+}
+
+/* ── Detail panel (.right) ── */
+.right {
+  width: 340px;
+  background: var(--color-bg);
+  border-left: 0.5px solid var(--color-border);
+  z-index: 10;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.third-col {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.card.partnership {
+  border: none;
+  border-radius: 0;
+  padding: 20px 20px 0 20px;
+  height: 100%;
+  overflow-y: auto;
+  background: var(--color-bg);
+}
+
+/* Scrollbar — thin and minimal */
+.card.partnership::-webkit-scrollbar {
+  width: 4px;
+}
+.card.partnership::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+.card.partnership::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ── Panel partner header ── */
+.card-title.partner-select {
+  font-size: 1.4rem !important;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  border-bottom: 2px solid var(--color-accent) !important;
+  padding-bottom: 10px !important;
+  margin-bottom: 8px !important;
+  margin-top: 0 !important;
+}
+
+/* Header note: "Partnerships with African countries" */
+.card-subTitle {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 16px;
+}
+
+/* African country headings in panel */
+.card-title.list-partners {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 6px;
+}
+
+/* Agreement name */
+.card-subtitle.agreement {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: 2px;
+  padding-bottom: 0 !important;
+}
+
+/* Signed / Access lines */
+.card-text.mb-1 {
+  font-size: 0.8rem !important;
+  color: var(--color-text-secondary);
+  margin-bottom: 2px !important;
+}
+
+/* Divider between African country sections */
+.card-body.partner {
+  border-bottom: 0.5px solid var(--color-border);
+  padding: 14px 0;
+  margin: 0;
+}
+
+.card-body.partner:last-child {
+  border-bottom: none;
+}
+
+/* ── Areas of cooperation tags ── */
+/* Unify all tag colors to terracotta light */
+.areas-tag,
+[class*="btn"][style*="background"] {
+  background-color: var(--color-accent-light) !important;
+  color: var(--color-accent) !important;
+  border: 0.5px solid var(--color-accent-border) !important;
+  font-size: 0.75rem !important;
+  padding: 3px 10px !important;
+  border-radius: 20px !important;
+  font-weight: 500;
+}
+
+/* ── View source link ── */
+a.source-link,
+.card a[href] {
+  color: var(--color-accent);
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+a.source-link:hover,
+.card a[href]:hover {
+  color: var(--color-accent-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── Fix broken icon image ── */
+/* Hide alt text when image fails to load */
+img[alt="Icono de acceso"] {
+  display: none;
+}
+
+/* ── Multilateral panel ── */
+/* Description text */
+.bloc-description {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  margin-bottom: 16px;
+}
+
+/* EU note in multilateral view */
+.eu-note {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: var(--color-accent-light);
+  border-left: 3px solid var(--color-accent);
+  border-radius: 0 4px 4px 0;
+}
+
+/* ── Tooltip ── */
+.tooltip2 {
+  position: absolute;
+  background: var(--color-bg);
+  border: 0.5px solid var(--color-border);
+  border-radius: 4px;
+  padding: 10px 14px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  pointer-events: none;
+  max-width: 200px;
+  z-index: 200;
+  font-size: 0.85rem;
+}
+
+/* ── Instructions bar ── */
+.instruccions {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  padding: 6px 16px;
+  border-top: 0.5px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.button-dropdown {
+  line-height: 1.1
 }
