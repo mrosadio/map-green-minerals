@@ -1,7 +1,7 @@
 export function addLegend(svg, colorScale) {
   //d3.select(".legend").remove();
   const title = d3.select(".d-flex.flex-column.p-2.fs-7.legend-title");
-  title.text("Number of Partnerships");
+  title.text("Number of bilateral partnerships");
   const barRow = d3.select(".d-flex.flex-row.g-0.legend-bar-row");
   const labelRow = d3.select(".d-flex.justify-content-between.legend-label-row");
   console.log('Color scale range', colorScale)

@@ -44,8 +44,7 @@ const highlightColors = {
 // ── Public: overview map ──────────────────────────────────────────────────────
 
 export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
-  console.log("drawMapWithPartnerColors called, existing paths:", 
-  svg.selectAll("path").size());
+  console.log("drawMapWithPartnerColors called, existing paths:", svg.selectAll("path").size());
   console.log(
     "Partners of Uganda",
     numberData.find((d) => d.africanCountry === "Uganda"),
@@ -133,9 +132,11 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
       const individualPartners = new Set(rawPartners.map(cleanPartnerName).filter((p) => p !== "European Union" && p !== "EU"));
 
       // Highlight individual partner countries
-      g.selectAll("path")
-        .filter((p) => individualPartners.has(p.properties.name))
-        .transition()
+      svg
+        .selectAll("path")
+        .filter((p) => individualPartners.has(p.properties?.name))
+        .interrupt("partnerHighlight")
+        .transition("partnerHighlight")
         .duration(200)
         .attr("fill", PARTNER_FILL)
         .attr("stroke", "#8C4D00")
@@ -186,9 +187,9 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
       // Restore partner countries — use their original fill, not DEFAULT_FILL
       svg
         .selectAll("path")
-        .filter((p) => individualPartners.has(p.properties.name))
-        .interrupt() // ← cancel any running transition on partner paths too
-        .transition()
+        .filter((p) => p?.properties && individualPartners.has(p.properties.name))
+        .interrupt("partnerHighlight") // name the transition
+        .transition("partnerHighlight") // same name cancels previous
         .duration(200)
         .attr("fill", (p) => {
           const count = partnerLookup.get(p.properties.name)?.partnersNo || 0;
