@@ -278,25 +278,25 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
 
 export function panMapforPartner(partnerName) {
   const mapEl = document.querySelector("#map");
-  const panelWidth = 320;
+  const vb = getViewBox(mapEl).split(" ").map(Number);
+  const legendShift = 60; // shift left to fill legend space
   // Partners on the right side of the world map — pan left to reveal them
   const rightSidePartners = new Set([
     "China", "Japan", "South Korea", "India", "Indonesia",
     "Russia", "United Arab Emirates", "Saudi Arabia", "Qatar", "Iran"
   ]);
-  const vb = getViewBox(mapEl).split(" ").map(Number);
-  
-  if (rightSidePartners.has(partnerName)) {
-    vb[0] = vb[0] - (panelWidth / 2);
-  }
+  // Shift left for right-side partners (to reveal them from behind panel)
+  // Plus always shift left slightly to fill legend space
+  const partnerShift = rightSidePartners.has(partnerName) ? 50 : 0;
+  vb[0] = vb[0] + legendShift + partnerShift;
 
-  svg.transition("panelOpen").duration(400)
+  svg.transition("mapPan").duration(400)
     .attr("viewBox", vb.join(" "));
 }
 
 export function resetMapPan() {
   const mapEl = document.querySelector("#map");
-  svg.transition("panelClose").duration(400)
+  svg.transition("mapPan").duration(400)
     .attr("viewBox", getViewBox(mapEl));
 }
 // ── Public: path generator helper ────────────────────────────────────────────

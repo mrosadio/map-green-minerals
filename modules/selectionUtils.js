@@ -1,19 +1,25 @@
 import { svg, themeUrl } from "./globals.js";
 
 export function highlightPartnership(svg, filteredGeoJSON, itemSelected) {
-  const partnerCountries = new Set(
-    filteredGeoJSON.features.map((f) => f.properties.name)
-  );
   svg.selectAll("path")
     .interrupt("highlight")
     .transition("highlight")
+    .duration(200)
+    .attr("fill", "#E8E4DF")
+    .attr("stroke", "white")
+    .attr("stroke-width", 0.5);
+  const partnerCountries = new Set(
+    filteredGeoJSON.features.map((f) => f.properties.name)
+  );
+  // Step 2: then apply new highlights
+  svg.selectAll("path")
+    .filter(d => partnerCountries.has(d.properties?.name))
+    .interrupt("highlight")
+    .transition("highlight")
     .duration(400)
-    .attr("fill", (d) => {
-      const name = d.properties.name;
-      if (name === itemSelected) return "#D4891A";        // partner country — darker amber
-      if (partnerCountries.has(name)) return "#F0C97A";  // African partners — lighter amber
-      return "#E8E4DF";                                   // default warm grey
-    });
+    .attr("fill", d =>
+      d.properties.name === itemSelected ? "#D4891A" : "#F0C97A"
+    );
 }
 
 export function highlightEu(svg, filteredGeoJSON) {
