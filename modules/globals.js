@@ -24,10 +24,9 @@ const legendMargin = { top: 20, right: 20, bottom: 40, left: 10 };
 let svg = d3
   .select("#map")
   .append("svg")
-  //.attr("viewBox", `-100 0 ${width} ${height}`)
   .attr("preserveAspectRatio", "xMidYMid meet")
-  .attr("height", "auto") // Altura fija
-  .attr("width", "100%"); // Altura fija
+  .attr("height", "100%") 
+  .attr("width", "100%");
 
 const customColors = ["#fcc12c", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#d62728", "#bcbd22", "#17becf", "#aec7e8", "#ffbb78", "#98df8a", "#ff9896", "#c5b0d5", "#c49c94", "#f7b6d2", "#c75b38", "#dbdb8d", "#9edae5"];
 const blocColors = {

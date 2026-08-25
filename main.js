@@ -2,17 +2,16 @@ import {
   loadAndMergeData,
   mergeMulti,
   createBlocGeoJSON,
-  // filterAfrica,
   mergeWorldWithPartnerData,
   filterCountriesByPartner,
   filterEUandPartners,
 } from "./modules/dataUtils.js";
 import {
-  // path,
   drawMap,
   drawMapWithPartnerColors,
-  //destroyMap,
-  fitSizeMap
+  fitSizeMap,
+  resetMapPan,
+  panMapforPartner
 } from "./modules/mapUtils.js";
 import {
   highlightPartnership,
@@ -76,7 +75,7 @@ function refresh() {
     console.log("refreshing in main.js")
     showPickerAfrica();
   } else {
-    window.location.href = window.location.href;
+    resetToInitialView();
   }
 }
 
@@ -133,11 +132,14 @@ Promise.all([
         ]);
 
       resetToInitialView();
+      document.querySelector("#africaButton").addEventListener('click', () => {
+        resetToInitialView();
+        resetMapPan()
+      })
       document.querySelectorAll(".country-select").forEach((item) => {
         item.addEventListener("click", function () {
           showThirdColumn();
           let selectedCountry = this.textContent.trim();
-          //  console.log(filteredCountryGeoJSON)
           // Map display names back to internal keys used by the data
           let internalSelectedCountry = selectedCountry;
           if (selectedCountry === "United Kingdom") internalSelectedCountry = "England";
@@ -146,8 +148,6 @@ Promise.all([
           if (item.textContent.includes("EU") || item.textContent.includes("European Union")) {
             filterEUandPartners(mergedBiData, biData).then(
               (filteredCountryGeoJSON) => {
-                deleteCountryLabels(filteredCountryGeoJSON);
-                destroyMap();
                 console.log('drawmap in main.js')
                 drawMap(mergedBiData, filteredCountryGeoJSON, "EU");
                 highlightEu(svg, filteredCountryGeoJSON);
@@ -156,6 +156,7 @@ Promise.all([
                   filteredCountryGeoJSON,
                   item.textContent
                 );*/
+                panMapforPartner(selectedCountry);
                 populatePartnerships(biData, selectedCountry);
               }
             );
@@ -169,6 +170,7 @@ Promise.all([
             //destroyMap();
             drawMap(mergedBiData, filteredCountryGeoJSON, internalSelectedCountry);
             highlightPartnership(svg, filteredCountryGeoJSON, item.textContent);
+            panMapforPartner(selectedCountry);
             populatePartnerships(biData, selectedCountry);
             //hideLegend();
           }

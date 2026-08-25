@@ -231,6 +231,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
 }
 // ── Public: bilateral / multilateral map ──────────────────────────────────────
 export function drawMap(geojson, filteredCountryGeoJSON, partner) {
+  console.log('Content of filtered', filteredCountryGeoJSON)
   const mapEl = document.querySelector("#map");
   if (!mapEl) {
     console.error("drawMap: #map not found");
@@ -243,10 +244,13 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
   const W = mapEl.clientWidth;
   const H = mapEl.clientHeight;
 
-  const projection = d3
-    .geoMercator()
-    .scale(400)
-    .translate([W / 2, H / 2]);
+  if (!W || !H) {
+    console.error("drawMap: #map has no dimensions");
+    return;
+  }
+
+  // fitSize automatically scales and centers the projection to fill [W, H]
+  const projection = d3.geoEqualEarth().fitSize([W, H], geojson);
   const path = d3.geoPath().projection(projection);
 
   g = svg.append("g");
@@ -268,6 +272,32 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
     .each(function (d) {
       renderLabel(d3.select(this), d, path);
     });
+}
+
+// -- Public: when partners local at the right-side of the world map selected --
+
+export function panMapforPartner(partnerName) {
+  const mapEl = document.querySelector("#map");
+  const panelWidth = 320;
+  // Partners on the right side of the world map — pan left to reveal them
+  const rightSidePartners = new Set([
+    "China", "Japan", "South Korea", "India", "Indonesia",
+    "Russia", "United Arab Emirates", "Saudi Arabia", "Qatar", "Iran"
+  ]);
+  const vb = getViewBox(mapEl).split(" ").map(Number);
+  
+  if (rightSidePartners.has(partnerName)) {
+    vb[0] = vb[0] - (panelWidth / 2);
+  }
+
+  svg.transition("panelOpen").duration(400)
+    .attr("viewBox", vb.join(" "));
+}
+
+export function resetMapPan() {
+  const mapEl = document.querySelector("#map");
+  svg.transition("panelClose").duration(400)
+    .attr("viewBox", getViewBox(mapEl));
 }
 // ── Public: path generator helper ────────────────────────────────────────────
 export function fitSizeMap(geoJSON) {

@@ -1,39 +1,19 @@
 import { svg, themeUrl } from "./globals.js";
-//import { path } from "./mapUtils.js";
 
 export function highlightPartnership(svg, filteredGeoJSON, itemSelected) {
-  console.log('Highlighting partnership', itemSelected);
-  console.log('Filtered GeoJSON in highlightPartnership', filteredGeoJSON);
   const partnerCountries = new Set(
     filteredGeoJSON.features.map((f) => f.properties.name)
   );
-  console.log("item selected in export function", partnerCountries);
-
-  //console.log("Partner countries test", partnerCountries);
-  //console.log("Parner countries", partnerCountries);
-  svg
-    .selectAll("path")
-
+  svg.selectAll("path")
+    .interrupt("highlight")
+    .transition("highlight")
+    .duration(400)
     .attr("fill", (d) => {
-      // console.log("item ", d.properties.name + "el otro es" + itemSelected);
-
-      if (d.properties.name.toString() == itemSelected.toString()) {
-        return "#fec030"; // Color para los países en blocCountries
-      } else if (partnerCountries.has(d.properties.name)) {
-        console.log("COINMCIDENNNN");
-        return "#FFDC94"; // Color alternativo
-      } else {
-        return "#f2f2f2"; // Color por defecto
-      }
-    })
-
-    /* .attr("fill", (d) =>
-      partnerCountries.has(d.properties.name) ? "#fec03c" : "#f2f2f2"
-    )*/
-    .transition()
-    .duration(500);
-  //console.log("filtered geo json after highlight", filteredGeoJSON.features);
-  //adjustViewbox(itemSelected);
+      const name = d.properties.name;
+      if (name === itemSelected) return "#D4891A";        // partner country — darker amber
+      if (partnerCountries.has(name)) return "#F0C97A";  // African partners — lighter amber
+      return "#E8E4DF";                                   // default warm grey
+    });
 }
 
 export function highlightEu(svg, filteredGeoJSON) {
@@ -66,13 +46,9 @@ export function highlightEu(svg, filteredGeoJSON) {
           ? "#fec03c" // Verde para updatedCountries
           : "#f2f2f2" // Gris claro para el resto
   );
-
-  svg.attr("viewBox", "-100 0 1000 600");
-  // svg.attr("viewBox", "100 50 600 350");
 }
 
 export function populatePartnerships(biData, selectedCountry) {
-  console.log('Selected country in populatePartnerships', selectedCountry);
   // Normalize display names to internal keys used in data
   if (selectedCountry === "England") {
     selectedCountry = "United Kingdom";
@@ -81,7 +57,7 @@ export function populatePartnerships(biData, selectedCountry) {
   if (selectedCountry === "European Union") internalSelected = "EU";
   if (selectedCountry === "United States") internalSelected = "USA";
   let partnerSelected;
-  const infoPartnerContainer = document.querySelector(".card");
+  const infoPartnerContainer = document.querySelector(".card.partnership");
   infoPartnerContainer.innerHTML = "";
   const bilateralPartner = document.createElement("h2");
   bilateralPartner.classList.add(
@@ -106,10 +82,7 @@ export function populatePartnerships(biData, selectedCountry) {
       bilateralPartner.innerHTML = `${partnerSelected.nonafrican}`;
     }
   }
-  // Agregar la línea roja debajo del H2 dinámicamente
-  bilateralPartner.style.borderBottom = "2px solid #ffb300"; // Línea roja de 2px
-  bilateralPartner.style.paddingBottom = "10px"; // Espacio entre el texto y la línea
-  bilateralPartner.style.marginTop = "0px !importat"; // Espacio entre el texto y la línea
+  bilateralPartner.classList.add("partner-header");
 
   infoPartnerContainer.appendChild(bilateralPartner);
 
@@ -188,24 +161,16 @@ export function populatePartnerships(biData, selectedCountry) {
         partnershipCard.appendChild(partnerAgreement);
         // Crear el elemento para el tiempo (time) y agregarlo segundo
         const time = document.createElement("p");
-        time.classList.add("card-text", "mb-1");
+        time.classList.add("card-text", "mb-1", "agreement-time");
         time.innerHTML = `Signed: ${agreement.year}`;
-        //time.style.fontFamily = "RalewayLight"; // Aplicar la fuente personalizada
-        time.style.fontSize = "11pt"; // Aplicar la fuente personalizada
-        time.style.paddingBottom = "0px"; // Aplicar la fuente personalizada
-        time.style.marginBottom = "0px"; // Aplicar la fuente personalizada
 
         partnershipCard.appendChild(time);
 
         // Crear el párrafo para Access y agregarlo al final
         const access = document.createElement("p");
-        access.classList.add("card-text", "mb-1");
+        access.classList.add("card-text", "mb-1", "agreement-access");
         access.innerHTML = `Access: Publicly available`;
-        //access.style.fontFamily = "RalewayLight"; // Aplicar la fuente personalizada
-        access.style.fontSize = "11pt"; // Aplicar la fuente personalizada
-        access.style.paddingBottom = "0px"; // Aplicar la fuente personalizada
-        access.style.marginBottom = "0px"; // Aplicar la fuente personalizada
-
+  
         // Crear el ícono
         const icon = document.createElement("img");
         icon.src = `${themeUrl}/img/icons/web.svg`; // Ruta del ícono PNG
@@ -391,24 +356,19 @@ export function populatePartnerships(biData, selectedCountry) {
       const time = document.createElement("p");
       time.classList.add("card-text", "mb-1");
       time.innerHTML = `Signed: ${partner.year}`;
-      //time.style.fontFamily = "RalewayLight"; // Aplicar la fuente personalizada
       time.style.fontSize = "11pt"; // Aplicar la fuente personalizada
       time.style.paddingBottom = "0px"; // Aplicar la fuente personalizada
-      //time.style.marginBottom = "0px"; // Aplicar la fuente personalizada
 
       partnershipCard.appendChild(time);
 
-      // Crear el párrafo para Access y agregarlo al final
       const access = document.createElement("p");
       access.classList.add("card-text", "mb-1");
 
       access.innerHTML = partner.linkAgreement
         ? `Access: Publicly available`
         : `Access: Not publicly available`;
-
-      //access.style.fontFamily = "RalewayLight"; // Aplicar la fuente personalizada
-      access.style.fontSize = "11pt"; // Aplicar la fuente personalizada
-      access.style.paddingBottom = "0px"; // Aplicar la fuente personalizada
+      access.style.fontSize = "11pt"; 
+      access.style.paddingBottom = "0px";
 
       // Crear el ícono
       const icon = document.createElement("img");
@@ -422,8 +382,8 @@ export function populatePartnerships(biData, selectedCountry) {
       link.href = partner.linkAgreement
         ? `${partner.linkAgreement}`
         : `${partner.sources}`;
-      link.target = "_blank"; // Abrir en una nueva pestaña
-      link.classList.add("ms-2"); // Margen izquierdo
+      link.target = "_blank";
+      link.classList.add("ms-2");
 
       link.textContent = partner.linkAgreement
         ? "View agreement"
@@ -458,15 +418,13 @@ export function populatePartnerships(biData, selectedCountry) {
 
         const areasTitle = document.createElement("span");
         areasTitle.classList.add("card-text");
-        //areasTitle.style.fontFamily = "RalewayLight"; // Aplicar la fuente personalizada
-        areasTitle.style.fontSize = "11pt"; // Aplicar la fuente personalizada
+        areasTitle.style.fontSize = "11pt";
         areasTitle.style.paddingBottom = "0px";
         areasTitle.style.marginBottom = "0px";
         areasTitle.style.marginRight = "10px";
         areasTitle.innerHTML = "Areas of cooperation:";
         areasTitleContainer.appendChild(areasTitle);
 
-        // Contenedor de tags
         const tagsContainer = document.createElement("div");
         tagsContainer.style.display = "flex";
         tagsContainer.style.flexWrap = "wrap";
@@ -474,7 +432,7 @@ export function populatePartnerships(biData, selectedCountry) {
         tagsContainer.style.gap = "5px";
 
         const rightElement = document.querySelector(".right");
-        rightElement.style.marginTop = "0px"; // Ajusta el valor según lo que necesites
+        rightElement.style.marginTop = "0px"; 
 
         // Obtener el primer elemento que tenga 25 letras o menos y luego el resto en su orden original
         const firstShortElement = partnerAreasCoop.find(
@@ -487,7 +445,6 @@ export function populatePartnerships(biData, selectedCountry) {
           ? [firstShortElement, ...remainingAreas]
           : remainingAreas;
 
-        // Crear los tags para cada área de cooperación con colores específicos
         reorderedAreas.forEach((area, index) => {
           const tag = document.createElement("span");
           tag.classList.add("tag");
@@ -540,7 +497,6 @@ export function populatePartnerships(biData, selectedCountry) {
               const overflowX = tooltipRect.right - containerRect.right;
               tooltip.style.transform = `translateX(calc(-15% - ${overflowX}px))`; // Ajustar la posición
             }
-
             if (tooltipRect.left < containerRect.left) {
               const overflowLeft = containerRect.left - tooltipRect.left;
               tooltip.style.transform = `translateX(calc(-15% + ${overflowLeft}px))`;
@@ -561,14 +517,11 @@ export function populatePartnerships(biData, selectedCountry) {
             tagsContainer.appendChild(tag);
           }
         });
-
-        // Agregar el contenedor de título y tags a partnershipCard
         areasTitleContainer.appendChild(tagsContainer);
         partnershipCard.appendChild(areasTitleContainer);
       }
     }
     scrollContainer.appendChild(partnershipCard);
-
     infoPartnerContainer.appendChild(scrollContainer);
   });
 }
@@ -638,7 +591,6 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
   const loremText = document.createElement("p");
   loremText.classList.add("card-text", "mt-2");
   loremText.style.fontSize = "11pt";
-  //loremText.style.fontFamily = "Roboto"; // Aplicar la fuente personalizada
   loremText.style.paddingLeft = "0rem"; // Aplicar la fuente personalizada
 
   let nombre = selectedBloc.replace(/\s+/g, " ");
@@ -900,7 +852,7 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
   infoMultiContainer.appendChild(scrollContainer);
 }
 export function clearCardContent() {
-  const infoMultiContainer = document.querySelector(".card");
+  const infoMultiContainer = document.querySelector(".card.partnership");
 
   if (infoMultiContainer) {
     infoMultiContainer.innerHTML = ""; // Elimina todo el contenido
@@ -908,36 +860,17 @@ export function clearCardContent() {
     ////console.warn("Elemento con clase 'card' no encontrado.");
   }
 }
-export function highlightBloc(
-  svg,
-  filteredGeoJSON,
-  selectedColor,
-  selectedBloc
-) {
-  //	svg.selectAll("text").remove();
-  console.log("selected color", selectedColor);
-  //console.log("Filtered geojson", filteredGeoJSON);
+export function highlightBloc(svg, filteredGeoJSON, selectedColor, selectedBloc) {
   const blocCountries = new Set(
     filteredGeoJSON.features.map((f) => f.properties.name)
   );
-  //console.log("bloc countries are", blocCountries);
-
-  svg.selectAll("path").attr("fill", (d) => {
-    if (blocCountries.has(d.properties.name)) {
-      return selectedColor; // Color para los países en blocCountries
-    } else if (blocCountries.has(selectedBloc)) {
-      // Otra condición adicional
-      return "#000"; // Color alternativo
-    } else {
-      return "#f2f2f2"; // Color por defecto
-    }
-  });
-
-  /* svg
-    .selectAll("path")
+  svg.selectAll("path")
+    .interrupt("highlight")
+    .transition("highlight")
+    .duration(400)
     .attr("fill", (d) =>
-      blocCountries.has(d.properties.name) ? selectedColor : "#f2f2f2"
-    );*/
+      blocCountries.has(d.properties.name) ? selectedColor : "#E8E4DF"
+    );
 }
 
 // export function highlightEuClubBloc(svg, filteredGeoJSON) {

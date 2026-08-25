@@ -279,19 +279,12 @@ h2.accordion-header.partner-header {
   font-size: 16pt;
   font-family: var(--vr-font-primary);
 }
-/* .list-partners {
-    .list-group-item {
-        font-size: 30pt;
-        font-family: var(--vr-font-primary);
-    }
-} */
 .card.partnership {
-  display: flex;
-  border: 1px solid lightgray;
-  /* Cambia el borde a gris claro */
-  border-radius: 7px;
-  padding: 0px 10px 10px 10px;
-  width: 140px;
+  border: none;
+  border-radius: 0;
+  padding: 16px;
+  height: 100%;
+  overflow-y: auto;
 }
 .card.partnership.expanded {
   width: 100%;
@@ -333,23 +326,10 @@ h2.accordion-header.partner-header {
   border: black solid 0.5px;
   padding: 0.75rem 0.75rem;
 }
-/* .list-group-item {
-    border: none;
-    cursor: pointer;
-    margin: 2px 2px;
-} */
 .col-3 .info-partner {
   display: none;
   border: black solid 1px;
   border-radius: 7px;
-  /* max-width: 100%;
-    height: 100%;
-    border: black solid .5px;
-    border-radius: 7px;
-    width: 25%; 
-    transition: opacity 0.3s ease, width 0.3s ease; 
-    padding-left: 0;
-    text-align: start; */
 }
 .width-third-col .col-3 .info-partner {
   height: 100%;
@@ -360,10 +340,6 @@ h2.accordion-header.partner-header {
   padding-left: 0;
   text-align: start;
 }
-/* #accordionFlushExample {
-    width: 25%;
-  } */
-
 .first-col.col-2 {
   padding: 0;
   margin: 0 0;
@@ -376,8 +352,9 @@ h2.accordion-header.partner-header {
   border-right: none;
 }
 .third-col {
-  display: block;
-  justify-content: flex-end;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
 }
 .nuevo {
   display: flex;
@@ -544,12 +521,15 @@ h2.accordion-header.partner-header {
     flex-grow: 1;
     text-align: center;
 }
-.right {
-    width: fit-content;
-    margin-left: 14px;
-    justify-content: flex-end;
-}
 */
+.right {
+  width: 360px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
+  border-left: 0.5px solid #E8E4DF;
+  z-index: 10;
+  overflow-y: auto;
+}
 .right.bilateral {
   width: 450px;
   margin-left: 12px;
@@ -624,49 +604,15 @@ h2.accordion-header.partner-header {
   background-color: transparent;
   pointer-events: none;
 }
-.controls * {
-  pointer-events: auto;
-  /* Habilita eventos del mouse en todos los elementos hijos */
-}
-/* Contenedor de los botones de zoom */
 
-.btnZoom {
-  top: 10px;
-  /* Ajusta la posición según tus necesidades */
-  right: 10px;
-  /* Ajusta la posición según tus necesidades */
-  display: flex;
-  flex-direction: column;
-}
-/* Estilos comunes para los botones */
 
-.btnZoom button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: transparent;
-  padding: 0px;
-  /* Elimina el padding para que el botón no tenga espacio extra */
-  border: none;
-  /* Borde negro */
-  margin: 0px;
-}
-/* Estilos para los iconos SVG dentro de los botones */
 
-.btnZoom button img {
-  width: 30px;
-  /* Ajusta el tamaño del icono */
-  height: 30px;
-}
 .instruccions {
   display: none;
 }
 .nameMobile {
   display: none;
 }
-
 .label {
   font-size: 14px;
   color: #000;
@@ -674,22 +620,6 @@ h2.accordion-header.partner-header {
   margin-right: 12px;
   font-family: var(--vr-font-primary);
   margin-left: 12px;
-}
-.downloadButton {
-  display: flex;
-  align-items: center;
-  font-size: 18px;
-  color: #333;
-  text-decoration: none;
-  border-radius: 5px;
-  cursor: pointer;
-  width: fit-content;
-  font-family: "UncutSans Semibold";
-}
-.downloadButton img {
-  width: 30px;
-  height: 30px;
-  margin-right: 10px;
 }
 .imgDownload {
   margin-left: 10px;
@@ -710,18 +640,6 @@ h2.accordion-header.partner-header {
   font-size: 11px;
   line-height: 1.4;
 }
-/* Alinea el triángulo al borde derecho */
-
-.triangle-icon {
-  margin-left: auto;
-  /* Empuja el triángulo hacia el extremo derecho */
-  width: 16px;
-  /* Ajusta el tamaño del triángulo */
-  height: 16px;
-  transition: transform 0.3s ease;
-  /* Suaviza la animación */
-}
-/* Rotación dependiendo del estado del botón */
 
 .accordion-button2[aria-expanded="true"] .triangle-icon {
   transform: rotate(-180deg);
@@ -729,46 +647,11 @@ h2.accordion-header.partner-header {
 .accordion-button2[aria-expanded="false"] .triangle-icon {
   transform: rotate(0deg);
 }
-/* .list-group-item:focus, .list-group-item.activeDetail {
-    color: #fcc12c;
-    text-decoration: underline;
-    text-decoration-color: #fcc12c;
-    text-underline-offset: 4px;
-} */
 
 .overlay {
   display: none;
 }
-#viewMoreBtn {
-  cursor: pointer;
-  color: #007bff;
-  text-decoration: none;
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 10pt;
-  font-family: var(--vr-font-primary);
-}
-#viewLessBtn {
-  cursor: pointer;
-  color: #007bff;
-  text-decoration: none;
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 10pt;
-  font-family: var(--vr-font-primary);
-}
-#viewLessBtn2 {
-  cursor: pointer;
-  color: #007bff;
-  text-decoration: none;
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 10pt;
-  font-family: var(--vr-font-primary);
-}
+
 .country-item {
   display: flex;
   align-items: center;
@@ -843,6 +726,18 @@ h2.accordion-header.partner-header {
   color: #fff;
   font-size: 12px;
   cursor: pointer;
+}
+.partner-header {
+  border-bottom: 2px solid #f8ae1a;
+  padding-bottom: 10px;
+  margin-top: 0;
+}
+
+.agreement-time,
+.agreement-access {
+  font-size: 11pt;
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 /*para movil */
 
@@ -932,7 +827,7 @@ h2.accordion-header.partner-header {
     /* Alinea horizontalmente */
   }
   .third-col {
-    width: 100vw;
+    width: 100%;
     display: block;
     flex-direction: column;
     justify-content: flex-start;
