@@ -231,7 +231,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
 }
 // ── Public: bilateral / multilateral map ──────────────────────────────────────
 export function drawMap(geojson, filteredCountryGeoJSON, partner) {
-  console.log('Content of filtered', filteredCountryGeoJSON)
+  console.log("Content of filtered", filteredCountryGeoJSON);
   const mapEl = document.querySelector("#map");
   if (!mapEl) {
     console.error("drawMap: #map not found");
@@ -275,29 +275,34 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
 }
 
 // -- Public: when partners local at the right-side of the world map selected --
+// Module-level flag in mapUtils.js
+let legendShiftApplied = false;
+let shiftedViewBox = null; // stores the viewBox after first shift
 
 export function panMapforPartner(partnerName) {
+  if (legendShiftApplied && shiftedViewBox) {
+    // Already shifted — just reapply the stored shifted viewBox
+    // (handles case where drawMap resets the viewBox between selections)
+    svg.attr("viewBox", shiftedViewBox);
+    return;
+  }
   const mapEl = document.querySelector("#map");
   const vb = getViewBox(mapEl).split(" ").map(Number);
-  const legendShift = 60; // shift left to fill legend space
-  // Partners on the right side of the world map — pan left to reveal them
-  const rightSidePartners = new Set([
-    "China", "Japan", "South Korea", "India", "Indonesia",
-    "Russia", "United Arab Emirates", "Saudi Arabia", "Qatar", "Iran"
-  ]);
-  // Shift left for right-side partners (to reveal them from behind panel)
-  // Plus always shift left slightly to fill legend space
-  const partnerShift = rightSidePartners.has(partnerName) ? 50 : 0;
-  vb[0] = vb[0] + legendShift + partnerShift;
+  vb[0] = vb[0] + 150;
 
-  svg.transition("mapPan").duration(400)
-    .attr("viewBox", vb.join(" "));
+  shiftedViewBox = vb.join(" ");
+  svg.transition("mapPan").duration(400).attr("viewBox", shiftedViewBox);
+
+  legendShiftApplied = true;
 }
 
 export function resetMapPan() {
   const mapEl = document.querySelector("#map");
   svg.transition("mapPan").duration(400)
     .attr("viewBox", getViewBox(mapEl));
+  // Reset both flag and stored viewBox
+  legendShiftApplied = false;
+  shiftedViewBox = null;
 }
 // ── Public: path generator helper ────────────────────────────────────────────
 export function fitSizeMap(geoJSON) {

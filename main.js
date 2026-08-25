@@ -179,6 +179,7 @@ Promise.all([
 
       document.querySelectorAll(".bloc-select").forEach((item) => {
         item.addEventListener("click", function () {
+          document.querySelector('#legend-container').classList.add('legend-hidden');
           showThirdColumn();
           //handleSelection("multilateral", item.textContent);
           const selectedBloc = this.textContent.trim();
@@ -208,7 +209,7 @@ Promise.all([
                 selectedBloc,
                 multiJsonData
               );
-              //hideLegend();
+              panMapforPartner(); // same as bilateral
             })
             .catch((error) =>
               console.error("Error processing filtered GeoJSON:", error)
