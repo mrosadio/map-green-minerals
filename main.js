@@ -1,8 +1,8 @@
 import { loadAndMergeData, mergeMulti, createBlocGeoJSON, mergeWorldWithPartnerData, filterCountriesByPartner, filterEUandPartners } from "./modules/dataUtils.js";
 import { drawMap, drawMapWithPartnerColors, fitSizeMap, resetMapPan, panMapforPartner } from "./modules/mapUtils.js";
 import { highlightPartnership, populatePartnerships, populateMultilateral, highlightBloc, highlightEu, clearCardContent } from "./modules/selectionUtils.js";
-import { addLegend /*, hideLegend*/ } from "./modules/legendUtils.js";
-import { svg, customColors, blocColors, geojsonUrl, jsonFilePath, multiJsonFilePath, noPartnerFilePath, themeUrl } from "./modules/globals.js";
+import { addLegend } from "./modules/legendUtils.js";
+import { svg, blocColors, geojsonUrl, jsonFilePath, multiJsonFilePath, noPartnerFilePath } from "./modules/globals.js";
 import { showThirdColumn, removeThirdColumn } from "./modules/layout.js";
 import { showPickerBilateral, showPickerMultilateral, showPickerAfrica } from "./modules/picker.js";
 const euGeojsonPath = `./db/eu.geojson`;
@@ -19,7 +19,6 @@ function resetToInitialView() {
   document.querySelector("#legend-container").classList.remove("legend-hidden");
   removeThirdColumn();
   filteredGeoJSON = mergeWorldWithPartnerData(mergedBiData, numberData);
-  //fitSizeMap(filteredGeoJSON);
   drawMapWithPartnerColors(svg, filteredGeoJSON, numberData);
   clearCardContent();
   addLegend(svg, colorScale);
@@ -91,6 +90,15 @@ Promise.all([loadAndMergeData(geojsonUrl, jsonFilePath, noPartnerFilePath), merg
       document.querySelector("#showScrollable").addEventListener("click", () => {
         refresh();
       });
+      ["bilateralToggle", "multilateralToggle"].forEach((id) => {
+        const toggle = document.getElementById(id);
+        toggle.addEventListener("shown.bs.dropdown", () => {
+          document.querySelector("#legend-container").classList.add("legend-hidden");
+        });
+        toggle.addEventListener("hidden.bs.dropdown", () => {
+          document.querySelector("#legend-container").classList.remove("legend-hidden");
+        });
+      });
       document.addEventListener("overview:selected", () => {
         resetToInitialView();
         resetMapPan();
@@ -115,11 +123,6 @@ Promise.all([loadAndMergeData(geojsonUrl, jsonFilePath, noPartnerFilePath), merg
               console.log("drawmap in main.js");
               drawMap(mergedBiData, filteredCountryGeoJSON, "EU");
               highlightEu(svg, filteredCountryGeoJSON);
-              /* highlightPartnership(
-                  svg,
-                  filteredCountryGeoJSON,
-                  item.textContent
-                );*/
               panMapforPartner(selectedCountry);
               populatePartnerships(biData, selectedCountry);
             });
@@ -182,6 +185,3 @@ Promise.all([loadAndMergeData(geojsonUrl, jsonFilePath, noPartnerFilePath), merg
     }
   })
   .catch((error) => console.error("Error processing data:", error));
-
-//window.addEventListener("resize", changeButtonText);
-//window.addEventListener("load", changeButtonText);

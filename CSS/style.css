@@ -624,7 +624,7 @@ body {
 
 /* -- Nav -- */
 #nav {
-  padding: 12px 24px;
+   padding: 12px var(--content-gutter);
   border-bottom: 0.5px solid var(--color-border);
   background: var(--color-bg);
 }
@@ -789,6 +789,7 @@ h2.title {
 #legend-container {
   z-index: 1040;
   top: 1em;
+  margin-left: calc(var(--content-gutter) - 14px);
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(4px);
   padding: 10px 14px;
@@ -897,7 +898,9 @@ h2.title {
   margin-bottom: 2px;
   padding-bottom: 0 !important;
 }
-
+.card-text {
+  text-align: justify;
+}
 /* Signed / Access lines */
 .card-text.mb-1 {
   font-size: 0.8rem !important;
