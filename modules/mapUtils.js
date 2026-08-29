@@ -212,7 +212,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
       positionTooltip(event, tooltip);
     });
 
-  // Labels — only for African countries with partnerships
+  // Labels - only for African countries with partnerships
   const featuresWithData = geojsonData.features.filter((d) => (partnerLookup.get(d.properties.name)?.partnersNo || 0) > 0);
 
   g.selectAll("text.country-label")
@@ -257,21 +257,6 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
 
   // All countries — grey base layer
   g.selectAll("path").data(geojson.features).enter().append("path").attr("d", path).attr("fill", "#d3d3d3").attr("stroke", "white").attr("stroke-width", 0.5);
-
-  // Labels for filtered (partner/African) countries
-  g.selectAll("text.city-label")
-    .data(filteredCountryGeoJSON.features)
-    .enter()
-    .append("text")
-    .attr("class", "city-label")
-    .attr("text-anchor", "middle")
-    .attr("font-size", "5pt")
-    .attr("fill", "black")
-    .attr("pointer-events", "none")
-    .attr("opacity", 0) // shown via toggle
-    .each(function (d) {
-      renderLabel(d3.select(this), d, path);
-    });
 }
 
 // -- Public: when partners local at the right-side of the world map selected --
@@ -304,7 +289,7 @@ export function resetMapPan() {
   legendShiftApplied = false;
   shiftedViewBox = null;
 }
-// ── Public: path generator helper ────────────────────────────────────────────
+// -- Public: path generator helper ---------------------------------------------
 export function fitSizeMap(geoJSON) {
   const mapEl = document.querySelector("#map");
   const W = mapEl?.clientWidth || 800;
@@ -312,13 +297,13 @@ export function fitSizeMap(geoJSON) {
   const projection = d3.geoEqualEarth().fitSize([W, H], geoJSON);
   return d3.geoPath().projection(projection);
 }
-// -- Private: Strip year annotation from partner name  ─────────────────────────
+// -- Private: Strip year annotation from partner name  -------------------------
 // e.g "Turkey (2016)" -> "Turkey"
 function cleanPartnerName(name) {
   const cleaned = name.replace(/\s*\([^)]*\)\s*$/, "").trim();
   return partnerNameNormalization[cleaned] || cleaned;
 }
-// ── Private: label rendering ──────────────────────────────────────────────────
+// -- Private: label rendering --------------------------------------------------
 function renderLabel(textEl, feature, path) {
   const name = feature.properties.name;
   const config = countryLabelConfig[name] || {};

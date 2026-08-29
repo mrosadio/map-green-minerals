@@ -74,12 +74,7 @@ const AfricanOverview = [
 let selectedIndex = 0;
 let pickerData;
 let wheelList = document.getElementById("wheelList");
-
-const picker = document.getElementById("picker");
-const selectedText = document.getElementById("selectedText");
-const selectedAfrican = document.getElementById("africanCountry");
-const blockNameTemp = document.getElementById("blockNameTemp");
-const blockNameNowTemp = document.getElementById("blockNameNowTemp");
+let selectedValue = ""; // tracks the current pick; no DOM node for this in this template
 
 function showPickerAfrica() {
   picker.style.display = "block";
@@ -107,60 +102,28 @@ function cancel() {
 
 function confirmPicker() {
   picker.style.display = "none";
-  selectedText.innerText = pickerData[selectedIndex].text;
-  selectedAfrican.innerText = pickerData[selectedIndex].text;
+  selectedValue = pickerData[selectedIndex].text;
 
   const showScrollable = document.getElementById("showScrollable");
   showScrollable.classList.add("hidden");
 
   const divElement = document.querySelector('.tooltip2');
-
-  // Comprobar si existe el elemento antes de modificar el estilo
   if (divElement) {
-	divElement.style.display = 'none';
-	
+    divElement.style.display = 'none';
   }
-
-
-  console.log(blockNameNowTemp);
-  blockNameTemp.innerText = blockNameNowTemp.textContent.trim();
-
-  console.log(selectedText.innerText);
-  //---------------------------Multilateral
+  if (selectedValue === "General overview") {
+    document.dispatchEvent(new CustomEvent("overview:selected"));
+    return;
+  }
   const button = Array.from(document.querySelectorAll(".bloc-select")).find(
-    (button) => {
-      // console.log(button.textContent + " no parece " + selectedText.innerText); // Esto imprimirá el botón en cada iteración
-      return button.textContent.trim() === selectedText.innerText;
-    }
+    (b) => b.textContent.trim() === selectedValue
   );
+  if (button) button.click();
 
-  if (button) {
-    button.click(); // Simula un clic en ese botón
-  } else {
-    console.log("Botón no encontrado");
-  }
-  //---------------------------Bilateral
   const button2 = Array.from(document.querySelectorAll(".country-select")).find(
-    (button) => {
-      //  console.log(button.textContent + " no parece " + selectedText.innerText); // Esto imprimirá el botón en cada iteración
-      return button.textContent.trim() === selectedText.innerText;
-    }
+    (b) => b.textContent.trim() === selectedValue
   );
-
-  if (button2) {
-    button2.click(); // Simula un clic en ese botón
-  } else {
-    console.log("Botón no encontrado");
-  }
-
-  /*
-  const firstBlocButton = document.querySelector(".bloc-select"); // Selecciona el primer botón en la lista de "Multilateral partnerships"
-  console.log(firstBlocButton);
-
-  if (firstBlocButton) {
-    firstBlocButton.classList.add("activeDetail");
-    firstBlocButton.click(); // Simula un clic en ese botón
-  }*/
+  if (button2) button2.click();
 }
 
 function createWheel() {
@@ -193,7 +156,7 @@ function selectItem(index) {
   newSelected.classList.add("selected-item");
 
   // Update displayed text
-  selectedText.innerText = pickerData[selectedIndex].text;
+  selectedValue = pickerData[selectedIndex].text;
   wheelList.scrollTop = selectedIndex * 36;
 }
 
@@ -246,6 +209,7 @@ wheelList.addEventListener("touchend", () => {
 });
 
 // Make confirmPicker available globally for onclick handler in template
+window.cancel = cancel;
 window.confirmPicker = confirmPicker;
 
 export { showPickerBilateral, showPickerMultilateral, showPickerAfrica, confirmPicker };
