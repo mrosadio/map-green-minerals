@@ -1,3 +1,12 @@
+// Geometry in the source GeoJSON is invalid for these — produces NaN in d3.geoPath,
+// same issue hit on the Diplomacy map. Excluded until source data is fixed.
+const EXCLUDED_COUNTRIES = new Set([
+  "Comoros",
+  "Mauritius",
+  "São Tomé and Príncipe",
+  "Seychelles",
+]);
+
 export async function loadAndMergeData(
   geojsonUrl,
   jsonFilePath,
@@ -6,8 +15,7 @@ export async function loadAndMergeData(
   try {
     // Load GeoJSON from the provided URL
     const geojsonResponse = await fetch(geojsonUrl);
-    const geojsonData = await geojsonResponse.json();
-
+    const geojsonData = excludeBrokenGeometry(await geojsonResponse.json());
     // Load the local JSON file
     const jsonResponse = await fetch(jsonFilePath);
     const jsonData = await jsonResponse.json();
@@ -82,8 +90,7 @@ export async function loadAndMergeData(
 export async function mergeMulti(geojsonUrl, multiJsonFilePath) {
   try {
     const geojsonResponse = await fetch(geojsonUrl);
-    const geojsonMultiData = await geojsonResponse.json();
-
+    const geojsonMultiData = excludeBrokenGeometry(await geojsonResponse.json());
     const multiJsonResponse = await fetch(multiJsonFilePath);
     const multiJsonData = await multiJsonResponse.json();
 
@@ -139,8 +146,7 @@ export async function createBlocGeoJSON(
   console.log("euGeojsonPath:", euGeojsonPath);
   try {
     const geojsonResponse = await fetch(geojsonUrl);
-    const geojsonData = await geojsonResponse.json();
-
+    const geojsonData = excludeBrokenGeometry(await geojsonResponse.json());
     const multiJsonResponse = await fetch(multiJsonFilePath);
     const multiJsonData = await multiJsonResponse.json();
 
@@ -253,34 +259,6 @@ export function mergeWorldWithPartnerData(geojsonData, partnersNoData) {
   return { ...geojsonData, features: mergedFeatures };
 }
 
-// export function filterAfrica(geojsonData, partnersNoData) {
-//   // console.log(geojsonData);
-
-//   // console.log(partnersNoData);
-//   const africanCountries = partnersNoData.map(
-//     (countryData) => countryData.africanCountry
-//   );
-//   //console.log(africanCountries); // lista de todos los paises a marcar, si sale Guinea Bisseau
-
-//   const filteredFeatures = geojsonData.features.filter((feature) => {
-//     const countryName = feature.properties.name;
-//     //   console.log(countryName);
-
-//     if (countryName == "Algeria") {
-//       // console.log("esta");
-//       //console.log(countryName);
-//       //console.log(africanCountries.includes(countryName));
-//     } else {
-//       //console.log( "no esta" + countryName)
-//     }
-
-//     return africanCountries.includes(countryName);
-//   });
-//   // console.log(filteredFeatures);
-
-//   return { ...geojsonData, features: filteredFeatures };
-// }
-
 export function filterCountriesByPartner(mergedBiData, selectedCountry) {
   console.log('Merged Bi data in filterCountriesByPartner', mergedBiData)
   console.log("Selected country in function filterCountriesByPartner", selectedCountry);
@@ -320,6 +298,11 @@ export async function filterEUandPartners(geojsonData, jsonData) {
   //console.log("Filter EU partners", filteredGeoJSON);
   return filteredGeoJSON;
 }
-
-
-
+function excludeBrokenGeometry(geojsonData) {
+  return {
+    ...geojsonData,
+    features: geojsonData.features.filter(
+      (f) => !EXCLUDED_COUNTRIES.has(f.properties.name)
+    ),
+  };
+}
