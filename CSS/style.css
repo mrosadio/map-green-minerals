@@ -16,9 +16,9 @@
   min-height: 0;
 }
 #map svg {
-    display: block;
-    width: 100%;
-    height: 100%;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .second-col {
   height: 600px !important;
@@ -62,17 +62,7 @@
   font-size: 16pt;
   font-family: var(--vr-font-primary);
 }
-.card.partnership {
-  border: none;
-  border-radius: 0;
-  padding: 16px;
-  height: 100%;
-  overflow-y: auto;
-}
-.card.partnership.expanded {
-  width: 100%;
-  border: none;
-}
+
 .card-body.partner {
   margin: 0;
   padding: 2px;
@@ -99,10 +89,10 @@
 .tooltip2 {
   position: absolute;
   background: white;
-  border: 0.5px solid #D3D1C7;
+  border: 0.5px solid #d3d1c7;
   border-radius: 4px;
   padding: 10px 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   display: none;
   pointer-events: none;
   max-width: 180px;
@@ -616,16 +606,23 @@
   --color-text-secondary:#5F5E5A;
   --color-text-muted:    #B4B2A9;
   --color-map-default:   #E8E4DF;
+  --content-gutter:      1rem;
 }
-
-/* ── Global base ── */
+.content-gutter-left {
+  margin-left: var(--content-gutter);
+}
+/* -- Global base -- */
 body {
   background: var(--color-bg-subtle);
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
   color: var(--color-text-primary);
 }
 
-/* ── Nav ── */
+/* -- Nav -- */
 #nav {
   padding: 12px 24px;
   border-bottom: 0.5px solid var(--color-border);
@@ -640,8 +637,7 @@ h2.title {
   letter-spacing: -0.02em;
 }
 
-/* ── Buttons ── */
-/* Replace Bootstrap danger with terracotta */
+/* -- Buttons -- */
 .btn-danger,
 .btn-danger.dropdown-toggle {
   background-color: var(--color-accent) !important;
@@ -656,8 +652,8 @@ h2.title {
 }
 
 .btn-secondary {
-  background-color: #4A4A47 !important;
-  border-color: #4A4A47 !important;
+  background-color: #4a4a47 !important;
+  border-color: #4a4a47 !important;
   color: #fff !important;
   font-size: 0.85rem;
 }
@@ -667,11 +663,11 @@ h2.title {
   border-color: #333331 !important;
 }
 
-/* ── Dropdowns ── */
+/* -- Dropdowns options -- */
 .dropdown-menu {
   border: 0.5px solid var(--color-border);
   border-radius: 4px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   padding: 4px 0;
   font-size: 0.875rem;
   max-height: 420px;
@@ -695,7 +691,7 @@ h2.title {
   color: #fff !important;
 }
 
-/* ── Modal ── */
+/* -- Modal -- */
 .modal-dialog {
   max-width: 640px;
 }
@@ -703,7 +699,7 @@ h2.title {
 .modal-content {
   border: none;
   border-radius: 6px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
 
 .modal-header {
@@ -793,7 +789,7 @@ h2.title {
 #legend-container {
   z-index: 1040;
   top: 1em;
-  background: rgba(255,255,255,0.92);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(4px);
   padding: 10px 14px;
   border-radius: 4px;
@@ -828,6 +824,10 @@ h2.title {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
 }
 
 .third-col {
@@ -841,13 +841,13 @@ h2.title {
 .card.partnership {
   border: none;
   border-radius: 0;
-  padding: 20px 20px 0 20px;
+  padding: 20px var(--content-gutter) 0 var(--content-gutter);
   height: 100%;
   overflow-y: auto;
   background: var(--color-bg);
 }
 
-/* Scrollbar — thin and minimal */
+/* -- Scrollbar thin and minimal -- */
 .card.partnership::-webkit-scrollbar {
   width: 4px;
 }
@@ -859,7 +859,7 @@ h2.title {
   background: transparent;
 }
 
-/* ── Panel partner header ── */
+/* -- Panel partner header -- */
 .card-title.partner-select {
   font-size: 1.4rem !important;
   font-weight: 700;
@@ -929,7 +929,7 @@ h2.title {
   font-weight: 500;
 }
 
-/* ── View source link ── */
+/* -- View source link -- */
 a.source-link,
 .card a[href] {
   color: var(--color-accent);
@@ -944,13 +944,13 @@ a.source-link:hover,
   text-underline-offset: 3px;
 }
 
-/* ── Fix broken icon image ── */
+/* -- Fix broken icon image -- */
 /* Hide alt text when image fails to load */
 img[alt="Icono de acceso"] {
   display: none;
 }
 
-/* ── Multilateral panel ── */
+/* -- Multilateral panel -- */
 /* Description text */
 .bloc-description {
   font-size: 0.875rem;
@@ -971,21 +971,21 @@ img[alt="Icono de acceso"] {
   border-radius: 0 4px 4px 0;
 }
 
-/* ── Tooltip ── */
+/* -- Tooltip -- */
 .tooltip2 {
   position: absolute;
   background: var(--color-bg);
   border: 0.5px solid var(--color-border);
   border-radius: 4px;
   padding: 10px 14px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   pointer-events: none;
   max-width: 200px;
   z-index: 200;
   font-size: 0.85rem;
 }
 
-/* ── Instructions bar ── */
+/* -- Instructions bar -- */
 .instruccions {
   font-size: 0.8rem;
   color: var(--color-text-muted);
@@ -995,5 +995,23 @@ img[alt="Icono de acceso"] {
 }
 
 .button-dropdown {
-  line-height: 1.1
+  line-height: 1.1;
+}
+
+@media (min-width: 769px) and (max-width: 1366px) and (orientation: portrait) {
+  #map {
+    display: flex;
+    flex-direction: column;
+  }
+  .right {
+    position: static;
+    width: 100%;
+    height: 65%; /* was 45% */
+    border-left: none;
+    border-top: 0.5px solid var(--color-border);
+    order: 2;
+  }
+  .right.bilateral {
+    width: 100%; /* overrides the 450px desktop rule */
+  }
 }

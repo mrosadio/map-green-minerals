@@ -624,45 +624,19 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
   const blocSource = document.createElement("a");
   blocSource.classList.add("card-link");
   blocSource.href = multiJsonData.find((item) => item.blocName === nombre).link;
-
   blocSource.target = "_blank";
   // Aplicar estilos al enlace
   blocSource.style.textDecoration = "none"; // Eliminar el subrayado
   blocSource.style.fontSize = "11pt"; // Tamaño de fuente
   blocSource.style.marginLeft = "4px"; // Tamaño de fuente
-
   blocSource.style.color = "#0071BC"; // Cambiar color
-  //blocSource.style.fontFamily = "Roboto"; // Aplicar la fuente personalizada
-
   blocSource.innerHTML = "View agreement";
 
   iconLinkContainer.appendChild(blocSource); // Añadir el enlace al contenedor
 
   // Añadir el contenedor de icono y enlace al contenedor principal
   scrollContainer.appendChild(iconLinkContainer);
-
-  // Agregar el subtítulo "Participating Countries"
-  const participatingCountriesTitle = document.createElement("p");
-  participatingCountriesTitle.classList.add("card-text", "mt-0.3");
-  participatingCountriesTitle.style.fontWeight = "bold"; // Poner en negrita
-  participatingCountriesTitle.style.fontSize = "18pt"; // Tamaño de fuente
-  participatingCountriesTitle.style.marginTop = "14pt"; // Tamaño de fuente
-  //participatingCountriesTitle.style.fontFamily = "Roboto"; // Aplicar la fuente personalizada
-
-  participatingCountriesTitle.innerHTML = "Participating Countries:";
-  scrollContainer.appendChild(participatingCountriesTitle); // Añadir el subtítulo al contenedor con scroll
-
-  // Crear un contenedor para los países con dos columnas
-  const countriesContainer = document.createElement("div");
-  countriesContainer.classList.add("d-flex", "flex-wrap"); // Usar flexbox para las columnas
-  //countriesContainer.style.fontFamily = "RalewayLight"; // Aplicar la fuente personalizada
-
-  // Dividir los países en dos columnas
-  const column1 = document.createElement("div");
-  column1.classList.add("w-50", "mb-2"); // La primera columna ocupará el 50% del ancho
-  const column2 = document.createElement("div");
-  column2.classList.add("w-50", "mb-2"); // La segunda columna también ocupará el 50%
-
+  
   // Variable global para rastrear el tooltip activo
   let activeTooltip = null;
   const isMobile = window.innerWidth <= 768; // Si el ancho de la pantalla es menor o igual a 768px, asumimos que es móvil
@@ -756,9 +730,6 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
 
         tooltipMultiContainer.appendChild(infoIcon);
         tooltipMultiContainer.appendChild(tooltipMulti);
-
-        // Agregar el contenedor del tooltip después del secondPart
-        // countryName.appendChild(tooltipMultiContainer);
       } else {
 
         countryName.innerHTML = `• ${displayName}`;
@@ -798,24 +769,11 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
       const tooltipText = document.createElement("div");
       tooltipText.innerText = "Description";
       tooltipText.style.marginRight = "15px";
-
       tooltipMulti.appendChild(closeBtn);
       tooltipMulti.appendChild(tooltipText);
-
       tooltipMultiContainer.appendChild(infoIcon);
       tooltipMultiContainer.appendChild(tooltipMulti);
-
-      // countryName.appendChild(tooltipMultiContainer);
     }
-
-    // Alternar columnas
-    countryItem.appendChild(countryName);
-    if (index % 2 === 0) {
-      column1.appendChild(countryItem);
-    } else {
-      column2.appendChild(countryItem);
-    }
-
     // Agregar evento de clic al ícono
     const infoIcon = countryItem.querySelector(".info-icon");
     if (infoIcon) {
@@ -846,14 +804,6 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
       activeTooltip = null;
     }
   });
-
-  // Agregar las columnas al contenedor principal
-  countriesContainer.appendChild(column1);
-  countriesContainer.appendChild(column2);
-
-  // Agregar el contenedor de países al contenedor con scroll
-  scrollContainer.appendChild(countriesContainer);
-
   // Finalmente, agregar el contenedor con scroll al DOM
   infoMultiContainer.appendChild(scrollContainer);
 }

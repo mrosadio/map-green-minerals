@@ -17,12 +17,12 @@ let colorScale;
 function resetToInitialView() {
   console.log("reseting in main.js");
   document.querySelector("#legend-container").classList.remove("legend-hidden");
+  removeThirdColumn();
   filteredGeoJSON = mergeWorldWithPartnerData(mergedBiData, numberData);
-  fitSizeMap(filteredGeoJSON);
-  drawMapWithPartnerColors(svg, /*path,*/ filteredGeoJSON, numberData);
+  //fitSizeMap(filteredGeoJSON);
+  drawMapWithPartnerColors(svg, filteredGeoJSON, numberData);
   clearCardContent();
   addLegend(svg, colorScale);
-  removeThirdColumn();
 }
 
 function refresh() {
@@ -74,13 +74,13 @@ Promise.all([loadAndMergeData(geojsonUrl, jsonFilePath, noPartnerFilePath), merg
         .scaleQuantize()
         .domain([0, d3.max(numberData, (d) => d.partnersNo)])
         .range([
-          "#F0EDEA", // 0 — warm grey, clearly neutral
-          "#F5DFB8", // 1 — pale sand
-          "#F0C97A", // 2
-          "#E8B044", // 3
-          "#D4891A", // 4
+          "#F0EDEA", // 0 - warm grey, neutral
+          "#F5DFB8", // 1 - pale sand
+          "#F0C97A",
+          "#E8B044",
+          "#D4891A",
           "#B86C0A", // 5
-          "#8C4D00",
+          "#8C4D00", //+6
         ]);
 
       resetToInitialView();
@@ -94,6 +94,12 @@ Promise.all([loadAndMergeData(geojsonUrl, jsonFilePath, noPartnerFilePath), merg
       document.addEventListener("overview:selected", () => {
         resetToInitialView();
         resetMapPan();
+      });
+      document.addEventListener("panel:toggled", () => {
+        fitSizeMap(filteredGeoJSON);
+        // redraw with whatever's currently active — decide later on the cleanest
+        // way to re-trigger the correct draw call here once we're looking at it live,
+        // since it depends on which of drawMap/drawMapWithPartnerColors was last used
       });
       document.querySelectorAll(".country-select").forEach((item) => {
         item.addEventListener("click", function () {
