@@ -8,11 +8,6 @@
   display: flex;
   flex-direction: column;
 }
-
-#legend-container {
-  z-index: 1040;
-  top: 1em;
-}
 #map {
   width: 100%;
   max-width: 100%;
@@ -98,11 +93,6 @@
   padding-bottom: 0.25rem !important;
   padding-left: 0rem !important;
 }
-.third-col {
-  width: 100%;
-  height: 100%;
-  overflow-y: auto;
-}
 .hidden {
   display: none;
 }
@@ -163,14 +153,6 @@
   width: 100%;
   height: 1px;
   background-color: #000000;
-}
-.right {
-  width: 360px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(4px);
-  border-left: 0.5px solid #E8E4DF;
-  z-index: 10;
-  overflow-y: auto;
 }
 .right.bilateral {
   width: 450px;
@@ -344,7 +326,7 @@
   padding-bottom: 0;
   margin-bottom: 0;
 }
-/*para movil */
+/* -- Mobile -- */
 @media (max-width: 768px) {
   .title {
     font-size: 24pt;
@@ -807,8 +789,10 @@ h2.title {
   text-underline-offset: 3px;
 }
 
-/* ── Legend ── */
+/* -- Legend -- */
 #legend-container {
+  z-index: 1040;
+  top: 1em;
   background: rgba(255,255,255,0.92);
   backdrop-filter: blur(4px);
   padding: 10px 14px;
@@ -835,7 +819,7 @@ h2.title {
   display: none !important;
 }
 
-/* ── Detail panel (.right) ── */
+/* -- Detail panel (.right) -- */
 .right {
   width: 340px;
   background: var(--color-bg);
