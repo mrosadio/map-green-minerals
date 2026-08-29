@@ -40,8 +40,8 @@ let partnerMap = {};
 let multilateralMap = {};
 let filteredGeoJSON;
 let mergedBiData; 
-let numberData; // Para referencia global
-let colorScale; // Para referencia global
+let numberData;
+let colorScale;
 
 // Tooltip
 // const tooltip = d3
@@ -57,17 +57,15 @@ let colorScale; // Para referencia global
 //   .style("font-size", "12px")
 //   .style("opacity", 0);
 
-// Función para restablecer el mapa a su estado inicial
-
 function resetToInitialView() {
   console.log('reseting in main.js')
-  document.querySelector('.container-map').classList.remove('legend-hidden');
-  filteredGeoJSON = mergeWorldWithPartnerData(mergedBiData, numberData); // Filtra África
+  document.querySelector('#legend-container').classList.remove('legend-hidden');
+  filteredGeoJSON = mergeWorldWithPartnerData(mergedBiData, numberData);
   fitSizeMap(filteredGeoJSON)
-  drawMapWithPartnerColors(svg, /*path,*/ filteredGeoJSON, numberData); // Dibuja el mapa inicial
+  drawMapWithPartnerColors(svg, /*path,*/ filteredGeoJSON, numberData);
   clearCardContent();
   addLegend(svg, colorScale); 
-  removeThirdColumn(); // Oculta la tercera columna
+  removeThirdColumn();
 }
 
 function refresh() {
