@@ -2,51 +2,34 @@ import { svg, themeUrl } from "./globals.js";
 import { euMemberNames } from "./mapUtils.js";
 
 export function highlightPartnership(svg, filteredGeoJSON, itemSelected) {
-  svg.selectAll("path")
-    .interrupt("highlight")
-    .transition("highlight")
-    .duration(200)
-    .attr("fill", "#E8E4DF")
-    .attr("stroke", "white")
-    .attr("stroke-width", 0.5);
-  const partnerCountries = new Set(
-    filteredGeoJSON.features.map((f) => f.properties.name)
-  );
+  svg.selectAll("path").interrupt("highlight").transition("highlight").duration(200).attr("fill", "#E8E4DF").attr("stroke", "white").attr("stroke-width", 0.5);
+  const partnerCountries = new Set(filteredGeoJSON.features.map((f) => f.properties.name));
   // Step 2: then apply new highlights
-  svg.selectAll("path")
-    .filter(d => partnerCountries.has(d.properties?.name))
+  svg
+    .selectAll("path")
+    .filter((d) => partnerCountries.has(d.properties?.name))
     .interrupt("highlight")
     .transition("highlight")
     .duration(400)
-    .attr("fill", d =>
-      d.properties.name === itemSelected ? "#D4891A" : "#F0C97A"
-    );
+    .attr("fill", (d) => (d.properties.name === itemSelected ? "#D4891A" : "#F0C97A"));
 }
 
 export function highlightEu(svg, filteredGeoJSON) {
-  svg.selectAll("path")
-    .interrupt("highlight")
-    .transition("highlight")
-    .duration(200)
-    .attr("fill", "#E8E4DF")
-    .attr("stroke", "white")
-    .attr("stroke-width", 0.5);
+  svg.selectAll("path").interrupt("highlight").transition("highlight").duration(200).attr("fill", "#E8E4DF").attr("stroke", "white").attr("stroke-width", 0.5);
 
   const euCountries = new Set(euMemberNames); // eu member states
-  const africanPartners = new Set(
-    filteredGeoJSON.features
-      .map((f) => f.properties.name)
-      .filter((name) => !euCountries.has(name))
-  );
+  const africanPartners = new Set(filteredGeoJSON.features.map((f) => f.properties.name).filter((name) => !euCountries.has(name)));
 
-  svg.selectAll("path")
+  svg
+    .selectAll("path")
     .filter((d) => euCountries.has(d.properties?.name))
     .interrupt("highlight")
     .transition("highlight")
     .duration(400)
     .attr("fill", "#D4891A");
 
-  svg.selectAll("path")
+  svg
+    .selectAll("path")
     .filter((d) => africanPartners.has(d.properties?.name))
     .interrupt("highlight")
     .transition("highlight")
@@ -66,21 +49,12 @@ export function populatePartnerships(biData, selectedCountry) {
   const infoPartnerContainer = document.querySelector(".card.partnership");
   infoPartnerContainer.innerHTML = "";
   const bilateralPartner = document.createElement("h2");
-  bilateralPartner.classList.add(
-    "card-title",
-    "card-title-fixed",
-    "partner-select",
-    "h2"
-  );
+  bilateralPartner.classList.add("card-title", "card-title-fixed", "partner-select", "h2");
   if (internalSelected === "EU") {
-    partnerSelected = biData.find(
-      (country) => country.nonafrican && country.nonafrican.name === internalSelected
-    );
+    partnerSelected = biData.find((country) => country.nonafrican && country.nonafrican.name === internalSelected);
     bilateralPartner.innerHTML = `European Union`;
   } else {
-    partnerSelected = biData.find(
-      (country) => country.nonafrican === internalSelected
-    );
+    partnerSelected = biData.find((country) => country.nonafrican === internalSelected);
     // Display friendly names for special cases
     if (internalSelected === "USA") {
       bilateralPartner.innerHTML = `United States`;
@@ -118,19 +92,19 @@ export function populatePartnerships(biData, selectedCountry) {
       if (partner.agreements && partner.agreements.length > 0) {
         // Find the most recent date from all agreements
         const dates = partner.agreements
-          .map(ag => ag.year)
-          .filter(year => year) // Remove null/undefined
+          .map((ag) => ag.year)
+          .filter((year) => year) // Remove null/undefined
           .sort((d1, d2) => new Date(d2) - new Date(d1)); // Sort descending
         return dates[0]; // Return the most recent
       }
       return null;
     };
-    
+
     const dateA = getMostRecentDate(a);
     const dateB = getMostRecentDate(b);
-    
+
     if (!dateA || !dateB) return 0;
-    
+
     // Convert to Date objects and sort newest first
     return new Date(dateB) - new Date(dateA);
   });
@@ -152,89 +126,48 @@ export function populatePartnerships(biData, selectedCountry) {
         return new Date(b.year) - new Date(a.year);
       });
 
-      //for para cada acuerdo
-      //console.log("Multiple agreements", partner.agreements);
       sortedAgreements.forEach((agreement, index) => {
         const partnerAgreement = document.createElement("h5");
         partnerAgreement.classList.add("card-subtitle", "agreement");
         partnerAgreement.style.paddingBottom = "0px"; // Aplicar la fuente personalizada
-        // partnerAgreement.style.marginBottom = "0px"; // Aplicar la fuente personalizada
-        //partnerAgreement.style.fontFamily = "RalewayMedium"; // Aplicar la fuente personalizada
-
-        partnerAgreement.innerHTML = agreement.typeAgreement
-          ? `${agreement.typeAgreement}`
-          : "";
+        partnerAgreement.innerHTML = agreement.typeAgreement ? `${agreement.typeAgreement}` : "";
         partnershipCard.appendChild(partnerAgreement);
-        // Crear el elemento para el tiempo (time) y agregarlo segundo
+
         const time = document.createElement("p");
         time.classList.add("card-text", "mb-1", "agreement-time");
         time.innerHTML = `Signed: ${agreement.year}`;
 
         partnershipCard.appendChild(time);
-
-        // Crear el párrafo para Access y agregarlo al final
         const access = document.createElement("p");
-        access.classList.add("card-text", "mb-1", "agreement-access");
-        access.innerHTML = `Access: Publicly available`;
-  
-        // Crear el ícono
-        const icon = document.createElement("img");
-        icon.src = `${themeUrl}/img/icons/web.svg`; // Ruta del ícono PNG
-        icon.alt = "Icono de acceso"; // Texto alternativo
-        icon.style.height = "20px";
-        icon.classList.add("ms-2"); // Margen a la izquierda
+        access.classList.add("card-text", "mb-1", "access-line");
 
-        // Crear el enlace
-        const link = document.createElement("a");
-        link.href = agreement.linkAgreement
-          ? `${agreement.linkAgreement}`
-          : `${agreement.sources}`;
-        link.target = "_blank"; // Abrir en una nueva pestaña
-        link.classList.add("ms-2"); // Margen izquierdo
-        link.textContent = "View agreement"; // Texto del enlace
+        if (agreement.linkAgreement) {
+          access.innerHTML = `Access: <svg class="access-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> <a href="${agreement.linkAgreement}" target="_blank" class="access-link">Publicly available</a>`;
+        } else {
+          const sourceLink = agreement.sources ? ` <a href="${agreement.sources}" target="_blank" class="access-link">View source</a>` : "";
+          access.innerHTML = `Access: <svg class="access-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm-3 8V6a3 3 0 0 1 6 0v3H9z"/></svg> Not publicly available${sourceLink}`;
+        }
 
-        // Aplicar estilos al enlace
-        link.style.textDecoration = "none"; // Eliminar el subrayado
-        link.style.fontSize = "11pt"; // Eliminar el subrayado
-
-        link.style.color = "#0071BC"; // Cambiar
-
-        // Agregar el ícono y el enlace al párrafo Access
-        access.appendChild(icon);
-        access.appendChild(link);
-
-        // Agregar el párrafo Access al partnershipCard
         partnershipCard.appendChild(access);
 
-        //console.log("nuevoooooooooooo");
         let tagsContainer;
-        //console.log(agreement.areasCoop);
-        const agreementAreasCoop = Array.isArray(agreement.areasCoop)
-          ? agreement.areasCoop
-          : agreement.areasCoop
-            ? [agreement.areasCoop]
-            : [];
+        const agreementAreasCoop = Array.isArray(agreement.areasCoop) ? agreement.areasCoop : agreement.areasCoop ? [agreement.areasCoop] : [];
 
         if (agreementAreasCoop.length > 0) {
-          // Crear el contenedor del título "Areas of Cooperation"
           const areasTitleContainer = document.createElement("div");
           areasTitleContainer.style.display = "flex";
           areasTitleContainer.style.alignItems = "center";
           areasTitleContainer.style.flexWrap = "wrap";
           areasTitleContainer.style.gap = "5px";
-          //areasTitleContainer.style.marginBottom = "7px";
 
           const areasTitle = document.createElement("span");
-          areasTitle.classList.add("card-text");
-          //areasTitle.style.fontFamily = "RalewayLight"; // Aplicar la fuente personalizada
-          areasTitle.style.fontSize = "11pt";
+          areasTitle.classList.add("card-text", "mb-1");
           areasTitle.style.paddingBottom = "0px";
           areasTitle.style.marginBottom = "0px";
           areasTitle.style.marginRight = "10px";
-          areasTitle.innerHTML = "Areas of Cooperation:";
+          areasTitle.innerHTML = "Areas of cooperation:";
           areasTitleContainer.appendChild(areasTitle);
 
-          // Contenedor de tags
           const tagsContainer = document.createElement("div");
           tagsContainer.style.display = "flex";
           tagsContainer.style.flexWrap = "wrap";
@@ -242,68 +175,53 @@ export function populatePartnerships(biData, selectedCountry) {
           tagsContainer.style.gap = "5px";
 
           const rightElement = document.querySelector(".right");
-          rightElement.style.marginTop = "0px"; // Ajusta el valor según lo que necesites
+          rightElement.style.marginTop = "0px";
 
-          // Obtener el primer elemento que tenga 25 letras o menos y luego el resto en su orden original
-          const firstShortElement = agreementAreasCoop.find(
-            (area) => area.length <= 60
-          );
-          const remainingAreas = agreementAreasCoop.filter(
-            (area) => area !== firstShortElement
-          );
-          const reorderedAreas = firstShortElement
-            ? [firstShortElement, ...remainingAreas]
-            : remainingAreas;
+          const firstShortElement = agreementAreasCoop.find((area) => area.length <= 60);
+          const remainingAreas = agreementAreasCoop.filter((area) => area !== firstShortElement);
+          const reorderedAreas = firstShortElement ? [firstShortElement, ...remainingAreas] : remainingAreas;
 
-          // Crear los tags para cada área de cooperación con colores específicos
           reorderedAreas.forEach((area, index) => {
             const tag = document.createElement("span");
             tag.classList.add("tag");
             tag.textContent = area;
-            tag.style.whiteSpace = "nowrap"; // Evitar que el texto del tag se parta en varias líneas
+            tag.style.whiteSpace = "nowrap";
 
-            tag.style.backgroundColor = colorMap[area] || "#000000"; // Color por defecto si el área no está en el mapa
-            tag.style.color = "black"; // Texto en color negro
+            tag.style.backgroundColor = colorMap[area] || "#000000";
+            tag.style.color = "black";
             tag.style.padding = "2px 10px";
             tag.style.borderRadius = "4px";
             tag.style.fontSize = "9pt";
 
-            // Añadir eventos para presionar y soltar el tag
             tag.addEventListener("mouseover", function () {
-              tag.style.boxSizing = "border-box"; // Asegurar que el borde forme parte del tamaño total del elemento
-              tag.style.border = "1px solid black"; // Añadir borde negro
+              tag.style.boxSizing = "border-box";
+              tag.style.border = "1px solid black";
             });
             tag.addEventListener("mouseleave", function () {
-              tag.style.border = "none"; // Quitar borde si el ratón sale del tag mientras se presiona
+              tag.style.border = "none";
             });
             tag.addEventListener("touchstart", function () {
-              tag.style.boxSizing = "border-box"; // Asegurar que el borde forme parte del tamaño total del elemento
-              tag.style.border = "1px solid black"; // Añadir borde negro
+              tag.style.boxSizing = "border-box";
+              tag.style.border = "1px solid black";
             });
 
             tag.addEventListener("mouseenter", function () {
-              // Crear el tooltip
               const tooltip = document.createElement("span");
               tooltip.classList.add("tooltip");
               tooltip.textContent = tooltipMap[area];
-              tooltip.style.lineHeight = "1.5"; // Aumentar interlineado
-
-              // Añadir el tooltip al tag
+              tooltip.style.lineHeight = "1.5";
               tag.appendChild(tooltip);
 
-              // Hacer el tooltip visible
               tooltip.style.visibility = "visible";
               tooltip.style.opacity = "1";
 
-              // Calcular la posición del tooltip para evitar que se corte con el contenedor
               const tooltipRect = tooltip.getBoundingClientRect();
-              const container = document.querySelector(".custom-scroll"); // Selecciona el contenedor por clase
+              const container = document.querySelector(".custom-scroll");
               const containerRect = container.getBoundingClientRect();
 
-              // Ajustar la posición si el tooltip se sale del contenedor
               if (tooltipRect.right > containerRect.right) {
                 const overflowX = tooltipRect.right - containerRect.right;
-                tooltip.style.transform = `translateX(calc(-15% - ${overflowX}px))`; // Ajustar la posición
+                tooltip.style.transform = `translateX(calc(-15% - ${overflowX}px))`;
               }
 
               if (tooltipRect.left < containerRect.left) {
@@ -313,32 +231,25 @@ export function populatePartnerships(biData, selectedCountry) {
             });
 
             tag.addEventListener("mouseleave", function () {
-              // Remover el tooltip al salir del tag
               const tooltip = tag.querySelector(".tooltip");
               if (tooltip) {
                 tag.removeChild(tooltip);
               }
             });
 
-            // Añadir el tag al contenedor de título solo si es el primer elemento corto, el resto va al contenedor de tags
             if (index === 0 && firstShortElement === area) {
               areasTitleContainer.appendChild(tag);
             } else {
               tagsContainer.appendChild(tag);
             }
           });
-
-          // Agregar el contenedor de título y tags a partnershipCard
           areasTitleContainer.appendChild(tagsContainer);
           partnershipCard.appendChild(areasTitleContainer);
-
-          // Agregar la línea separadora solo si no es el último elemento
           if (index < partner.agreements.length - 1) {
             const line = document.createElement("hr");
             line.classList.add("line_black");
-            if (tagsContainer) tagsContainer.style.marginBottom = "0.75rem"; // Ajusta el valor según lo que necesites
+            if (tagsContainer) tagsContainer.style.marginBottom = "0.75rem";
 
-            // Personalizar los estilos de la línea
             line.style.border = "0.5px solid gray";
             line.style.margin = "6px 0 3px 0";
             line.style.padding = "0px";
@@ -348,74 +259,35 @@ export function populatePartnerships(biData, selectedCountry) {
         }
       });
     } else if (partner.typeAgreement) {
-      // Crear el elemento para partnerAgreement y agregarlo primero
       const partnerAgreement = document.createElement("h5");
       partnerAgreement.classList.add("card-subtitle", "agreement");
-      //partnerAgreement.style.fontFamily = "RalewayMedium"; // Aplicar la fuente personalizada
-
-      partnerAgreement.innerHTML = partner.typeAgreement
-        ? `${partner.typeAgreement}`
-        : "";
+      partnerAgreement.innerHTML = partner.typeAgreement ? `${partner.typeAgreement}` : "";
       partnershipCard.appendChild(partnerAgreement);
 
-      // Crear el elemento para el tiempo (time) y agregarlo segundo
       const time = document.createElement("p");
       time.classList.add("card-text", "mb-1");
       time.innerHTML = `Signed: ${partner.year}`;
-      time.style.fontSize = "11pt"; // Aplicar la fuente personalizada
-      time.style.paddingBottom = "0px"; // Aplicar la fuente personalizada
+      time.style.fontSize = "11pt";
+      time.style.paddingBottom = "0px";
 
       partnershipCard.appendChild(time);
 
       const access = document.createElement("p");
-      access.classList.add("card-text", "mb-1");
-
-      access.innerHTML = partner.linkAgreement
-        ? `Access: Publicly available`
-        : `Access: Not publicly available`;
-      access.style.fontSize = "11pt"; 
+      access.classList.add("card-text", "mb-1", "access-line");
+      access.style.fontSize = "11pt";
       access.style.paddingBottom = "0px";
 
-      // Crear el ícono
-      const icon = document.createElement("img");
-      icon.src = `${themeUrl}/img/icons/web.svg`; // Ruta del ícono PNG
-      icon.alt = "Icono de acceso"; // Texto alternativo
-      icon.style.height = "20px";
-      icon.classList.add("ms-2"); // Margen a la izquierda
-
-      // Crear el enlace
-      const link = document.createElement("a");
-      link.href = partner.linkAgreement
-        ? `${partner.linkAgreement}`
-        : `${partner.sources}`;
-      link.target = "_blank";
-      link.classList.add("ms-2");
-
-      link.textContent = partner.linkAgreement
-        ? "View agreement"
-        : "View source";
-
-      // Aplicar estilos al enlace
-      link.style.textDecoration = "none"; // Eliminar el subrayado
-      link.style.fontSize = "11pt"; // Eliminar el subrayado
-      link.style.color = "#0071BC"; // Cambiar
-
-      // Agregar el ícono y el enlace al párrafo Access
-      access.appendChild(icon);
-      access.appendChild(link);
-
-      // Agregar el párrafo Access al partnershipCard
+      if (partner.linkAgreement) {
+        access.innerHTML = `Access: <svg class="access-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> <a href="${partner.linkAgreement}" target="_blank" class="access-link">Publicly available</a>`;
+      } else {
+        const sourceLink = partner.sources ? ` <a href="${partner.sources}" target="_blank" class="access-link">View source</a>` : "";
+        access.innerHTML = `Access: <svg class="access-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm-3 8V6a3 3 0 0 1 6 0v3H9z"/></svg> Not publicly available${sourceLink}`;
+      }
       partnershipCard.appendChild(access);
 
-      //console.log(partner.areasCoop);
-      const partnerAreasCoop = Array.isArray(partner.areasCoop)
-        ? partner.areasCoop
-        : partner.areasCoop
-          ? [partner.areasCoop]
-          : [];
+      const partnerAreasCoop = Array.isArray(partner.areasCoop) ? partner.areasCoop : partner.areasCoop ? [partner.areasCoop] : [];
 
       if (partnerAreasCoop.length > 0) {
-        // Crear el subtítulo de "Areas of Cooperation"
         const areasTitleContainer = document.createElement("div");
         areasTitleContainer.style.display = "flex";
         areasTitleContainer.style.alignItems = "center";
@@ -423,8 +295,7 @@ export function populatePartnerships(biData, selectedCountry) {
         areasTitleContainer.style.gap = "5px";
 
         const areasTitle = document.createElement("span");
-        areasTitle.classList.add("card-text");
-        areasTitle.style.fontSize = "11pt";
+        areasTitle.classList.add("card-text", "mb-1");
         areasTitle.style.paddingBottom = "0px";
         areasTitle.style.marginBottom = "0px";
         areasTitle.style.marginRight = "10px";
@@ -438,43 +309,34 @@ export function populatePartnerships(biData, selectedCountry) {
         tagsContainer.style.gap = "5px";
 
         const rightElement = document.querySelector(".right");
-        rightElement.style.marginTop = "0px"; 
+        rightElement.style.marginTop = "0px";
 
         // Obtener el primer elemento que tenga 25 letras o menos y luego el resto en su orden original
-        const firstShortElement = partnerAreasCoop.find(
-          (area) => area.length <= 60
-        );
-        const remainingAreas = partnerAreasCoop.filter(
-          (area) => area !== firstShortElement
-        );
-        const reorderedAreas = firstShortElement
-          ? [firstShortElement, ...remainingAreas]
-          : remainingAreas;
+        const firstShortElement = partnerAreasCoop.find((area) => area.length <= 60);
+        const remainingAreas = partnerAreasCoop.filter((area) => area !== firstShortElement);
+        const reorderedAreas = firstShortElement ? [firstShortElement, ...remainingAreas] : remainingAreas;
 
         reorderedAreas.forEach((area, index) => {
           const tag = document.createElement("span");
           tag.classList.add("tag");
           tag.textContent = area;
-          tag.style.whiteSpace = "nowrap"; // Evitar que el texto del tag se parta en varias líneas
+          tag.style.whiteSpace = "nowrap";
 
-          tag.style.backgroundColor = colorMap[area] || "#000000"; // Color por defecto si el área no está en el mapa
-          tag.style.color = "black"; // Texto en color negro
+          tag.style.backgroundColor = colorMap[area] || "#000000";
+          tag.style.color = "black";
           tag.style.padding = "2px 10px";
           tag.style.borderRadius = "4px";
           tag.style.fontSize = "9pt";
 
-          // Añadir eventos para presionar y soltar el tag
           tag.addEventListener("mouseover", function () {
-            tag.style.boxSizing = "border-box"; // Asegurar que el borde forme parte del tamaño total del elemento
-            tag.style.border = "1px solid black"; // Añadir borde negro
+            tag.style.boxSizing = "border-box";
+            tag.style.border = "1px solid black";
           });
-          // Opcional: Detectar cuando el clic termina aunque no sea sobre el tag (en caso de que se mueva fuera)
           tag.addEventListener("mouseleave", function () {
-            tag.style.border = "none"; // Quitar borde si el ratón sale del tag mientras se presiona
+            tag.style.border = "none";
           });
           tag.addEventListener("touchstart", function () {
-            tag.style.boxSizing = "border-box"; // Asegurar que el borde forme parte del tamaño total del elemento
-            tag.style.border = "1px solid black"; // Añadir borde negro
+            tag.style.boxSizing = "border-box";
           });
 
           tag.addEventListener("mouseenter", function () {
@@ -482,26 +344,21 @@ export function populatePartnerships(biData, selectedCountry) {
             const tooltip = document.createElement("span");
             tooltip.classList.add("tooltip");
             tooltip.textContent = tooltipMap[area];
-            tooltip.style.lineHeight = "1.5"; // Aumentar interlineado
-
-            // Añadir el tooltip al tag
+            tooltip.style.lineHeight = "1.5";
             tag.appendChild(tooltip);
 
-            // Hacer el tooltip visible
             tooltip.style.visibility = "visible";
             tooltip.style.opacity = "1";
 
-            // Calcular la posición del tooltip para evitar que se corte con el contenedor
             const tooltipRect = tooltip.getBoundingClientRect();
-            const container = document.querySelector(".custom-scroll"); // Selecciona el contenedor por clase
+            const container = document.querySelector(".custom-scroll");
             const containerRect = container.getBoundingClientRect();
             console.log(containerRect);
-            // Ajustar la posición si el tooltip se sale del contenedor
             if (tooltipRect.right > containerRect.right) {
               console.log("mas grande");
 
               const overflowX = tooltipRect.right - containerRect.right;
-              tooltip.style.transform = `translateX(calc(-15% - ${overflowX}px))`; // Ajustar la posición
+              tooltip.style.transform = `translateX(calc(-15% - ${overflowX}px))`;
             }
             if (tooltipRect.left < containerRect.left) {
               const overflowLeft = containerRect.left - tooltipRect.left;
@@ -510,13 +367,12 @@ export function populatePartnerships(biData, selectedCountry) {
           });
 
           tag.addEventListener("mouseleave", function () {
-            // Remover el tooltip al salir del tag
             const tooltip = tag.querySelector(".tooltip");
             if (tooltip) {
               tag.removeChild(tooltip);
             }
           });
-          // Añadir el tag al contenedor de título solo si es el primer elemento corto, el resto va al contenedor de tags
+
           if (index === 0 && firstShortElement === area) {
             areasTitleContainer.appendChild(tag);
           } else {
@@ -532,20 +388,15 @@ export function populatePartnerships(biData, selectedCountry) {
   });
 }
 const tooltipMap = {
-  "Economic linkages and diversification":
-    "Provisions broadly relating to the integration of value chains, fostering economic diversification and creating business models that strengthen trade, governance and infrastructure development.",
+  "Economic linkages and diversification": "Provisions broadly relating to the integration of value chains, fostering economic diversification and creating business models that strengthen trade, governance and infrastructure development.",
 
-  "Capital mobilization":
-    "Provisions focused on securing and attracting funds for infrastructure, encouraging private sector investment, promoting joint ventures, fostering new business models and promoting joint initiatives, including public-private partnerships, to strengthen trade and resource exploration.",
+  "Capital mobilization": "Provisions focused on securing and attracting funds for infrastructure, encouraging private sector investment, promoting joint ventures, fostering new business models and promoting joint initiatives, including public-private partnerships, to strengthen trade and resource exploration.",
 
-  "Sustainable governance":
-    "Collaborative efforts to promote responsible production, integrate Environmental, Social, Governance (ESG) criteria, strengthen governance and ensure traceability through sustainable legislation, policies and industry standards.",
+  "Sustainable governance": "Collaborative efforts to promote responsible production, integrate Environmental, Social, Governance (ESG) criteria, strengthen governance and ensure traceability through sustainable legislation, policies and industry standards.",
 
-  "Knowledge and capacity building":
-    "Initiatives such as the establishment of data banks, the sharing of expertise, joint research initiatives, specialized training and the exchange of technical knowledge to enhance skills, foster innovation and support sustainable development in the sector.",
+  "Knowledge and capacity building": "Initiatives such as the establishment of data banks, the sharing of expertise, joint research initiatives, specialized training and the exchange of technical knowledge to enhance skills, foster innovation and support sustainable development in the sector.",
 
-  "Extraction and exploration partnerships":
-    "Joint efforts in mineral exploration, secure supply chain development, technical expertise exchange and geological infrastructure creation through public-private partnerships to promote sustainable mining and investment.",
+  "Extraction and exploration partnerships": "Joint efforts in mineral exploration, secure supply chain development, technical expertise exchange and geological infrastructure creation through public-private partnerships to promote sustainable mining and investment.",
 };
 const colorMap = {
   "Economic linkages and diversification": "#75D1D1",
@@ -582,12 +433,7 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
   multiPartner.style.fontSize = "22pt";
   multiPartner.style.fontWeight = "bold";
 
-  multiPartner.classList.add(
-    "card-title",
-    "card-title-fixed",
-    "partner-select",
-    "mt-3"
-  );
+  multiPartner.classList.add("card-title", "card-title-fixed", "partner-select", "mt-3");
   multiPartner.innerHTML = `${selectedBloc}`;
   infoMultiContainer.appendChild(multiPartner);
 
@@ -636,7 +482,7 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
 
   // Añadir el contenedor de icono y enlace al contenedor principal
   scrollContainer.appendChild(iconLinkContainer);
-  
+
   // Variable global para rastrear el tooltip activo
   let activeTooltip = null;
   const isMobile = window.innerWidth <= 768; // Si el ancho de la pantalla es menor o igual a 768px, asumimos que es móvil
@@ -644,15 +490,15 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
   // Check if EU exists in the original data and filter display accordingly
   const blocData = multiJsonData.find((item) => item.blocName === nombre);
   let displayCountries = blocCountries;
-  
-  if (blocData && blocData.members && typeof blocData.members === 'object' && !Array.isArray(blocData.members)) {
+
+  if (blocData && blocData.members && typeof blocData.members === "object" && !Array.isArray(blocData.members)) {
     if (blocData.members.EU && blocData.members.countries) {
       // Get list of countries that are explicitly in the "countries" array
       const explicitCountries = blocData.members.countries;
       const euCountriesList = blocData.members.EU;
-      
+
       // Display: countries from "countries" array + EU, but exclude EU countries that are NOT in "countries" array
-      displayCountries = blocCountries.filter(country => {
+      displayCountries = blocCountries.filter((country) => {
         const name = country.properties.name;
         // Keep if it's EU
         if (name === "EU") return true;
@@ -684,16 +530,13 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
       countryName.className = "country-name2 long-name";
       const parts = displayName.split(" ");
       if (parts.length > 1) {
-        const firstPart = parts
-          .slice(0, Math.ceil(parts.length / 2.5))
-          .join(" ");
+        const firstPart = parts.slice(0, Math.ceil(parts.length / 2.5)).join(" ");
         const secondPart = parts.slice(Math.ceil(parts.length / 2.5)).join(" ");
         countryName.innerHTML = `• ${firstPart}<br>&nbsp;&nbsp;&nbsp;${secondPart}`;
 
         // Crear el contenedor del tooltip
         const tooltipMultiContainer = document.createElement("div");
-        tooltipMultiContainer.className =
-          "tooltipMulti-container long-name-tooltip";
+        tooltipMultiContainer.className = "tooltipMulti-container long-name-tooltip";
         tooltipMultiContainer.style.position = "relative";
         tooltipMultiContainer.style.display = "inline-block";
         tooltipMultiContainer.style.marginLeft = "5px"; // Margen para separar el ícono del nombre
@@ -731,7 +574,6 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
         tooltipMultiContainer.appendChild(infoIcon);
         tooltipMultiContainer.appendChild(tooltipMulti);
       } else {
-
         countryName.innerHTML = `• ${displayName}`;
       }
     } else {
@@ -817,16 +659,13 @@ export function clearCardContent() {
   }
 }
 export function highlightBloc(svg, filteredGeoJSON, selectedColor, selectedBloc) {
-  const blocCountries = new Set(
-    filteredGeoJSON.features.map((f) => f.properties.name)
-  );
-  svg.selectAll("path")
+  const blocCountries = new Set(filteredGeoJSON.features.map((f) => f.properties.name));
+  svg
+    .selectAll("path")
     .interrupt("highlight")
     .transition("highlight")
     .duration(400)
-    .attr("fill", (d) =>
-      blocCountries.has(d.properties.name) ? selectedColor : "#E8E4DF"
-    );
+    .attr("fill", (d) => (blocCountries.has(d.properties.name) ? selectedColor : "#E8E4DF"));
 }
 
 // export function highlightEuClubBloc(svg, filteredGeoJSON) {

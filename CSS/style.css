@@ -174,15 +174,14 @@
   border-radius: 3px;
   font-size: 10pt;
 }
-.tag.tooltip {
+.tag.tooltip,
+.tag.tooltipMulti {
   position: absolute;
-  font-family: var(--vr-font-primary);
+  font-family: "Inter", system-ui, sans-serif;
   visibility: hidden;
   line-height: 1;
   text-align: left;
-  /* Alineación del texto a la izquierda */
   padding: 8px 10px;
-  /* Espaciado interno en el tooltip */
   font-size: 8pt;
   background-color: #333;
   color: #fff;
@@ -190,10 +189,8 @@
   width: 250px;
   position: absolute;
   bottom: 125%;
-  /* Ajusta la posición del tooltip */
   transform: translateX(-4%);
   z-index: 9999;
-  /* Asegura que el tooltip esté encima de otros elementos */
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -207,6 +204,7 @@
 .tag:hover.tooltip {
   visibility: visible;
   opacity: 1;
+  font-family: "Inter", system-ui, sans-serif;
 }
 .label {
   font-size: 14px;
@@ -217,7 +215,7 @@
   margin-left: 12px;
 }
 .tooltip {
-  font-family: "UncutSans Semibold";
+  font-family: "Inter", system-ui, sans-serif;
   font-size: 12px;
 }
 .tooltip h3 {
@@ -260,13 +258,10 @@
   border-radius: 5px;
   padding: 10px;
   position: absolute;
-  /* Cambiado a absolute para posicionar relativo al viewport */
   z-index: 1000;
-  /* Asegura que el tooltip esté por encima de otros elementos */
   bottom: 125%;
-  /* Mostrar sobre el ícono */
   left: 1%;
-  font-family: "UncutSans Semibold";
+  font-family: "Inter", system-ui, sans-serif;
   transform: translateX(-40%);
   opacity: 0;
   transition: opacity 0.3s;
@@ -275,7 +270,6 @@
 .tooltipMulti.active {
   visibility: visible;
   opacity: 1;
-  font-family: "UncutSans Semibold";
   font-size: 8pt;
   padding: 8px 10px;
 }
@@ -283,12 +277,15 @@
   content: "";
   position: absolute;
   top: 100%;
-  /* Flecha del tooltip */
   left: 50%;
   transform: translateX(-50%);
   border-width: 5px;
   border-style: solid;
   border-color: #333 transparent transparent transparent;
+}
+.tooltipMulti,
+.tooltipMulti.active {
+  font-family: "Inter", system-ui, sans-serif;
 }
 .info-icon {
   cursor: pointer;
@@ -928,6 +925,13 @@ h2.title {
   margin-bottom: 2px !important;
 }
 
+p.card-text .access-icon {
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0;
+  vertical-align: -2px;
+  margin: 0 4px;
+}
 /* Divider between African country sections */
 .card-body.partner {
   border-bottom: 0.5px solid var(--color-border);
@@ -939,7 +943,7 @@ h2.title {
   border-bottom: none;
 }
 
-/* ── Areas of cooperation tags ── */
+/* -- Areas of cooperation tags ----------- */
 /* Unify all tag colors to terracotta light */
 .areas-tag,
 [class*="btn"][style*="background"] {
@@ -967,6 +971,24 @@ a.source-link:hover,
   text-underline-offset: 3px;
 }
 
+.access-icon {
+  display: inline-block;
+  vertical-align: -2px;
+  width: 16px;
+  height: 16px;
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+.access-link {
+  color: #0071BC !important;
+  text-decoration: underline !important;
+}
+.access-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
 /* -- Fix broken icon image -- */
 /* Hide alt text when image fails to load */
 img[alt="Icono de acceso"] {

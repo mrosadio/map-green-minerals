@@ -45,7 +45,7 @@ const highlightColors = {
   euMember: "#FCC12C", // same as individual — Germany etc. treated as individual
 };
 
-// ── Public: overview map ──────────────────────────────────────────────────────
+// -- Public: overview map ---------------------------------------------------------
 export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
   console.log("drawMapWithPartnerColors called, existing paths:", svg.selectAll("path").size());
   console.log(
@@ -142,9 +142,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
         .interrupt("partnerHighlight")
         .transition("partnerHighlight")
         .duration(200)
-        .attr("fill", PARTNER_FILL)
-        .attr("stroke", "#8C4D00")
-        .attr("stroke-width", 1.5);
+        .attr("fill", PARTNER_FILL);
 
       // Highlight EU as border only
       if (hasEU) {
@@ -152,9 +150,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
           .filter((p) => euMemberNames.has(p.properties.name))
           .transition()
           .duration(200)
-          .attr("stroke", EU_STROKE)
-          .attr("stroke-width", EU_STROKE_WIDTH);
-        // leave fill unchanged — EU members keep their default grey fill
+          .attr("fill", "#D4891A");
       }
 
       tooltip.html(buildTooltipHTML(countryName, count, rawPartners)).style("display", window.innerWidth > 768 ? "block" : "none");
@@ -207,6 +203,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
         .interrupt()
         .transition()
         .duration(200)
+        .attr("fill", DEFAULT_FILL)
         .attr("stroke", "white")
         .attr("stroke-width", 0.5);
 
