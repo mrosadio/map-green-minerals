@@ -7,6 +7,7 @@
 import { svg } from "./globals.js";
 
 let g; // at the module-level container. Reassigned at each draw
+let isPanned = false; // whether the horizontal shift is currently applied
 
 // Per-country label position overrides.
 // dx/dy: pixel offset from centroid. lines: override text split.
@@ -31,7 +32,7 @@ const countryLabelConfig = {
   "United Republic of Tanzania": { lines: ["Tanzania"] },
 };
 
-const euMemberNames = new Set(["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"]);
+export const euMemberNames = new Set(["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"]);
 const partnerNameNormalization = {
   USA: "United States",
   EU: "European Union",
@@ -232,7 +233,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
       renderLabel(d3.select(this), d, path);
     });
 }
-// ── Public: bilateral / multilateral map ──────────────────────────────────────
+// -- Public: bilateral / multilateral map --------------------------------------------
 export function drawMap(geojson, filteredCountryGeoJSON, partner) {
   console.log("Content of filtered", filteredCountryGeoJSON);
   const mapEl = document.querySelector("#map");
@@ -242,7 +243,6 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
   }
 
   svg.selectAll("*").remove();
-  svg.attr("viewBox", getViewBox(mapEl));
 
   const svgNode = svg.node();
   const W = svgNode.clientWidth;
@@ -271,6 +271,8 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
     .attr("stroke", "white")
     .attr("stroke-width", 0.5)
     .on("mouseover", function (event, d) {
+      const hasData = filteredCountryGeoJSON.features.some((f) => f.properties.name === d.properties.name);
+      if (!hasData) return; // no tooltip for countries with no data
       tooltip.html(`<h3 class="fw-bold mb-0" style="font-size:12pt">${d.properties.name}</h3>`).style("display", window.innerWidth > 768 ? "block" : "none");
     })
     .on("mousemove", function (event) {
@@ -280,22 +282,20 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
       tooltip.style("display", "none");
     });
 }
-// -- Private: layout helper detector -------
+// -- Private: layout helper detector ----------------------------------------
 function isStackedLayout() {
   return window.matchMedia("(min-width: 769px) and (max-width: 1366px) and (orientation: portrait)").matches;
 }
-// -- Public: when partners local at the right-side of the world map selected --
+// -- Public: registers is map is already shifted ------------------------------
 // Module-level flag in mapUtils.js
-export function panMapforPartner(partnerName) {
-  if (isStackedLayout()) return; // panel sits below the map
-  const mapEl = document.querySelector("#map");
-  const vb = getViewBox(mapEl).split(" ").map(Number);
-  vb[0] = vb[0] + 150;
-  svg.transition("mapPan").duration(400).attr("viewBox", vb.join(" "));
-}
-export function resetMapPan() {
-  const mapEl = document.querySelector("#map");
-  svg.transition("mapPan").duration(400).attr("viewBox", getViewBox(mapEl));
+export function panMapforPartner() {
+  const target = computeShiftedViewBox();
+  if (isPanned) {
+    svg.attr("viewBox", target); // already shifted — refresh in place, no slide
+  } else {
+    svg.transition("mapPan").duration(400).attr("viewBox", target);
+  }
+  isPanned = !isStackedLayout();
 }
 // -- Public: path generator helper ---------------------------------------------
 export function fitSizeMap(geoJSON) {
@@ -305,6 +305,13 @@ export function fitSizeMap(geoJSON) {
   const projection = d3.geoEqualEarth().fitSize([W, H], geoJSON);
   return d3.geoPath().projection(projection);
 }
+
+// -- public: reset map ---------------------------------------------------------
+export function resetMapPan() {
+  svg.transition("mapPan").duration(400).attr("viewBox", getViewBox());
+  isPanned = false;
+}
+
 // -- Private: Strip year annotation from partner name  -------------------------
 // e.g "Turkey (2016)" -> "Turkey"
 function cleanPartnerName(name) {
@@ -372,7 +379,7 @@ function positionTooltip(event, tooltip) {
     tooltip.style("left", `${event.pageX + 10}px`).style("top", `${event.pageY + 10}px`);
   }
 }
-// ── Private: viewBox ──────────────────────────────────────────────────────────
+// -- Private: viewBox ------------------------------------------------------------------
 function getViewBox(el) {
   const svgNode = svg.node();
   const w = svgNode.clientWidth;
@@ -387,7 +394,7 @@ function getViewBox(el) {
   return `0 0 ${w} ${h}`;
 }
 
-// ── Private: text wrapping ────────────────────────────────────────────────────
+// -- Private: text wrapping ----------------------------------------------------------------
 function wrapText(text, maxLength) {
   const words = text.split(" ");
   let currentLine = "";
@@ -402,4 +409,13 @@ function wrapText(text, maxLength) {
   });
   if (currentLine) lines.push(currentLine);
   return lines;
+}
+
+// -- Private ------------------------------------------------------------------
+function computeShiftedViewBox() {
+  const vb = getViewBox().split(" ").map(Number);
+  if (!isStackedLayout()) {
+    vb[0] += 150;
+  }
+  return vb.join(" ");
 }

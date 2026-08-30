@@ -1,4 +1,5 @@
 import { svg, themeUrl } from "./globals.js";
+import { euMemberNames } from "./mapUtils.js";
 
 export function highlightPartnership(svg, filteredGeoJSON, itemSelected) {
   svg.selectAll("path")
@@ -23,35 +24,34 @@ export function highlightPartnership(svg, filteredGeoJSON, itemSelected) {
 }
 
 export function highlightEu(svg, filteredGeoJSON) {
-  const euCountries = new Set(
-    filteredGeoJSON.features.map((f) => f.properties.name)
-  );
-  // Lista de países a excluir
-  const excludedCountries = new Set([
-    "Zambia",
-    "Rwanda",
-    "Namibia",
-    "Democratic Republic of the Congo",
-    "South Africa",
-  ]);
-  // Crear un nuevo arreglo excluyendo los países
-  const updatedCountries = Array.from(euCountries).filter(
-    (country) => !excludedCountries.has(country)
+  svg.selectAll("path")
+    .interrupt("highlight")
+    .transition("highlight")
+    .duration(200)
+    .attr("fill", "#E8E4DF")
+    .attr("stroke", "white")
+    .attr("stroke-width", 0.5);
+
+  const euCountries = new Set(euMemberNames); // eu member states
+  const africanPartners = new Set(
+    filteredGeoJSON.features
+      .map((f) => f.properties.name)
+      .filter((name) => !euCountries.has(name))
   );
 
-  console.log(updatedCountries);
+  svg.selectAll("path")
+    .filter((d) => euCountries.has(d.properties?.name))
+    .interrupt("highlight")
+    .transition("highlight")
+    .duration(400)
+    .attr("fill", "#D4891A");
 
-  const updatedCountriesSet = new Set(updatedCountries);
-
-  svg.selectAll("path").attr(
-    "fill",
-    (d) =>
-      excludedCountries.has(d.properties.name)
-        ? "#FFDC94 " // Amarillo para excludedCountries
-        : updatedCountriesSet.has(d.properties.name)
-          ? "#fec03c" // Verde para updatedCountries
-          : "#f2f2f2" // Gris claro para el resto
-  );
+  svg.selectAll("path")
+    .filter((d) => africanPartners.has(d.properties?.name))
+    .interrupt("highlight")
+    .transition("highlight")
+    .duration(400)
+    .attr("fill", "#F0C97A");
 }
 
 export function populatePartnerships(biData, selectedCountry) {
