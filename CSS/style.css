@@ -612,6 +612,7 @@
   --color-text-muted:    #B4B2A9;
   --color-map-default:   #E8E4DF;
   --content-gutter:      1rem;
+  --nav-btn-font-size:   0.95rem; /* pick the value that looks right to you */
 }
 .content-gutter-left {
   margin-left: var(--content-gutter);
@@ -643,7 +644,9 @@ body {
   border-bottom: 0.5px solid var(--color-border);
   background: var(--color-bg);
 }
-
+#nav .btn {
+  font-size: var(--nav-btn-font-size);
+}
 h2.title {
   font-size: 1.4rem;
   font-weight: 700;
@@ -1014,11 +1017,14 @@ img[alt="Icono de acceso"] {
   background: var(--color-bg);
 }
 
-.button-dropdown {
+/* .button-dropdown {
   line-height: 1.1;
-}
+} */
 
 @media (min-width: 769px) and (max-width: 1366px) and (orientation: portrait) {
+  :root {
+    --nav-btn-font-size: 0.85rem;
+  }
   #map {
     display: flex;
     flex-direction: column;

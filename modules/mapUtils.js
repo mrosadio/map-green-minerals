@@ -15,7 +15,7 @@ const countryLabelConfig = {
   Guinea: { dx: 5, dy: 0 },
   "Ivory Coast": { lines: ["Ivory", "Coast"], dx: 0, dy: 5 },
   Somalia: { dx: 20, dy: 10 },
-  "Guinea Bissau": {lines: ["Guinea-", "Bissau"], dx: -25, dy: 6 },
+  "Guinea Bissau": { lines: ["Guinea-", "Bissau"], dx: -25, dy: 6 },
   Mali: { dx: 20, dy: 0 },
   Algeria: { dx: 0, dy: 10 },
   Libya: { dx: 0, dy: 5 },
@@ -25,10 +25,10 @@ const countryLabelConfig = {
   Mozambique: { dx: 14, dy: -10 },
   Namibia: { dx: 0, dy: 5 },
   Madagascar: { dx: 10, dy: 0 },
-  Uganda: { dy: -5},
+  Uganda: { dy: -5 },
   "South Africa": { lines: ["South", "Africa"], dx: -10, dy: 0 },
-  "Democratic Republic of the Congo": { lines: ["Dem. Rep.", "of the Congo"]},
-  "United Republic of Tanzania": { lines: ["Tanzania"]}
+  "Democratic Republic of the Congo": { lines: ["Dem. Rep.", "of the Congo"] },
+  "United Republic of Tanzania": { lines: ["Tanzania"] },
 };
 
 const euMemberNames = new Set(["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"]);
@@ -87,7 +87,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
   const colorScaleHover = d3.scaleQuantize().domain([0, 6]).range(["#F5F0EC", "#FAE9CA", "#F5D898", "#EEC268", "#DDA040", "#C87E20", "#A05C10"]);
 
   // Individual bilateral partner country fill
-  const PARTNER_FILL = "#E8B044"; 
+  const PARTNER_FILL = "#E8B044";
 
   // EU bloc — border only, no fill
   const EU_STROKE = "#B86C0A";
@@ -119,6 +119,10 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
       const countryData = partnerLookup.get(countryName);
       const count = countryData?.partnersNo || 0;
 
+      // if no partnership data no tooltip
+      if (count === 0) {
+        return;
+      }
       // Highlight hovered African country
       d3.select(this).transition().duration(200).attr("fill", colorScaleHover(count));
       if (count === 0) {

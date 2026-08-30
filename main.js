@@ -90,15 +90,15 @@ Promise.all([loadAndMergeData(geojsonUrl, jsonFilePath, noPartnerFilePath), merg
       document.querySelector("#showScrollable").addEventListener("click", () => {
         refresh();
       });
-      ["bilateralToggle", "multilateralToggle"].forEach((id) => {
-        const toggle = document.getElementById(id);
-        toggle.addEventListener("shown.bs.dropdown", () => {
-          document.querySelector("#legend-container").classList.add("legend-hidden");
-        });
-        toggle.addEventListener("hidden.bs.dropdown", () => {
-          document.querySelector("#legend-container").classList.remove("legend-hidden");
-        });
-      });
+      // ["bilateralToggle", "multilateralToggle"].forEach((id) => {
+      //   const toggle = document.getElementById(id);
+      //   toggle.addEventListener("shown.bs.dropdown", () => {
+      //     document.querySelector("#legend-container").classList.add("legend-hidden");
+      //   });
+      //   toggle.addEventListener("hidden.bs.dropdown", () => {
+      //     document.querySelector("#legend-container").classList.remove("legend-hidden");
+      //   });
+      // });
       document.addEventListener("overview:selected", () => {
         resetToInitialView();
         resetMapPan();
