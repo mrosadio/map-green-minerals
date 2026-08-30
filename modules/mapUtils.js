@@ -11,21 +11,24 @@ let g; // at the module-level container. Reassigned at each draw
 // Per-country label position overrides.
 // dx/dy: pixel offset from centroid. lines: override text split.
 const countryLabelConfig = {
-  Senegal: { dx: -40, dy: 5 },
-  Guinea: { dx: -40, dy: 8 },
-  "Ivory Coast": { dx: -20, dy: 35 },
+  Senegal: { dx: -10, dy: 0 },
+  Guinea: { dx: 5, dy: 0 },
+  "Ivory Coast": { lines: ["Ivory", "Coast"], dx: 0, dy: 5 },
   Somalia: { dx: 20, dy: 10 },
-  "Guinea Bissau": { dx: -35, dy: 6 },
+  "Guinea Bissau": {lines: ["Guinea-", "Bissau"], dx: -25, dy: 6 },
   Mali: { dx: 20, dy: 0 },
   Algeria: { dx: 0, dy: 10 },
   Libya: { dx: 0, dy: 5 },
   Rwanda: { dx: 15, dy: 3 },
   Zambia: { dx: -8, dy: 12 },
   Malawi: { dx: 7, dy: 2 },
-  Mozambique: { dx: 14, dy: 10 },
+  Mozambique: { dx: 14, dy: -10 },
   Namibia: { dx: 0, dy: 5 },
-  Madagascar: { dx: 15, dy: 0 },
-  "South Africa": { lines: ["SOUTH", "AFRICA"], dx: -10, dy: 0 },
+  Madagascar: { dx: 10, dy: 0 },
+  Uganda: { dy: -5},
+  "South Africa": { lines: ["South", "Africa"], dx: -10, dy: 0 },
+  "Democratic Republic of the Congo": { lines: ["Dem. Rep.", "of the Congo"]},
+  "United Republic of Tanzania": { lines: ["Tanzania"]}
 };
 
 const euMemberNames = new Set(["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"]);
@@ -84,10 +87,10 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
   const colorScaleHover = d3.scaleQuantize().domain([0, 6]).range(["#F5F0EC", "#FAE9CA", "#F5D898", "#EEC268", "#DDA040", "#C87E20", "#A05C10"]);
 
   // Individual bilateral partner country fill
-  const PARTNER_FILL = "#E8B044"; // mid-amber, matches choropleth step 3
+  const PARTNER_FILL = "#E8B044"; 
 
   // EU bloc — border only, no fill
-  const EU_STROKE = "#B86C0A"; // darker amber, clearly distinct
+  const EU_STROKE = "#B86C0A";
   const EU_STROKE_WIDTH = 2;
 
   // Non-partner, non-African countries
@@ -315,18 +318,20 @@ function renderLabel(textEl, feature, path) {
   const cx = centroid[0] + (config.dx || 0);
   const cy = centroid[1] + (config.dy || 0);
 
-  const lines = config.lines || wrapText(name.toUpperCase(), 13);
+  const lines = config.lines || wrapText(name, 13);
 
   lines.forEach((line, i) => {
     textEl
       .append("tspan")
       .attr("x", cx)
       .attr("y", cy + i * 8)
-      .text(line);
+      .text(line)
+      .attr("font-size", "1.25em")
+      .attr("color", "var(--color-text-primary)");
   });
 }
 
-// ── Private: tooltip ──────────────────────────────────────────────────────────
+// -- Private: tooltip --------------------------------------------------
 function getOrCreateTooltip() {
   const existing = d3.select(".tooltip2");
   if (!existing.empty()) return existing;

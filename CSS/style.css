@@ -30,6 +30,11 @@
   font-weight: bolder;
   font-family: var(--vr-font-primary);
 }
+.subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  margin: 2px 0 0 0;
+}
 .card-subTitle {
   font-size: 11pt;
   padding: 0px;
@@ -603,7 +608,7 @@
   --color-bg-subtle:     #FAFAF8;
   --color-border:        #E8E4DF;
   --color-text-primary:  #1C1C1A;
-  --color-text-secondary:#5F5E5A;
+  --color-text-secondary:#222222;
   --color-text-muted:    #B4B2A9;
   --color-map-default:   #E8E4DF;
   --content-gutter:      1rem;
@@ -614,15 +619,25 @@
 /* -- Global base -- */
 body {
   background: var(--color-bg-subtle);
-  font-family:
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    sans-serif;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+
   color: var(--color-text-primary);
 }
 
 /* -- Nav -- */
+.nav-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--color-border);
+  margin: 0 12px;
+}
+.explore-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  margin-right: 8px;
+}
 #nav {
    padding: 12px var(--content-gutter);
   border-bottom: 0.5px solid var(--color-border);
@@ -704,7 +719,7 @@ h2.title {
 
 .modal-header {
   padding: 24px 28px 8px 28px;
-  border-bottom: none;
+  /* border-bottom: none; */
 }
 
 /* Hide the redundant "About" header label */
@@ -727,7 +742,7 @@ h2.title {
   display: block;
   width: 48px;
   height: 3px;
-  background: var(--color-accent);
+  /* background: var(--color-accent); */
   margin-top: 10px;
 }
 
@@ -743,10 +758,12 @@ h2.title {
   opacity: 1;
 }
 
-.modal-body {
-  padding: 16px 28px 28px 28px;
-  max-height: 70vh;
+.modal-body .col-12 p {
+  /* padding: 16px 28px 28px 28px; */
+  /* max-height: 70vh; */
   overflow-y: auto;
+  text-align: justify;
+  hyphens: auto;
 }
 
 .modal-body p {

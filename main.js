@@ -175,13 +175,6 @@ Promise.all([loadAndMergeData(geojsonUrl, jsonFilePath, noPartnerFilePath), merg
           showPickerBilateral();
         }
       });
-      document.querySelector("#multilateralToggle").addEventListener("click", (e) => {
-        if (/Mobi|Android/i.test(navigator.userAgent)) {
-          e.preventDefault();
-          e.stopPropagation();
-          showPickerMultilateral();
-        }
-      });
     }
   })
   .catch((error) => console.error("Error processing data:", error));
