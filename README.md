@@ -8,7 +8,7 @@ countries and international partners regarding access to critical minerals.
 ## Features
 - Hover any African country for its partnership count and partner list
 - Select a specific partner (country or the EU) from the **Partner** menu to
-  see agreement details — signing date, access status, and areas of cooperation
+  see agreement details: signing date, access status, and areas of cooperation
 - Responsive layout: desktop (side panel) and tablet portrait (stacked panel)
 
 ## Built with
@@ -18,8 +18,7 @@ countries and international partners regarding access to critical minerals.
 
 ## Data
 Collected by APRI's Geopolitics and Geoeconomics Program from government
-databases, treaty repositories, and secondary sources. Not exhaustive —
-see the in-app About modal for full methodology.
+databases, treaty repositories, and secondary sources. Not exhaustive, see the in-app About modal for full methodology.
 
 ## Known limitations / next steps
 - Multilateral (coalition-based) partnerships are not currently represented
