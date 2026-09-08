@@ -12,7 +12,7 @@ const width = 1200;
 const height = 1000;
 // Use the theme URL from the global variable set in template.php
 const themeUrl = window.THEME_URL || ".";
-const geojsonUrl = "https://raw.githubusercontent.com/Afripoli/D3-graph-gallery/refs/heads/master/DATA/world.geojson";
+const worldGeojsonPath = `${themeUrl}/db/world.geojson`;
 const jsonFilePath = `${themeUrl}/db/bilateralPartner.json`;
 const multiJsonFilePath = `${themeUrl}/db/multiPartner.json`;
 const noPartnerFilePath = `${themeUrl}/db/numberPartner.json`;
@@ -43,4 +43,4 @@ const blocColors = {
 };
 
 // Export the variables
-export { width, height, svg, customColors, blocColors, geojsonUrl, jsonFilePath, multiJsonFilePath, noPartnerFilePath, legendWidth, legendHeight, legendMargin, themeUrl };
+export { width, height, svg, customColors, blocColors, worldGeojsonPath, jsonFilePath, multiJsonFilePath, noPartnerFilePath, legendWidth, legendHeight, legendMargin, themeUrl };

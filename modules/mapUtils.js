@@ -71,7 +71,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
     return;
   }
 
-  // fitSize automatically scales and centers the projection to fill [W, H]
+    // fitSize automatically scales and centers the projection to fill [W, H]
   const projection = d3.geoEqualEarth().fitSize([W, H], geojsonData);
   const path = d3.geoPath().projection(projection);
 
