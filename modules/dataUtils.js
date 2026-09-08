@@ -1,26 +1,13 @@
-// Geometry in the source GeoJSON is invalid for these — produces NaN in d3.geoPath,
-// same issue hit on the Diplomacy map. Excluded until source data is fixed.
-const EXCLUDED_COUNTRIES = new Set([
-  "Comoros",
-  "Mauritius",
-  "São Tomé and Príncipe",
-  "Seychelles",
-]);
 
 export async function loadAndMergeData(
-  geojsonUrl,
+  worldGeoJSON,
   jsonFilePath,
   noPartnerFilePath
 ) {
   try {
-    // Load GeoJSON from the provided URL
-    const geojsonResponse = await fetch(geojsonUrl);
-    const geojsonData = excludeBrokenGeometry(await geojsonResponse.json());
-    // Load the local JSON file
     const jsonResponse = await fetch(jsonFilePath);
     const jsonData = await jsonResponse.json();
 
-    // Load partnership no. JSON file
     const numberjsonResponse = await fetch(noPartnerFilePath);
     const nojsonData = await numberjsonResponse.json();
 
@@ -32,7 +19,6 @@ export async function loadAndMergeData(
 
     // Map each bilateral partnership in a object
     jsonData.forEach((partner) => {
-      //console.log('Partner in Json raw data', partner);
       let nonAfricanPartner;
       if (typeof partner.nonafrican === "object") {
         nonAfricanPartner = partner.nonafrican.name;
@@ -65,94 +51,100 @@ export async function loadAndMergeData(
         zoomMap.set(partner.nonafrican, partner.zoom);
       }
     });
-    //console.log("JSON data", jsonData);
     nojsonData.forEach((entry) => {
       partnersNoMap.set(entry.africanCountry, entry.partnersNo);
     });
-    geojsonData.features.forEach((feature) => {
+
+    // build new feature objects instead of mutation worldgeojsonin place
+    // worldgeojson is shared with mergeMulti and createBlocGeoJSON
+    // mutating here would leak bilateral-only properties into those
+    const mergedFeatures = worldGeoJSON.features.map((feature) => {
       const countryName = feature.properties.name;
-      if (partnershipMap.has(countryName)) {
-        feature.properties.partners = partnershipMap.get(countryName);
-      }
-      feature.properties.center = centerMap.get(countryName);
-      feature.properties.zoom = zoomMap.get(countryName);
-      if (partnersNoMap.has(countryName)) {
-        feature.properties.partnersNo = partnersNoMap.get(countryName);
-      }
+      return {
+        ...feature,
+        properties: {
+          ...feature.properties,
+          partners: partnershipMap.get(countryName),
+          center: centerMap.get(countryName),
+          zoom: zoomMap.get(countryName),
+          partnersNo: partnersNoMap.get(countryName),
+        },
+      };
     });
+
+    const geojsonData = { ...worldGeoJSON, features: mergedFeatures };
+
     return { geojsonData, jsonData, nojsonData, partnershipMap };
   } catch (error) {
-    //console.error("Error loading or merging data:", error);
     return null;
   }
 }
 
-export async function mergeMulti(geojsonUrl, multiJsonFilePath) {
+export async function mergeMulti(worldGeoJSON, multiJsonFilePath) {
   try {
-    const geojsonResponse = await fetch(geojsonUrl);
-    const geojsonMultiData = excludeBrokenGeometry(await geojsonResponse.json());
     const multiJsonResponse = await fetch(multiJsonFilePath);
     const multiJsonData = await multiJsonResponse.json();
 
+    // blocName -> set of member country names
+    // a set ,not array, makes membership checks below o(1) (instead of o(n))
     const blocToMembersMap = new Map();
-    //console.log("Multijson data", multiJsonData);
     multiJsonData.forEach((partner) => {
       const blocName = partner.blocName;
-      //console.log("bloc name", blocName);
       if (!blocToMembersMap.has(blocName)) {
-        blocToMembersMap.set(blocName, []);
+        blocToMembersMap.set(blocName, new Set());
       }
-      if (typeof partner.members === "object") {
+      const members = blocToMembersMap.get(blocName);
+
+      if (typeof partner.members === "object" && !Array.isArray(partner.members)) {
         for (let key in partner.members) {
           if (Array.isArray(partner.members[key])) {
-            partner.members[key].forEach((item) => {
-              blocToMembersMap.get(blocName).push(item);
-            });
+            partner.members[key].forEach((item) => members.add(item));
           }
         }
       } else {
-        partner.members.forEach((member) => {
-          //console.log("Member", member);
-          if (!blocToMembersMap.get(blocName).includes(member)) {
-            blocToMembersMap.get(blocName).push(member);
-          }
-        });
+        partner.members.forEach((member) => members.add(member));
       }
     });
-    geojsonMultiData.features.forEach((feature) => {
-      const countryName = feature.properties.name;
-      feature.properties.blocs = [];
-      blocToMembersMap.forEach((members, blocName) => {
-        if (members.includes(countryName)) {
-          feature.properties.blocs.push(blocName);
+    // Reverse index: countryName -> [blocNames]. Built once, O(total bloc
+    // memberships) rather than re-scanning every bloc for every feature
+    // (which was the o(features × blocs × members) shape in the original)
+    const countryToBlocs = new Map();
+    blocToMembersMap.forEach((members, blocName) => {
+      members.forEach((countryName) => {
+        if (!countryToBlocs.has(countryName)) {
+          countryToBlocs.set(countryName, []);
         }
+        countryToBlocs.get(countryName).push(blocName);
       });
     });
+    const mergedFeatures = worldGeoJSON.features.map((feature) => {
+      const countryName = feature.properties.name;
+      return {
+        ...feature,
+        properties: {
+          ...feature.properties,
+          blocs: countryToBlocs.get(countryName) || [],
+        },
+      };
+    });
+
+    const geojsonMultiData = { ...worldGeoJSON, features: mergedFeatures };
     return { geojsonMultiData, multiJsonData };
   } catch (error) {
-    //console.error("Error loading or merging data:", error);
     return null;
   }
 }
 
-export async function createBlocGeoJSON(
-  geojsonUrl,
-  multiJsonFilePath,
-  targetBlocName,
-  euGeojsonPath
-) {
+export async function createBlocGeoJSON(worldGeoJSON, multiJsonFilePath, targetBlocName, euGeojsonPath) {
   console.log("====== createBlocGeoJSON CALLED ======");
   console.log("targetBlocName:", targetBlocName);
   console.log("euGeojsonPath:", euGeojsonPath);
   try {
-    const geojsonResponse = await fetch(geojsonUrl);
-    const geojsonData = excludeBrokenGeometry(await geojsonResponse.json());
     const multiJsonResponse = await fetch(multiJsonFilePath);
     const multiJsonData = await multiJsonResponse.json();
 
     let targetMembers = [];
     let hasEUKey = false;
-    let euCountries = [];
     let explicitCountries = [];
     
     multiJsonData.forEach((bloc) => {
@@ -162,22 +154,15 @@ export async function createBlocGeoJSON(
         if (Array.isArray(bloc.members)) {
           targetMembers = bloc.members;
         } else {
-          console.log("bloc members structure:", bloc.members);
-          
-          // First, collect countries from "countries" array
+          console.log("bloc members structure:", bloc.members);          
           if (bloc.members.countries) {
             explicitCountries = bloc.members.countries;
           }
-          
-          // Add all members
           for (let key in bloc.members) {
             console.log("Processing key:", key);
             if (key === "EU") {
-              // Track that EU exists for loading EU GeoJSON
               hasEUKey = true;
-              euCountries = bloc.members.EU;
               targetMembers.push("EU");
-              // Only add EU countries that are ALSO in the explicit countries array
               bloc.members.EU.forEach((item) => {
                 if (explicitCountries.includes(item)) {
                   targetMembers.push(item);
@@ -196,17 +181,20 @@ export async function createBlocGeoJSON(
     
     console.log("hasEUKey:", hasEUKey);
     console.log("targetMembers:", targetMembers);
+
+    // Copy the features array before mutating - worldGeoJSON is shared
+    // across all consumers, so pushing the EU feature directly onto
+    // worldGeoJSON.features would leak it permanently into every other view
+    let features = [...worldGeoJSON.features];
     
-    // Load EU GeoJSON and add it to the world data if EU key exists
     if (hasEUKey && euGeojsonPath) {
       console.log("Loading EU GeoJSON from:", euGeojsonPath);
       try {
         const euResponse = await fetch(euGeojsonPath);
         const euData = await euResponse.json();
         console.log("EU GeoJSON loaded:", euData);
-        // Add EU feature to the world GeoJSON
         if (euData.features && euData.features.length > 0) {
-          geojsonData.features.push(euData.features[0]);
+          features.push(euData.features[0]);
           console.log("Added EU feature to geojsonData. EU feature name:", euData.features[0].properties.name);
         }
       } catch (euError) {
@@ -215,29 +203,24 @@ export async function createBlocGeoJSON(
     } else {
       console.log("Not loading EU GeoJSON. hasEUKey:", hasEUKey, "euGeojsonPath:", euGeojsonPath);
     }
-    
-    const filteredFeatures = geojsonData.features.filter((feature) => {
-      return targetMembers.includes(feature.properties.name);
-    });
+    // Set for O(1) membership checks instead of .includes() (O(n)) inside filter.
+    const targetSet = new Set(targetMembers);
+    const filteredFeatures = features.filter((feature) => targetSet.has(feature.properties.name));
     console.log("Filtered features count:", filteredFeatures.length);
-    console.log("Filtered features names:", filteredFeatures.map(f => f.properties.name));
-    //console.log("Target members", targetMembers);
-    // Create a new GeoJSON object with the filtered features
+    console.log("Filtered features names:", filteredFeatures.map((f) => f.properties.name));
+
+
     const filteredGeoJSON = {
       type: "FeatureCollection",
       features: filteredFeatures,
     };
     return filteredGeoJSON;
   } catch (error) {
-    //console.error("Error creating bloc GeoJSON:", error);
     return null;
   }
 }
 export function mergeWorldWithPartnerData(geojsonData, partnersNoData) {
-  // Build a lookup map for fast access: countryName → partnerCount
-  const partnerLookup = new Map(
-    partnersNoData.map((d) => [d.africanCountry, d])
-  );
+  const partnerLookup = new Map(partnersNoData.map((d) => [d.africanCountry, d]));
 
   // Keep ALL world features, but attach partnership data where it exists
   const mergedFeatures = geojsonData.features.map((feature) => {
@@ -248,8 +231,6 @@ export function mergeWorldWithPartnerData(geojsonData, partnersNoData) {
       ...feature,
       properties: {
         ...feature.properties,
-        // If this is an African partner country, attach the data
-        // Otherwise partnerCount stays undefined → colored as default grey
         partnerCount: partnerData ? partnerData.partnerCount : null,
         isAfricanPartner: !!partnerData,
       },
@@ -263,22 +244,18 @@ export function filterCountriesByPartner(mergedBiData, selectedCountry) {
   console.log('Merged Bi data in filterCountriesByPartner', mergedBiData)
   console.log("Selected country in function filterCountriesByPartner", selectedCountry);
   if (selectedCountry === "United Kingdom") {
-    selectedCountry = "England"; // since the geojson calls it England
+    selectedCountry = "England";
   }
-  const selectedCountryFeature = mergedBiData.features.find(
-    (feature) => feature.properties.name === selectedCountry
-  );
+  const selectedCountryFeature = mergedBiData.features.find((feature) => feature.properties.name === selectedCountry);
   console.log("Selected country", selectedCountryFeature);
-  const partners = selectedCountryFeature.properties.partners || [];
+  // Set for O(1) membership checks instead of .includes() (O(n)) inside filter
+  const partnerSet = new Set(selectedCountryFeature.properties.partners || []);
   const filteredGeoJSON = {
     type: "FeatureCollection",
     features: mergedBiData.features.filter(
-      (feature) =>
-        feature.properties.name === selectedCountry ||
-        partners.includes(feature.properties.name)
+      (feature) => feature.properties.name === selectedCountry || partnerSet.has(feature.properties.name)
     ),
   };
-  //console.log("Filtered GeoJSON is now:", filteredGeoJSON);
   return filteredGeoJSON;
 }
 
@@ -286,23 +263,12 @@ export async function filterEUandPartners(geojsonData, jsonData) {
   const eu = jsonData[0];
   const euContries = eu.nonafrican.countries;
   const euPartners = eu.partnership.map((partner) => partner.country);
-  const euPartnership = euContries.concat(euPartners);
-  //console.log("eu partnership", euPartnership);
-  const filteredFeatures = geojsonData.features.filter((feature) => {
-    return euPartnership.includes(feature.properties.name);
-  });
+  // Set for O(1) membership checks instead of .includes() (O(n)) inside filter
+  const euPartnershipSet = new Set([...euContries, ...euPartners]);
+  const filteredFeatures = geojsonData.features.filter((feature) => euPartnershipSet.has(feature.properties.name));
   const filteredGeoJSON = {
     type: "FeatureCollection",
     features: filteredFeatures,
   };
-  //console.log("Filter EU partners", filteredGeoJSON);
   return filteredGeoJSON;
-}
-function excludeBrokenGeometry(geojsonData) {
-  return {
-    ...geojsonData,
-    features: geojsonData.features.filter(
-      (f) => !EXCLUDED_COUNTRIES.has(f.properties.name)
-    ),
-  };
 }
