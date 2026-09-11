@@ -1,0 +1,86 @@
+[
+  {
+    "partner": "United Kingdom",
+    "totalAgreements": 3,
+    "publicAgreements": 0,
+    "mechanism": "direct-cooperation",
+    "rationale": "The UK's partnerships concentrate on Commonwealth members — Nigeria, South Africa and Zambia — reflecting its longstanding presence in African mining and historical ties dating to Commonwealth membership. Agreements emphasize responsible sourcing, investment and knowledge exchange, formalized through joint technical working groups. None of the three are linked to a primary source document; what is known comes from government statements and news reporting."
+  },
+  {
+    "partner": "Turkey",
+    "totalAgreements": 9,
+    "publicAgreements": 1,
+    "mechanism": "direct-cooperation",
+    "rationale": "Turkey's traditional focus on the North and Horn of Africa reflects geographic proximity and longstanding religious ties. Recent outreach to West Africa is driven by an ambition to deepen cross-regional commercial connectivity. Of its nine documented agreements, only one links to a primary source document."
+  },
+  {
+    "partner": "Saudi Arabia",
+    "totalAgreements": 8,
+    "publicAgreements": 0,
+    "mechanism": "private-investment",
+    "rationale": "Vision 2030 positions the minerals sector as key to diversifying beyond oil, with Saudi Arabia framing itself as an innovation \"hub\" for a self-defined super-region spanning Africa, the Middle East and Central/South Asia. None of its eight agreements link to a primary document. Beyond the agreements themselves, the state-linked Manara Minerals joint venture has pursued direct equity stakes — including a bid for Zambia's Sentinel and Kansanshi copper mines — suggesting agreements function partly as a precursor to follow-on investment."
+  },
+  {
+    "partner": "United Arab Emirates",
+    "totalAgreements": 2,
+    "publicAgreements": 0,
+    "mechanism": "private-investment",
+    "rationale": "The UAE's small number of formal bilateral agreements understates its actual engagement: its strategy centers on direct investment by Emirati companies rather than state-to-state agreements. In 2023 alone, UAE-linked firms committed over $3.9 billion across Zambia, the DRC and South Africa, underpinned by capital reserves that allow it to absorb higher-risk, longer-horizon projects than many competitors."
+  },
+  {
+    "partner": "Russia",
+    "totalAgreements": 10,
+    "publicAgreements": 1,
+    "mechanism": "security-linked",
+    "rationale": "Russia's partnerships largely trace to Cold War-era Soviet support for Angola, Mozambique and South Africa's liberation movements. Agreements are frequently accompanied by security provision — through the Africa Corps (formerly Wagner Group) — offered in exchange for mining concessions, reflecting a strategy oriented toward sanctions-driven liquidity needs and geopolitical leverage rather than large-scale capital investment, which remains limited given Russia's constrained financial resources."
+  },
+  {
+    "partner": "India",
+    "totalAgreements": 9,
+    "publicAgreements": 6,
+    "mechanism": "direct-cooperation",
+    "rationale": "India's partnerships concentrate in sub-Saharan Africa, disproportionately with fellow Commonwealth members, reflecting both shared institutional ties and a strategic effort to reduce reliance on China amid regional rivalry. Agreements center on exploration cooperation, geological studies and training; the accords with Zambia, Zimbabwe and Mali go further, adding joint-venture and investment-promotion provisions."
+  },
+  {
+    "partner": "China",
+    "totalAgreements": 18,
+    "publicAgreements": 0,
+    "mechanism": "infrastructure-for-resources",
+    "rationale": "China's agreements are typically embedded within broader, non-public comprehensive partnerships, and none in this dataset link to a primary source document — information comes entirely from secondary reporting. Its approach favors direct control over supply chains — securing mining rights and channeling materials directly to Chinese processing facilities rather than through third-party traders — often structured as infrastructure-for-resources exchanges under the Belt and Road Initiative, exemplified by the DRC's Sicomines agreement."
+  },
+  {
+    "partner": "South Korea",
+    "totalAgreements": 3,
+    "publicAgreements": 0,
+    "mechanism": "direct-cooperation",
+    "rationale": "All three of Korea's agreements were signed at the 2024 Korea-Africa Summit, reflecting a recent, deliberate shift toward resource diplomacy as Korea seeks to de-risk its heavy reliance on Chinese mineral imports while balancing its dual relationship with China as a market and the US as a security ally. The Madagascar agreement follows existing Korean commercial interest in the country's nickel sector."
+  },
+  {
+    "partner": "Japan",
+    "totalAgreements": 6,
+    "publicAgreements": 0,
+    "mechanism": "infrastructure-for-resources",
+    "rationale": "Following a 2010 rare-earth supply cutoff by China, Japan's resource diplomacy explicitly trades technology transfer, infrastructure development and investment for supply diversification. Agreements concentrate in Southern Africa and the Central African \"copper belt,\" implemented through JOGMEC's geological surveys, capacity-building support and long-term financing for Japanese firms."
+  },
+  {
+    "partner": "Indonesia",
+    "totalAgreements": 5,
+    "publicAgreements": 3,
+    "mechanism": "direct-cooperation",
+    "rationale": "Indonesia's outreach is driven by a mineral endowment mismatch: despite being resource-rich, it lacks several inputs needed for its electric-vehicle battery ambitions, compounded by friction with China over both market reliance and maritime disputes. Agreements span exploration, knowledge-sharing, technology transfer and investment promotion, with Indonesian investor interest concentrated on the graphite and lithium needed for its goal of becoming the world's third-largest EV battery producer by 2027."
+  },
+  {
+    "partner": "United States",
+    "totalAgreements": 5,
+    "publicAgreements": 3,
+    "mechanism": "infrastructure-for-resources",
+    "rationale": "US engagement is deliberately narrow and selective, favoring multilateral vehicles (the Minerals Security Partnership, the Energy Resource Governance Initiative) over extensive bilateral deals. Its named agreements center on the DRC-Zambia electric-vehicle battery value chain and the Lobito Corridor — the latter focused specifically on mineral transportation infrastructure rather than extraction or processing directly."
+  },
+  {
+    "partner": "European Union",
+    "totalAgreements": 5,
+    "publicAgreements": 5,
+    "mechanism": "direct-cooperation",
+    "rationale": "Formalized under the EU's 2024 Critical Raw Materials Act, all five partnerships (Namibia, the DRC, Zambia, Rwanda, and a newly added South Africa agreement) follow a consistent five-pillar structure covering value-chain integration, public/private fund mobilization, knowledge exchange, capacity building and ESG standards — a comparatively standardized, fully publicly documented framework relative to other actors. The Namibia agreement uniquely adds a renewable-hydrogen cooperation pillar."
+  }
+]
