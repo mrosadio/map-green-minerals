@@ -637,9 +637,15 @@ body {
   margin-right: 8px;
 }
 #nav {
-   padding: 12px var(--content-gutter);
-  border-bottom: 0.5px solid var(--color-border);
-  background: var(--color-bg);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1045;
+  padding: 12px var(--content-gutter);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(4px);
+  border-bottom: none;
 }
 #nav .btn {
   font-size: var(--nav-btn-font-size);
@@ -805,7 +811,8 @@ h2.title {
 /* -- Legend -- */
 #legend-container {
   z-index: 1040;
-  top: 1em;
+  bottom: 1em;
+  top: auto;
   margin-left: calc(var(--content-gutter) - 14px);
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(4px);
@@ -843,9 +850,9 @@ h2.title {
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 0;
+  top: 70px;
   right: 0;
-  height: 100%;
+  height: calc(100% - 70px);
 }
 
 .third-col {
