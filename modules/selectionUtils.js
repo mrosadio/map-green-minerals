@@ -1,6 +1,199 @@
 import { svg, themeUrl } from "./globals.js";
 import { euMemberNames } from "./mapUtils.js";
 
+const tooltipMap = {
+  "Economic linkages and diversification": "Provisions broadly relating to the integration of value chains, fostering economic diversification and creating business models that strengthen trade, governance and infrastructure development.",
+
+  "Capital mobilization": "Provisions focused on securing and attracting funds for infrastructure, encouraging private sector investment, promoting joint ventures, fostering new business models and promoting joint initiatives, including public-private partnerships, to strengthen trade and resource exploration.",
+
+  "Sustainable governance": "Collaborative efforts to promote responsible production, integrate Environmental, Social, Governance (ESG) criteria, strengthen governance and ensure traceability through sustainable legislation, policies and industry standards.",
+
+  "Knowledge and capacity building": "Initiatives such as the establishment of data banks, the sharing of expertise, joint research initiatives, specialized training and the exchange of technical knowledge to enhance skills, foster innovation and support sustainable development in the sector.",
+
+  "Extraction and exploration partnerships": "Joint efforts in mineral exploration, secure supply chain development, technical expertise exchange and geological infrastructure creation through public-private partnerships to promote sustainable mining and investment.",
+};
+const colorMap = {
+  "Economic linkages and diversification": "#75D1D1",
+  "Capital mobilization": "#F4A27D",
+  "Sustainable governance": "#E3F5F5",
+  "Knowledge and capacity building": "#FFDC94",
+  "Extraction and exploration partnerships": "#EF9CAF",
+};
+const MECHANISM_LABELS = {
+  "direct-cooperation": "Direct state cooperation",
+  "private-investment": "Private-investment enabling",
+  "infrastructure-for-resources": "Infrastructure-for-resources",
+  "security-linked": "Security-linked",
+};
+
+const MECHANISM_COLORS = {
+  "direct-cooperation": "#F0C97A",
+  "private-investment": "#75D1D1",
+  "infrastructure-for-resources": "#F4A27D",
+  "security-linked": "#EF9CAF",
+};
+
+function createAreaTag(area, colorMap, tooltipMap) {
+  const tag = document.createElement("span");
+  tag.classList.add("tag");
+  tag.textContent = area;
+  tag.style.whiteSpace = "nowrap";
+  tag.style.backgroundColor = colorMap[area] || "#000000";
+  tag.style.color = "black";
+  tag.style.padding = "2px 10px";
+  tag.style.borderRadius = "4px";
+  tag.style.fontSize = "9pt";
+
+  tag.addEventListener("mouseover", function () {
+    tag.style.boxSizing = "border-box";
+    tag.style.border = "1px solid black";
+  });
+  tag.addEventListener("mouseleave", function () {
+    tag.style.border = "none";
+  });
+  tag.addEventListener("touchstart", function () {
+    tag.style.boxSizing = "border-box";
+    tag.style.border = "1px solid black";
+  });
+  tag.addEventListener("mouseenter", function () {
+    const tooltip = document.createElement("span");
+    tooltip.classList.add("tooltip");
+    tooltip.textContent = tooltipMap[area];
+    tooltip.style.lineHeight = "1.5";
+    tag.appendChild(tooltip);
+    tooltip.style.visibility = "visible";
+    tooltip.style.opacity = "1";
+
+    const tooltipRect = tooltip.getBoundingClientRect();
+    const container = document.querySelector(".custom-scroll");
+    const containerRect = container.getBoundingClientRect();
+
+    if (tooltipRect.right > containerRect.right) {
+      const overflowX = tooltipRect.right - containerRect.right;
+      tooltip.style.transform = `translateX(calc(-15% - ${overflowX}px))`;
+    }
+    if (tooltipRect.left < containerRect.left) {
+      const overflowLeft = containerRect.left - tooltipRect.left;
+      tooltip.style.transform = `translateX(calc(-15% + ${overflowLeft}px))`;
+    }
+  });
+  tag.addEventListener("mouseleave", function () {
+    const tooltip = tag.querySelector(".tooltip");
+    if (tooltip) tag.removeChild(tooltip);
+  });
+
+  return tag;
+}
+
+// Renders one agreement's details (type, date, access, areas of cooperation)
+// into partnershipCard. Used for both the single-agreement case and each
+// item inside a partner's nested `agreements` array — previously duplicated
+// almost verbatim in both branches.
+function renderAgreementDetails(agreement, partnershipCard) {
+  const partnerAgreement = document.createElement("h5");
+  partnerAgreement.classList.add("card-subtitle", "agreement");
+  partnerAgreement.style.paddingBottom = "0px";
+  partnerAgreement.innerHTML = agreement.typeAgreement ? `${agreement.typeAgreement}` : "";
+  partnershipCard.appendChild(partnerAgreement);
+
+  const time = document.createElement("p");
+  time.classList.add("card-text", "mb-1", "agreement-time");
+  time.innerHTML = `Signed: ${agreement.year}`;
+  partnershipCard.appendChild(time);
+
+  const access = document.createElement("p");
+  access.classList.add("card-text", "mb-1", "access-line");
+  if (agreement.linkAgreement) {
+    access.innerHTML = `Access: <svg class="access-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> <a href="${agreement.linkAgreement}" target="_blank" class="access-link">Publicly available</a>`;
+  } else {
+    const sourceLink = agreement.sources ? ` <a href="${agreement.sources}" target="_blank" class="access-link">View source</a>` : "";
+    access.innerHTML = `Access: <svg class="access-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm-3 8V6a3 3 0 0 1 6 0v3H9z"/></svg> Not publicly available${sourceLink}`;
+  }
+  partnershipCard.appendChild(access);
+
+  const areasCoop = Array.isArray(agreement.areasCoop) ? agreement.areasCoop : agreement.areasCoop ? [agreement.areasCoop] : [];
+  if (areasCoop.length > 0) {
+    const areasTitleContainer = document.createElement("div");
+    areasTitleContainer.style.display = "flex";
+    areasTitleContainer.style.alignItems = "center";
+    areasTitleContainer.style.flexWrap = "wrap";
+    areasTitleContainer.style.gap = "5px";
+
+    const areasTitle = document.createElement("span");
+    areasTitle.classList.add("card-text", "mb-1");
+    areasTitle.style.paddingBottom = "0px";
+    areasTitle.style.marginBottom = "0px";
+    areasTitle.style.marginRight = "10px";
+    areasTitle.innerHTML = "Areas of cooperation:";
+    areasTitleContainer.appendChild(areasTitle);
+
+    const tagsContainer = document.createElement("div");
+    tagsContainer.style.display = "flex";
+    tagsContainer.style.flexWrap = "wrap";
+    tagsContainer.style.alignItems = "center";
+    tagsContainer.style.gap = "5px";
+
+    const rightElement = document.querySelector(".right");
+    rightElement.style.marginTop = "0px";
+
+    const firstShortElement = areasCoop.find((area) => area.length <= 60);
+    const remainingAreas = areasCoop.filter((area) => area !== firstShortElement);
+    const reorderedAreas = firstShortElement ? [firstShortElement, ...remainingAreas] : remainingAreas;
+
+    reorderedAreas.forEach((area, index) => {
+      const tag = createAreaTag(area, colorMap, tooltipMap);
+      if (index === 0 && firstShortElement === area) {
+        areasTitleContainer.appendChild(tag);
+      } else {
+        tagsContainer.appendChild(tag);
+      }
+    });
+    areasTitleContainer.appendChild(tagsContainer);
+    partnershipCard.appendChild(areasTitleContainer);
+  }
+}
+
+// Badge, rationale paragraph, and transparency bar — sourced from
+// partnerNarratives.json. Only the 12 report-backed partners have an
+// entry; everyone else silently skips this block (full fallback
+// treatment for the other 17 is Task 9).
+function renderNarrativePanel(container, narrativeEntry) {
+  if (!narrativeEntry) return;
+
+  const badge = document.createElement("span");
+  badge.classList.add("mechanism-badge");
+  badge.style.backgroundColor = MECHANISM_COLORS[narrativeEntry.mechanism] || "#E8E4DF";
+  badge.textContent = MECHANISM_LABELS[narrativeEntry.mechanism] || narrativeEntry.mechanism;
+  container.appendChild(badge);
+
+  const rationale = document.createElement("p");
+  rationale.classList.add("narrative-rationale");
+  rationale.textContent = narrativeEntry.rationale;
+  container.appendChild(rationale);
+
+  if (narrativeEntry.publicAgreements != null && narrativeEntry.totalAgreements) {
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("transparency-bar-wrapper");
+
+    const ratio = narrativeEntry.publicAgreements / narrativeEntry.totalAgreements;
+
+    const barTrack = document.createElement("div");
+    barTrack.classList.add("transparency-bar-track");
+    const barFill = document.createElement("div");
+    barFill.classList.add("transparency-bar-fill");
+    barFill.style.width = `${Math.round(ratio * 100)}%`;
+    barTrack.appendChild(barFill);
+    wrapper.appendChild(barTrack);
+
+    const label = document.createElement("span");
+    label.classList.add("transparency-bar-label");
+    label.textContent = `${narrativeEntry.publicAgreements} of ${narrativeEntry.totalAgreements} agreements publicly documented`;
+    wrapper.appendChild(label);
+
+    container.appendChild(wrapper);
+  }
+}
+
 export function highlightPartnership(svg, filteredGeoJSON, itemSelected) {
   svg.selectAll("path").interrupt("highlight").transition("highlight").duration(200).attr("fill", "#E8E4DF").attr("stroke", "white").attr("stroke-width", 0.5);
   const partnerCountries = new Set(filteredGeoJSON.features.map((f) => f.properties.name));
@@ -37,7 +230,7 @@ export function highlightEu(svg, filteredGeoJSON) {
     .attr("fill", "#F0C97A");
 }
 
-export function populatePartnerships(biData, selectedCountry) {
+export function populatePartnerships(biData, selectedCountry, partnerNarratives = []) {
   // Normalize display names to internal keys used in data
   if (selectedCountry === "England") {
     selectedCountry = "United Kingdom";
@@ -50,47 +243,42 @@ export function populatePartnerships(biData, selectedCountry) {
   infoPartnerContainer.innerHTML = "";
   const bilateralPartner = document.createElement("h2");
   bilateralPartner.classList.add("card-title", "card-title-fixed", "partner-select", "h2");
+
+  let displayName;
   if (internalSelected === "EU") {
     partnerSelected = biData.find((country) => country.nonafrican && country.nonafrican.name === internalSelected);
-    bilateralPartner.innerHTML = `European Union`;
+    displayName = `European Union`;
   } else {
     partnerSelected = biData.find((country) => country.nonafrican === internalSelected);
-    // Display friendly names for special cases
-    if (internalSelected === "USA") {
-      bilateralPartner.innerHTML = `United States`;
-    } else {
-      bilateralPartner.innerHTML = `${partnerSelected.nonafrican}`;
-    }
+    displayName = internalSelected === "USA" ? "United States" : partnerSelected.nonafrican;
   }
+  bilateralPartner.innerHTML = displayName;
   bilateralPartner.classList.add("partner-header");
-
   infoPartnerContainer.appendChild(bilateralPartner);
+
+  // Narrative panel (badge, rationale, transparency bar) — sits above
+  // the agreement list, only rendered when this partner has an entry.
+  const narrativeEntry = partnerNarratives.find((p) => p.partner === displayName);
+  renderNarrativePanel(infoPartnerContainer, narrativeEntry);
 
   const partnerSubTitle = document.createElement("h4");
   partnerSubTitle.classList.add("card-subTitle");
   partnerSubTitle.innerHTML = "Partnerships with African countries";
-
   infoPartnerContainer.appendChild(partnerSubTitle);
 
-  // Crear el contenedor para el contenido con scroll
   const scrollContainer = document.createElement("div");
-  scrollContainer.classList.add("custom-scroll"); // Se añade 'custom-scroll' aquí
-
-  scrollContainer.style.maxHeight = "100%"; // Establecer el alto máximo para hacer scroll
-  scrollContainer.style.overflowY = "auto"; // Activar el scroll vertical
-  scrollContainer.style.marginTop = "0px"; // Espacio entre el título y el contenido
-
+  scrollContainer.classList.add("custom-scroll");
+  scrollContainer.style.maxHeight = "100%";
+  scrollContainer.style.overflowY = "auto";
+  scrollContainer.style.marginTop = "0px";
   infoPartnerContainer.appendChild(scrollContainer);
 
   // Sort partnerships: newest to oldest based on year/date
   const sortedPartnerships = [...partnerSelected.partnership].sort((a, b) => {
     // Function to get the most recent date from a partnership
     const getMostRecentDate = (partner) => {
-      if (partner.year) {
-        return partner.year;
-      }
+      if (partner.year) return partner.year;
       if (partner.agreements && partner.agreements.length > 0) {
-        // Find the most recent date from all agreements
         const dates = partner.agreements
           .map((ag) => ag.year)
           .filter((year) => year) // Remove null/undefined
@@ -99,18 +287,13 @@ export function populatePartnerships(biData, selectedCountry) {
       }
       return null;
     };
-
     const dateA = getMostRecentDate(a);
     const dateB = getMostRecentDate(b);
-
     if (!dateA || !dateB) return 0;
-
-    // Convert to Date objects and sort newest first
     return new Date(dateB) - new Date(dateA);
   });
 
   sortedPartnerships.forEach((partner) => {
-    ////console.log('Partnership in container', partner)
     const partnershipCard = document.createElement("div");
     partnershipCard.classList.add("card-body", "partner", "custom-scroll");
     const partnerTitle = document.createElement("h5");
@@ -118,293 +301,31 @@ export function populatePartnerships(biData, selectedCountry) {
     partnerTitle.innerHTML = `${partner.country}`;
     partnershipCard.appendChild(partnerTitle);
     if (partner.agreements) {
-      //console.log("Multiple agreements", partner.agreements);
-
-      // Sort agreements by date: newest to oldest
+      // Sort agreements by date, newest to oldest
       const sortedAgreements = [...partner.agreements].sort((a, b) => {
         if (!a.year || !b.year) return 0;
         return new Date(b.year) - new Date(a.year);
       });
-
       sortedAgreements.forEach((agreement, index) => {
-        const partnerAgreement = document.createElement("h5");
-        partnerAgreement.classList.add("card-subtitle", "agreement");
-        partnerAgreement.style.paddingBottom = "0px"; // Aplicar la fuente personalizada
-        partnerAgreement.innerHTML = agreement.typeAgreement ? `${agreement.typeAgreement}` : "";
-        partnershipCard.appendChild(partnerAgreement);
-
-        const time = document.createElement("p");
-        time.classList.add("card-text", "mb-1", "agreement-time");
-        time.innerHTML = `Signed: ${agreement.year}`;
-
-        partnershipCard.appendChild(time);
-        const access = document.createElement("p");
-        access.classList.add("card-text", "mb-1", "access-line");
-
-        if (agreement.linkAgreement) {
-          access.innerHTML = `Access: <svg class="access-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> <a href="${agreement.linkAgreement}" target="_blank" class="access-link">Publicly available</a>`;
-        } else {
-          const sourceLink = agreement.sources ? ` <a href="${agreement.sources}" target="_blank" class="access-link">View source</a>` : "";
-          access.innerHTML = `Access: <svg class="access-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm-3 8V6a3 3 0 0 1 6 0v3H9z"/></svg> Not publicly available${sourceLink}`;
-        }
-
-        partnershipCard.appendChild(access);
-
-        let tagsContainer;
-        const agreementAreasCoop = Array.isArray(agreement.areasCoop) ? agreement.areasCoop : agreement.areasCoop ? [agreement.areasCoop] : [];
-
-        if (agreementAreasCoop.length > 0) {
-          const areasTitleContainer = document.createElement("div");
-          areasTitleContainer.style.display = "flex";
-          areasTitleContainer.style.alignItems = "center";
-          areasTitleContainer.style.flexWrap = "wrap";
-          areasTitleContainer.style.gap = "5px";
-
-          const areasTitle = document.createElement("span");
-          areasTitle.classList.add("card-text", "mb-1");
-          areasTitle.style.paddingBottom = "0px";
-          areasTitle.style.marginBottom = "0px";
-          areasTitle.style.marginRight = "10px";
-          areasTitle.innerHTML = "Areas of cooperation:";
-          areasTitleContainer.appendChild(areasTitle);
-
-          const tagsContainer = document.createElement("div");
-          tagsContainer.style.display = "flex";
-          tagsContainer.style.flexWrap = "wrap";
-          tagsContainer.style.alignItems = "center";
-          tagsContainer.style.gap = "5px";
-
-          const rightElement = document.querySelector(".right");
-          rightElement.style.marginTop = "0px";
-
-          const firstShortElement = agreementAreasCoop.find((area) => area.length <= 60);
-          const remainingAreas = agreementAreasCoop.filter((area) => area !== firstShortElement);
-          const reorderedAreas = firstShortElement ? [firstShortElement, ...remainingAreas] : remainingAreas;
-
-          reorderedAreas.forEach((area, index) => {
-            const tag = document.createElement("span");
-            tag.classList.add("tag");
-            tag.textContent = area;
-            tag.style.whiteSpace = "nowrap";
-
-            tag.style.backgroundColor = colorMap[area] || "#000000";
-            tag.style.color = "black";
-            tag.style.padding = "2px 10px";
-            tag.style.borderRadius = "4px";
-            tag.style.fontSize = "9pt";
-
-            tag.addEventListener("mouseover", function () {
-              tag.style.boxSizing = "border-box";
-              tag.style.border = "1px solid black";
-            });
-            tag.addEventListener("mouseleave", function () {
-              tag.style.border = "none";
-            });
-            tag.addEventListener("touchstart", function () {
-              tag.style.boxSizing = "border-box";
-              tag.style.border = "1px solid black";
-            });
-
-            tag.addEventListener("mouseenter", function () {
-              const tooltip = document.createElement("span");
-              tooltip.classList.add("tooltip");
-              tooltip.textContent = tooltipMap[area];
-              tooltip.style.lineHeight = "1.5";
-              tag.appendChild(tooltip);
-
-              tooltip.style.visibility = "visible";
-              tooltip.style.opacity = "1";
-
-              const tooltipRect = tooltip.getBoundingClientRect();
-              const container = document.querySelector(".custom-scroll");
-              const containerRect = container.getBoundingClientRect();
-
-              if (tooltipRect.right > containerRect.right) {
-                const overflowX = tooltipRect.right - containerRect.right;
-                tooltip.style.transform = `translateX(calc(-15% - ${overflowX}px))`;
-              }
-
-              if (tooltipRect.left < containerRect.left) {
-                const overflowLeft = containerRect.left - tooltipRect.left;
-                tooltip.style.transform = `translateX(calc(-15% + ${overflowLeft}px))`;
-              }
-            });
-
-            tag.addEventListener("mouseleave", function () {
-              const tooltip = tag.querySelector(".tooltip");
-              if (tooltip) {
-                tag.removeChild(tooltip);
-              }
-            });
-
-            if (index === 0 && firstShortElement === area) {
-              areasTitleContainer.appendChild(tag);
-            } else {
-              tagsContainer.appendChild(tag);
-            }
-          });
-          areasTitleContainer.appendChild(tagsContainer);
-          partnershipCard.appendChild(areasTitleContainer);
-          if (index < partner.agreements.length - 1) {
-            const line = document.createElement("hr");
-            line.classList.add("line_black");
-            if (tagsContainer) tagsContainer.style.marginBottom = "0.75rem";
-
-            line.style.border = "0.5px solid gray";
-            line.style.margin = "6px 0 3px 0";
-            line.style.padding = "0px";
-
-            partnershipCard.appendChild(line);
-          }
+        renderAgreementDetails(agreement, partnershipCard);
+        if (index < partner.agreements.length - 1) {
+          const line = document.createElement("hr");
+          line.classList.add("line_black");
+          line.style.border = "0.5px solid gray";
+          line.style.margin = "6px 0 3px 0";
+          line.style.padding = "0px";
+          partnershipCard.appendChild(line);
         }
       });
     } else if (partner.typeAgreement) {
-      const partnerAgreement = document.createElement("h5");
-      partnerAgreement.classList.add("card-subtitle", "agreement");
-      partnerAgreement.innerHTML = partner.typeAgreement ? `${partner.typeAgreement}` : "";
-      partnershipCard.appendChild(partnerAgreement);
-
-      const time = document.createElement("p");
-      time.classList.add("card-text", "mb-1");
-      time.innerHTML = `Signed: ${partner.year}`;
-      time.style.fontSize = "11pt";
-      time.style.paddingBottom = "0px";
-
-      partnershipCard.appendChild(time);
-
-      const access = document.createElement("p");
-      access.classList.add("card-text", "mb-1", "access-line");
-      access.style.fontSize = "11pt";
-      access.style.paddingBottom = "0px";
-
-      if (partner.linkAgreement) {
-        access.innerHTML = `Access: <svg class="access-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> <a href="${partner.linkAgreement}" target="_blank" class="access-link">Publicly available</a>`;
-      } else {
-        const sourceLink = partner.sources ? ` <a href="${partner.sources}" target="_blank" class="access-link">View source</a>` : "";
-        access.innerHTML = `Access: <svg class="access-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm-3 8V6a3 3 0 0 1 6 0v3H9z"/></svg> Not publicly available${sourceLink}`;
-      }
-      partnershipCard.appendChild(access);
-
-      const partnerAreasCoop = Array.isArray(partner.areasCoop) ? partner.areasCoop : partner.areasCoop ? [partner.areasCoop] : [];
-
-      if (partnerAreasCoop.length > 0) {
-        const areasTitleContainer = document.createElement("div");
-        areasTitleContainer.style.display = "flex";
-        areasTitleContainer.style.alignItems = "center";
-        areasTitleContainer.style.flexWrap = "wrap";
-        areasTitleContainer.style.gap = "5px";
-
-        const areasTitle = document.createElement("span");
-        areasTitle.classList.add("card-text", "mb-1");
-        areasTitle.style.paddingBottom = "0px";
-        areasTitle.style.marginBottom = "0px";
-        areasTitle.style.marginRight = "10px";
-        areasTitle.innerHTML = "Areas of cooperation:";
-        areasTitleContainer.appendChild(areasTitle);
-
-        const tagsContainer = document.createElement("div");
-        tagsContainer.style.display = "flex";
-        tagsContainer.style.flexWrap = "wrap";
-        tagsContainer.style.alignItems = "center";
-        tagsContainer.style.gap = "5px";
-
-        const rightElement = document.querySelector(".right");
-        rightElement.style.marginTop = "0px";
-
-        // Obtener el primer elemento que tenga 25 letras o menos y luego el resto en su orden original
-        const firstShortElement = partnerAreasCoop.find((area) => area.length <= 60);
-        const remainingAreas = partnerAreasCoop.filter((area) => area !== firstShortElement);
-        const reorderedAreas = firstShortElement ? [firstShortElement, ...remainingAreas] : remainingAreas;
-
-        reorderedAreas.forEach((area, index) => {
-          const tag = document.createElement("span");
-          tag.classList.add("tag");
-          tag.textContent = area;
-          tag.style.whiteSpace = "nowrap";
-
-          tag.style.backgroundColor = colorMap[area] || "#000000";
-          tag.style.color = "black";
-          tag.style.padding = "2px 10px";
-          tag.style.borderRadius = "4px";
-          tag.style.fontSize = "9pt";
-
-          tag.addEventListener("mouseover", function () {
-            tag.style.boxSizing = "border-box";
-            tag.style.border = "1px solid black";
-          });
-          tag.addEventListener("mouseleave", function () {
-            tag.style.border = "none";
-          });
-          tag.addEventListener("touchstart", function () {
-            tag.style.boxSizing = "border-box";
-          });
-
-          tag.addEventListener("mouseenter", function () {
-            // Crear el tooltip
-            const tooltip = document.createElement("span");
-            tooltip.classList.add("tooltip");
-            tooltip.textContent = tooltipMap[area];
-            tooltip.style.lineHeight = "1.5";
-            tag.appendChild(tooltip);
-
-            tooltip.style.visibility = "visible";
-            tooltip.style.opacity = "1";
-
-            const tooltipRect = tooltip.getBoundingClientRect();
-            const container = document.querySelector(".custom-scroll");
-            const containerRect = container.getBoundingClientRect();
-            console.log(containerRect);
-            if (tooltipRect.right > containerRect.right) {
-              console.log("mas grande");
-
-              const overflowX = tooltipRect.right - containerRect.right;
-              tooltip.style.transform = `translateX(calc(-15% - ${overflowX}px))`;
-            }
-            if (tooltipRect.left < containerRect.left) {
-              const overflowLeft = containerRect.left - tooltipRect.left;
-              tooltip.style.transform = `translateX(calc(-15% + ${overflowLeft}px))`;
-            }
-          });
-
-          tag.addEventListener("mouseleave", function () {
-            const tooltip = tag.querySelector(".tooltip");
-            if (tooltip) {
-              tag.removeChild(tooltip);
-            }
-          });
-
-          if (index === 0 && firstShortElement === area) {
-            areasTitleContainer.appendChild(tag);
-          } else {
-            tagsContainer.appendChild(tag);
-          }
-        });
-        areasTitleContainer.appendChild(tagsContainer);
-        partnershipCard.appendChild(areasTitleContainer);
-      }
+      renderAgreementDetails(partner, partnershipCard);
     }
+       
     scrollContainer.appendChild(partnershipCard);
     infoPartnerContainer.appendChild(scrollContainer);
   });
 }
-const tooltipMap = {
-  "Economic linkages and diversification": "Provisions broadly relating to the integration of value chains, fostering economic diversification and creating business models that strengthen trade, governance and infrastructure development.",
 
-  "Capital mobilization": "Provisions focused on securing and attracting funds for infrastructure, encouraging private sector investment, promoting joint ventures, fostering new business models and promoting joint initiatives, including public-private partnerships, to strengthen trade and resource exploration.",
-
-  "Sustainable governance": "Collaborative efforts to promote responsible production, integrate Environmental, Social, Governance (ESG) criteria, strengthen governance and ensure traceability through sustainable legislation, policies and industry standards.",
-
-  "Knowledge and capacity building": "Initiatives such as the establishment of data banks, the sharing of expertise, joint research initiatives, specialized training and the exchange of technical knowledge to enhance skills, foster innovation and support sustainable development in the sector.",
-
-  "Extraction and exploration partnerships": "Joint efforts in mineral exploration, secure supply chain development, technical expertise exchange and geological infrastructure creation through public-private partnerships to promote sustainable mining and investment.",
-};
-const colorMap = {
-  "Economic linkages and diversification": "#75D1D1",
-  "Capital mobilization": "#F4A27D",
-  "Sustainable governance": "#E3F5F5",
-  "Knowledge and capacity building": "#FFDC94",
-  "Extraction and exploration partnerships": "#EF9CAF",
-};
 export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
   console.log("Multi data to populate", multiData);
   console.log("Multi JSON data to populate", multiJsonData);
