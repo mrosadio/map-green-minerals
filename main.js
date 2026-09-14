@@ -9,6 +9,7 @@ const euGeojsonPath = `./db/eu.geojson`;
 
 let partnerMap = {};
 let multilateralMap = {};
+let partnerNarratives = [];
 let filteredGeoJSON;
 let mergedBiData;
 let numberData;
@@ -35,12 +36,21 @@ function refresh() {
 
 console.log("console before promise");
 
-// Fetch the world GeoJSON once, up front — previously loadAndMergeData,
+fetch("./db/partnerNarratives.json")
+  .then((r) => r.json())
+  .then((data) => { partnerNarratives = data; })
+  .catch((error) => console.error("Error loading partner narratives:", error));
+// Fetch the world GeoJSON once, up front - previously loadAndMergeData,
 // mergeMulti, and createBlocGeoJSON each fetched it independently, meaning
-// every page load re-downloaded the same ~large file two or three times.
-fetch(worldGeojsonPath)
-  .then((response) => response.json())
-  .then((worldGeoJSON) => {
+// every page load re-downloaded the same large file two or three times.
+Promise.all([
+  fetch(worldGeojsonPath).then((r) => r.json()),
+  fetch("./db/partnerNarratives.json").then((r) => r.json()),
+])
+  .then(([worldGeoJSON, partnerNarrativesData]) => {
+    partnerNarratives = partnerNarrativesData;
+    console.log("DEBUG partnerNarratives loaded:", partnerNarratives);
+
     return Promise.all([loadAndMergeData(worldGeoJSON, jsonFilePath, noPartnerFilePath), mergeMulti(worldGeoJSON, multiJsonFilePath)]).then(([bilateralData, multiData]) => {
       if (bilateralData && multiData) {
         mergedBiData = bilateralData.geojsonData;
@@ -118,7 +128,7 @@ fetch(worldGeojsonPath)
                 drawMap(mergedBiData, filteredCountryGeoJSON, "EU");
                 highlightEu(svg, filteredCountryGeoJSON);
                 panMapforPartner(selectedCountry);
-                populatePartnerships(biData, selectedCountry);
+                populatePartnerships(biData, selectedCountry, partnerNarratives);
               });
             } else {
               console.log("selectedCountry in ELSE CONDITION", selectedCountry);
@@ -126,7 +136,7 @@ fetch(worldGeojsonPath)
               drawMap(mergedBiData, filteredCountryGeoJSON, internalSelectedCountry);
               highlightPartnership(svg, filteredCountryGeoJSON, item.textContent);
               panMapforPartner(selectedCountry);
-              populatePartnerships(biData, selectedCountry);
+              populatePartnerships(biData, selectedCountry, partnerNarratives);
             }
           });
         });
