@@ -3,13 +3,9 @@ import { euMemberNames } from "./mapUtils.js";
 
 const tooltipMap = {
   "Economic linkages and diversification": "Provisions broadly relating to the integration of value chains, fostering economic diversification and creating business models that strengthen trade, governance and infrastructure development.",
-
   "Capital mobilization": "Provisions focused on securing and attracting funds for infrastructure, encouraging private sector investment, promoting joint ventures, fostering new business models and promoting joint initiatives, including public-private partnerships, to strengthen trade and resource exploration.",
-
   "Sustainable governance": "Collaborative efforts to promote responsible production, integrate Environmental, Social, Governance (ESG) criteria, strengthen governance and ensure traceability through sustainable legislation, policies and industry standards.",
-
   "Knowledge and capacity building": "Initiatives such as the establishment of data banks, the sharing of expertise, joint research initiatives, specialized training and the exchange of technical knowledge to enhance skills, foster innovation and support sustainable development in the sector.",
-
   "Extraction and exploration partnerships": "Joint efforts in mineral exploration, secure supply chain development, technical expertise exchange and geological infrastructure creation through public-private partnerships to promote sustainable mining and investment.",
 };
 const colorMap = {
@@ -25,7 +21,6 @@ const MECHANISM_LABELS = {
   "infrastructure-for-resources": "Infrastructure-for-resources",
   "security-linked": "Security-linked",
 };
-
 const MECHANISM_COLORS = {
   "direct-cooperation": "#F0C97A",
   "private-investment": "#75D1D1",
@@ -84,11 +79,31 @@ function createAreaTag(area, colorMap, tooltipMap) {
 
   return tag;
 }
+// Computes total/public agreement counts live from a partner's raw
+// partnership data. Same linkAgreement/sources logic used to derive
+// the static numbers in partnerNarratives.json but computed fresh
+// here so it stays accurate even as bilateralPartner.json changes,
+// and works for all 29 partners, not just the 12 with narratives
+function countAgreements(partnershipList) {
+  let total = 0
+  let publicCount = 0
+  partnershipList.forEach((item) => {
+    if (item.agreements) {
+      item.agreements.forEach((sub) => {
+        total += 1;
+        if (sub.linkAgreement && sub.linkAgreement.trim()) publicCount += 1;
+      })
+    } else {
+      total += 1;
+      if (item.linkAgreement && item.linkAgreement.trim()) publicCount += 1;
+    }
+  });
+  return { total, publicCount }
+}
 
 // Renders one agreement's details (type, date, access, areas of cooperation)
 // into partnershipCard. Used for both the single-agreement case and each
-// item inside a partner's nested `agreements` array — previously duplicated
-// almost verbatim in both branches.
+// item inside a partner's nested agreements array
 function renderAgreementDetails(agreement, partnershipCard) {
   const partnerAgreement = document.createElement("h5");
   partnerAgreement.classList.add("card-subtitle", "agreement");
@@ -153,13 +168,11 @@ function renderAgreementDetails(agreement, partnershipCard) {
   }
 }
 
-// Badge, rationale paragraph, and transparency bar — sourced from
+// Badge, rationale paragraph, and transparency bar sourced from
 // partnerNarratives.json. Only the 12 report-backed partners have an
-// entry; everyone else silently skips this block (full fallback
-// treatment for the other 17 is Task 9).
-function renderNarrativePanel(container, narrativeEntry) {
-  if (!narrativeEntry) return;
-
+// entry, everyone else silently received a fallback treatment
+function renderNarrativePanel(container, narrativeEntry, partnershipList) {
+  if (narrativeEntry) { 
   const badge = document.createElement("span");
   badge.classList.add("mechanism-badge");
   badge.style.backgroundColor = MECHANISM_COLORS[narrativeEntry.mechanism] || "#E8E4DF";
@@ -170,13 +183,18 @@ function renderNarrativePanel(container, narrativeEntry) {
   rationale.classList.add("narrative-rationale");
   rationale.textContent = narrativeEntry.rationale;
   container.appendChild(rationale);
-
-  if (narrativeEntry.publicAgreements != null && narrativeEntry.totalAgreements) {
+  } else {
+    const fallbackNote = document.createElement("p");
+    fallbackNote.classList.add("narrative-fallback-note");
+    fallbackNote.textContent = "In-depth analysis is available for selected partners. The list below shows all documented agreements.";
+    container.appendChild(fallbackNote);
+  }
+  const { total, publicCount } = countAgreements(partnershipList);
+  if (total > 0) {
     const wrapper = document.createElement("div");
     wrapper.classList.add("transparency-bar-wrapper");
 
-    const ratio = narrativeEntry.publicAgreements / narrativeEntry.totalAgreements;
-
+    const ratio = publicCount / total;
     const barTrack = document.createElement("div");
     barTrack.classList.add("transparency-bar-track");
     const barFill = document.createElement("div");
@@ -187,7 +205,7 @@ function renderNarrativePanel(container, narrativeEntry) {
 
     const label = document.createElement("span");
     label.classList.add("transparency-bar-label");
-    label.textContent = `${narrativeEntry.publicAgreements} of ${narrativeEntry.totalAgreements} agreements publicly documented`;
+    label.textContent = `${publicCount} of ${total} agreements publicly documented`;
     wrapper.appendChild(label);
 
     container.appendChild(wrapper);
@@ -256,10 +274,10 @@ export function populatePartnerships(biData, selectedCountry, partnerNarratives 
   bilateralPartner.classList.add("partner-header");
   infoPartnerContainer.appendChild(bilateralPartner);
 
-  // Narrative panel (badge, rationale, transparency bar) — sits above
-  // the agreement list, only rendered when this partner has an entry.
+  // Narrative panel (badge, rationale, transparency bar) - is above
+  // the agreement list
   const narrativeEntry = partnerNarratives.find((p) => p.partner === displayName);
-  renderNarrativePanel(infoPartnerContainer, narrativeEntry);
+  renderNarrativePanel(infoPartnerContainer, narrativeEntry, partnerSelected.partnership);
 
   const partnerSubTitle = document.createElement("h4");
   partnerSubTitle.classList.add("card-subTitle");
@@ -439,7 +457,6 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
     const countryItem = document.createElement("div");
     countryItem.className = "country-item";
 
-    // Agregar el nombre del país
     const countryName = document.createElement("p");
     // Normalize display name for special programmatic keys
     let displayName = country.properties.name;
@@ -455,23 +472,19 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
         const secondPart = parts.slice(Math.ceil(parts.length / 2.5)).join(" ");
         countryName.innerHTML = `• ${firstPart}<br>&nbsp;&nbsp;&nbsp;${secondPart}`;
 
-        // Crear el contenedor del tooltip
         const tooltipMultiContainer = document.createElement("div");
         tooltipMultiContainer.className = "tooltipMulti-container long-name-tooltip";
         tooltipMultiContainer.style.position = "relative";
         tooltipMultiContainer.style.display = "inline-block";
         tooltipMultiContainer.style.marginLeft = "5px"; // Margen para separar el ícono del nombre
 
-        // Ícono de información
         const infoIcon = document.createElement("img");
         infoIcon.src = `${themeUrl}/img/icons/info.svg`; // Ruta al archivo SVG
         infoIcon.className = "info-icon";
 
-        // Crear el tooltip
         const tooltipMulti = document.createElement("div");
         tooltipMulti.className = "tooltipMulti";
 
-        // Botón "X" para cerrar el tooltip
         const closeBtn = document.createElement("button");
         closeBtn.className = "close-btn";
         closeBtn.innerHTML = "✖";
@@ -484,7 +497,7 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
           activeTooltip = null;
         });
 
-        // Texto dentro del tooltip
+
         const tooltipText = document.createElement("div");
         tooltipText.innerText = "Description";
         tooltipText.style.marginRight = "15px";
@@ -523,12 +536,12 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
       closeBtn.style.paddingTop = "2px";
 
       closeBtn.addEventListener("click", (e) => {
-        e.stopPropagation(); // Prevenir que el clic afecte a otros eventos
+        e.stopPropagation();
         tooltipMulti.classList.remove("active");
         activeTooltip = null;
       });
 
-      // Texto dentro del tooltip
+
       const tooltipText = document.createElement("div");
       tooltipText.innerText = "Description";
       tooltipText.style.marginRight = "15px";
@@ -549,7 +562,6 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
           activeTooltip.classList.remove("active");
         }
 
-        // Alternar el tooltip actual
         if (tooltipMulti.classList.contains("active")) {
           tooltipMulti.classList.remove("active");
           activeTooltip = null;
@@ -560,7 +572,6 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
       });
     }
   });
-  // Cerrar tooltips al hacer clic en cualquier otra parte de la página
   document.addEventListener("click", () => {
     if (activeTooltip) {
       activeTooltip.classList.remove("active");
@@ -588,7 +599,3 @@ export function highlightBloc(svg, filteredGeoJSON, selectedColor, selectedBloc)
     .duration(400)
     .attr("fill", (d) => (blocCountries.has(d.properties.name) ? selectedColor : "#E8E4DF"));
 }
-
-// export function highlightEuClubBloc(svg, filteredGeoJSON) {
-
-// }

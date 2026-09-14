@@ -756,6 +756,12 @@ h2.title {
   font-size: 9pt;
   color: var(--color-text-secondary);
 }
+.narrative-fallback-note {
+  font-size: 10pt;
+  font-style: italic;
+  color: var(--color-text-secondary);
+  margin-bottom: 14px;
+}
 /* -- Dropdowns options -- */
 .dropdown-menu {
   border: 0.5px solid var(--color-border);
