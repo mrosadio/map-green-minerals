@@ -14,6 +14,8 @@ let filteredGeoJSON;
 let mergedBiData;
 let numberData;
 let colorScale;
+let multiGeoDataRef; // set once loaded — needed by the mode toggle's multilateral overview call
+let currentMode = "bilateral"; // "bilateral" , "multilateral"
 
 function resetToInitialView() {
   document.querySelector("#legend-container").classList.remove("legend-hidden");
@@ -23,22 +25,43 @@ function resetToInitialView() {
   clearCardContent();
   addLegend(svg, colorScale);
 }
+function resetToMultilateralOverview() {
+  document.querySelector("#legend-container").classList.remove("legend-hidden");
+  removeThirdColumn();
+  drawMultilateralOverview(svg, multiGeoDataRef, numberData);
+  clearCardContent();
+  addLegend(svg, multilateralColorScale, "Number of coalitions", ["1", "3+"]);
+}
+// Resets to whichever mode is currently active — used by the "Overview"
+// button and the overview:selected event, so both respect the toggle
+// state instead of always assuming bilateral.
+function resetToCurrentOverview() {
+  if (currentMode === "multilateral") {
+    resetToMultilateralOverview();
+  } else {
+    resetToInitialView();
+  }
+}
 
 function refresh() {
   if (/Mobi|Android/i.test(navigator.userAgent)) {
     console.log("refreshing in main.js");
     showPickerAfrica();
   } else {
-    resetToInitialView();
+    resetToCurrentOverview();
   }
 }
+function setMode(mode) {
+  currentMode = mode;
+  const isBilateral = mode === "bilateral";
+  document.getElementById("bilateralModeBtn").classList.toggle("active", isBilateral);
+  document.getElementById("multilateralModeBtn").classList.toggle("active", !isBilateral);
+  document.getElementById("bilateralDropdownGroup").classList.toggle("d-none", !isBilateral);
+  document.getElementById("multilateralDropdownGroup").classList.toggle("d-none", isBilateral);
+  resetToCurrentOverview();
+  resetMapPan();
+}
 
-fetch("./db/partnerNarratives.json")
-  .then((r) => r.json())
-  .then((data) => {
-    partnerNarratives = data;
-  })
-  .catch((error) => console.error("Error loading partner narratives:", error));
 // Fetch the world GeoJSON once, up front - previously loadAndMergeData,
 // mergeMulti, and createBlocGeoJSON each fetched it independently, meaning
 // every page load re-downloaded the same large file two or three times.
@@ -52,14 +75,14 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
         const biData = bilateralData.jsonData;
         numberData = bilateralData.nojsonData;
         const multiGeoData = multiData.geojsonMultiData;
+        multiGeoDataRef = multiGeoData;
         const multiJsonData = multiData.multiJsonData;
+
         mergedBiData.features.forEach((feature) => {
           const country = feature.properties.name;
           if (feature.properties.partners) {
             feature.properties.partners.forEach((partner) => {
-              if (!partnerMap[country]) {
-                partnerMap[country] = [];
-              }
+              if (!partnerMap[country]) partnerMap[country] = [];
               partnerMap[country].push(partner);
             });
           }
@@ -68,13 +91,9 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
         multiGeoData.features.forEach((bloc) => {
           const blocName = bloc.properties.blocs;
           blocName.forEach((name) => {
-            if (!multilateralMap[name]) {
-              multilateralMap[name] = [];
-            }
+            if (!multilateralMap[name]) multilateralMap[name] = [];
             bloc.properties.blocs.forEach((member) => {
-              if (!multilateralMap[name].includes(member)) {
-                multilateralMap[name].push(member);
-              }
+              if (!multilateralMap[name].includes(member)) multilateralMap[name].push(member);
             });
           });
         });
@@ -94,19 +113,21 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
 
         resetToInitialView();
         document.querySelector("#africaButton").addEventListener("click", () => {
-          resetToInitialView();
+          resetToCurrentOverview();
           resetMapPan();
         });
         document.querySelector("#showScrollable").addEventListener("click", () => {
           refresh();
         });
         document.addEventListener("overview:selected", () => {
-          resetToInitialView();
+          resetToCurrentOverview();
           resetMapPan();
         });
         document.addEventListener("panel:toggled", () => {
           fitSizeMap(filteredGeoJSON);
         });
+        document.getElementById("bilateralModeBtn").addEventListener("click", () => setMode("bilateral"));
+        document.getElementById("multilateralModeBtn").addEventListener("click", () => setMode("multilateral"));
         document.querySelectorAll(".country-select").forEach((item) => {
           item.addEventListener("click", function () {
             document.querySelector("#legend-container").classList.add("legend-hidden");
@@ -118,7 +139,6 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
             if (selectedCountry === "United States") internalSelectedCountry = "USA";
             if (item.textContent.includes("EU") || item.textContent.includes("European Union")) {
               filterEUandPartners(mergedBiData, biData).then((filteredCountryGeoJSON) => {
-                console.log("drawmap in main.js");
                 drawMap(mergedBiData, filteredCountryGeoJSON, "EU");
                 highlightEu(svg, filteredCountryGeoJSON);
                 panMapforPartner(selectedCountry);
@@ -165,6 +185,13 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
             e.preventDefault();
             e.stopPropagation();
             showPickerBilateral();
+          }
+        });
+        document.querySelector("#multilateralToggle").addEventListener("click", (e) => {
+          if (/Mobi|Android/i.test(navigator.userAgent)) {
+            e.preventDefault();
+            e.stopPropagation();
+            showPickerMultilateral();
           }
         });
       }

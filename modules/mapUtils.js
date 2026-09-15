@@ -70,7 +70,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
     return;
   }
 
-    // fitSize automatically scales and centers the projection to fill [W, H]
+  // fitSize automatically scales and centers the projection to fill [W, H]
   const projection = d3.geoEqualEarth().fitSize([W, H], geojsonData);
   const path = d3.geoPath().projection(projection);
 
@@ -276,7 +276,10 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
 // -- Public: multilateral map -----------------------------------------------
 export function drawMultilateralOverview(svg, multiGeoData, numberData) {
   const mapEl = document.querySelector("#map");
-  if (!mapEl) { console.error("drawMultilateralOverview: #map not found"); return; }
+  if (!mapEl) {
+    console.error("drawMultilateralOverview: #map not found");
+    return;
+  }
 
   svg.selectAll("*").remove();
   svg.attr("viewBox", getViewBox(mapEl));
@@ -284,7 +287,10 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
   const svgNode = svg.node();
   const W = svgNode.clientWidth;
   const H = svgNode.clientHeight;
-  if (!W || !H) { console.error("drawMultilateralOverview: #map has no dimensions"); return; }
+  if (!W || !H) {
+    console.error("drawMultilateralOverview: #map has no dimensions");
+    return;
+  }
 
   const projection = d3.geoEqualEarth().fitSize([W, H], multiGeoData);
   const path = d3.geoPath().projection(projection);
@@ -312,19 +318,39 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
     .attr("stroke-width", 0.5)
     .on("mouseover", function (event, d) {
       if (!africanCountries.has(d.properties.name)) return;
-      const count = d.properties.blocs?.length || 0;
-      if (count === 0) return;
+      const blocs = d.properties.blocs || [];
+      if (blocs.length === 0) return;
       d3.select(this).transition().duration(200).attr("fill", "#04342C");
-      tooltip.html(`<h3 class="fw-bold mb-0" style="font-size:12pt">${d.properties.name}</h3><p class="text-secondary mb-0" style="font-size:9pt">${count} coalition${count !== 1 ? "s" : ""}</p>`).style("display", window.innerWidth > 768 ? "block" : "none");
+      tooltip.html(buildBlocTooltipHTML(d.properties.name, blocs)).style("display", window.innerWidth > 768 ? "block" : "none");
     })
-    .on("mousemove", function (event) { positionTooltip(event, tooltip); })
+    .on("mousemove", function (event) {
+      positionTooltip(event, tooltip);
+    })
     .on("mouseout", function (event, d) {
       if (!africanCountries.has(d.properties.name)) return;
       const count = d.properties.blocs?.length || 0;
       d3.select(this).transition().duration(200).attr("fill", multilateralColorScale(count));
       tooltip.style("display", "none");
     });
+  // Labels - only for African countries with at least one coalition,
+  // same pattern as the bilateral overview's featuresWithData filter
+  const featuresWithData = multiGeoData.features.filter((d) => africanCountries.has(d.properties.name) && (d.properties.blocs?.length || 0) > 0);
+
+  g.selectAll("text.country-label")
+    .data(featuresWithData)
+    .enter()
+    .append("text")
+    .attr("class", "country-label")
+    .attr("text-anchor", "middle")
+    .attr("font-size", "5pt")
+    .attr("fill", "black")
+    .attr("pointer-events", "none")
+    .attr("opacity", 1)
+    .each(function (d) {
+      renderLabel(d3.select(this), d, path);
+    });
 }
+
 // -- Private: layout helper detector ----------------------------------------
 function isStackedLayout() {
   return window.matchMedia("(min-width: 769px) and (max-width: 1366px) and (orientation: portrait)").matches;
@@ -391,7 +417,17 @@ function getOrCreateTooltip() {
   if (!existing.empty()) return existing;
   return d3.select("body").append("div").attr("class", "tooltip2").style("display", "none");
 }
+function buildBlocTooltipHTML(countryName, blocs) {
+  const blocsHTML = blocs.map((name) => `<p class="mb-0">${name}</p>`).join("");
 
+  return `
+    <p class="fw-bold mb-1" style="font-size:12pt">${countryName}</p>
+    <p class="text-secondary mb-2" style="font-size:9pt">
+      ${blocs.length} coalition${blocs.length !== 1 ? "s" : ""}
+    </p>
+    <div style="font-size:9.5pt">${blocsHTML}</div>
+  `;
+}
 function buildTooltipHTML(countryName, partnerCount, rawPartners) {
   const cleaned = rawPartners.map((p) => ({
     name: cleanPartnerName(p),
