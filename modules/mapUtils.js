@@ -320,7 +320,17 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
       if (!africanCountries.has(d.properties.name)) return;
       const blocs = d.properties.blocs || [];
       if (blocs.length === 0) return;
-      d3.select(this).transition().duration(200).attr("fill", "#04342C");
+
+      d3.select(this).interrupt("blocHoverSelf").transition("blocHoverSelf").duration(200).attr("fill", "#04342C");
+
+      const hoveredBlocs = new Set(blocs);
+      g.selectAll("path")
+        .filter((p) => p !== d && p.properties?.blocs?.some((b) => hoveredBlocs.has(b)))
+        .interrupt("blocHover")
+        .transition("blocHover")
+        .duration(200)
+        .attr("fill", (p) => (africanCountries.has(p.properties.name) ? "#5DCAA5" : "#0F6E56"));
+
       tooltip.html(buildBlocTooltipHTML(d.properties.name, blocs)).style("display", window.innerWidth > 768 ? "block" : "none");
     })
     .on("mousemove", function (event) {
@@ -329,7 +339,12 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
     .on("mouseout", function (event, d) {
       if (!africanCountries.has(d.properties.name)) return;
       const count = d.properties.blocs?.length || 0;
-      d3.select(this).transition().duration(200).attr("fill", multilateralColorScale(count));
+      d3.select(this).interrupt("blocHoverSelf").transition("blocHoverSelf").duration(200).attr("fill", multilateralColorScale(count));
+      g.selectAll("path")
+        .interrupt("blocHoverOthers")
+        .transition("blocHoverOthers")
+        .duration(200)
+        .attr("fill", (p) => (africanCountries.has(p.properties.name) ? multilateralColorScale(p.properties.blocs?.length || 0) : "#E8E4DF"));
       tooltip.style("display", "none");
     });
   // Labels - only for African countries with at least one coalition,
