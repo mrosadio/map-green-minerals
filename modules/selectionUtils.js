@@ -595,12 +595,26 @@ export function clearCardContent() {
     ////console.warn("Elemento con clase 'card' no encontrado.");
   }
 }
-export function highlightBloc(svg, filteredGeoJSON, selectedColor, selectedBloc) {
-  const blocCountries = new Set(filteredGeoJSON.features.map((f) => f.properties.name));
+export function highlightBloc(svg, filteredGeoJSON, africanCountries) {
+  svg.selectAll("path").interrupt("highlight").transition("highlight").duration(200).attr("fill", "#E8E4DF").attr("stroke", "white").attr("stroke-width", 0.5);
+
+  const blocMembers = new Set(filteredGeoJSON.features.map((f) => f.properties.name));
+  const nonAfricanMembers = new Set([...blocMembers].filter((name) => !africanCountries.has(name)));
+  const africanMembers = new Set([...blocMembers].filter((name) => africanCountries.has(name)));
+
   svg
     .selectAll("path")
+    .filter((d) => nonAfricanMembers.has(d.properties?.name))
     .interrupt("highlight")
     .transition("highlight")
     .duration(400)
-    .attr("fill", (d) => (blocCountries.has(d.properties.name) ? selectedColor : "#E8E4DF"));
+    .attr("fill", "#0F6E56"); // darker teal — non-African members, mirrors EU's darker amber
+
+  svg
+    .selectAll("path")
+    .filter((d) => africanMembers.has(d.properties?.name))
+    .interrupt("highlight")
+    .transition("highlight")
+    .duration(400)
+    .attr("fill", "#5DCAA5"); // lighter teal — African members, mirrors partner countries' lighter amber
 }

@@ -34,7 +34,7 @@ const Multilateral = [
   { text: "BRICS Geological Platform", value: 1, disabled: false },
   { text: "Minerals Security Partnership", value: 2, disabled: false },
   { text: "Energy Resource Governance Initiative", value: 4, disabled: false },
-  { text: " Critical Minerals Dialogue", value: 5, disabled: false },
+  { text: "Critical Minerals Dialogue", value: 5, disabled: false },
   { text: "Sustainable Critical Mineral Alliance", value: 6, disabled: false },
   { text: "Conference on Critical Materials and Minerals", value: 7, disabled: false },
   { text: "France-Germany-Italy Joint Communique on Critical Raw Materials", value: 8, disabled: false },

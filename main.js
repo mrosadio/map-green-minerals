@@ -159,7 +159,6 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
             document.querySelector("#legend-container").classList.add("legend-hidden");
             showThirdColumn();
             const selectedBloc = this.textContent.trim();
-            const selectedColor = blocColors[selectedBloc] || "#ccc";
             createBlocGeoJSON(worldGeoJSON, multiJsonFilePath, selectedBloc, euGeojsonPath)
               .then((filteredGeoJSON) => {
                 const mergedMapData = {
@@ -173,7 +172,7 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
                   }
                 });
                 drawMap(mergedMapData, filteredGeoJSON, selectedBloc);
-                highlightBloc(svg, filteredGeoJSON, selectedColor, selectedBloc);
+                highlightBloc(svg, filteredGeoJSON, new Set(numberData.map((d) => d.africanCountry)));
                 populateMultilateral(filteredGeoJSON, selectedBloc, multiJsonData);
                 panMapforPartner();
               })
