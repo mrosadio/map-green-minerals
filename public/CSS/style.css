@@ -657,6 +657,37 @@ h2.title {
   background-color: #333331 !important;
   border-color: #333331 !important;
 }
+/* -- Multilateral/Bilateral toggle -- */
+.mode-toggle {
+  margin-right: 10px;
+}
+.mode-toggle-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: 0.5px solid var(--color-border);
+  padding: 4px 12px;
+  font-family: inherit;
+  font-size: var(--nav-btn-font-size);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+.mode-toggle-btn:first-child {
+  border-radius: 4px 0 0 4px;
+  border-right: none;
+}
+.mode-toggle-btn:last-child {
+  border-radius: 0 4px 4px 0;
+}
+.mode-toggle-btn.active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+.mode-toggle-btn:hover:not(.active) {
+  background: var(--color-accent-light);
+}
 /* -- Bilateral panel -- */
 .mechanism-badge {
   display: inline-block;

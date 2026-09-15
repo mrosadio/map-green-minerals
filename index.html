@@ -68,7 +68,11 @@
           <div class="nav-divider"></div>
           <div class="d-flex align-items-center explore-cluster">
             <span class="explore-label">Explore by</span>
-            <div class="btn-group">
+            <div class="mode-toggle btn-group" role="group" aria-label="Explore by mode">
+              <button type="button" id="bilateralModeBtn" class="mode-toggle-btn active">Bilateral</button>
+              <button type="button" id="multilateralModeBtn" class="mode-toggle-btn">Multilateral</button>
+            </div>
+            <div class="btn-group" id="bilateralDropdownGroup">
               <button type="button" id="bilateralToggle" class="btn btn-danger dropdown-toggle button-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Partner</button>
               <ul class="dropdown-menu">
                 <li><a href="#" class="dropdown-item country-select">Austria</a></li>
@@ -100,6 +104,20 @@
                 <li><a href="#" class="dropdown-item country-select">United Kingdom</a></li>
                 <li><a href="#" class="dropdown-item country-select">United States</a></li>
                 <li><a href="#" class="dropdown-item country-select">Venezuela</a></li>
+              </ul>
+            </div>
+            <div class="btn-group d-none" id="multilateralDropdownGroup">
+              <button type="button" id="multilateralToggle" class="btn btn-danger dropdown-toggle button-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Coalition</button>
+              <ul class="dropdown-menu">
+                <li><a href="#" class="dropdown-item bloc-select">BRICS Geological Platform</a></li>
+                <li><a href="#" class="dropdown-item bloc-select">Minerals Security Partnership</a></li>
+                <li><a href="#" class="dropdown-item bloc-select">Energy Resource Governance Initiative</a></li>
+                <li><a href="#" class="dropdown-item bloc-select">Critical Minerals Dialogue</a></li>
+                <li><a href="#" class="dropdown-item bloc-select">Sustainable Critical Mineral Alliance</a></li>
+                <li><a href="#" class="dropdown-item bloc-select">Conference on Critical Materials and Minerals</a></li>
+                <li><a href="#" class="dropdown-item bloc-select">France-Germany-Italy Joint Communique on Critical Raw Materials</a></li>
+                <li><a href="#" class="dropdown-item bloc-select">Critical Minerals Mapping Initiative</a></li>
+                <li><a href="#" class="dropdown-item bloc-select">Lobito Corridor Project</a></li>
               </ul>
             </div>
           </div>
