@@ -242,9 +242,33 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
     console.error("drawMap: #map has no dimensions");
     return;
   }
+  if (!filteredCountryGeoJSON.features.length) {
+    console.error("drawMap: filteredCountryGeoJSON has no features to fit bounds to");
+    return;
+  }
 
-  // fitSize automatically scales and centers the projection to fill [W, H]
-  const projection = d3.geoEqualEarth().fitSize([W, H], geojson);
+  // Zoom/pan to fit just the selected partner + its African partners,
+  // rather than fitting the projection to the whole world every time.
+  // panMapforPartner()'s viewBox shift (called separately, after this)
+  // is a different concern — it nudges the view to clear the detail
+  // panel, and still runs regardless of how tightly we've zoomed here.
+  const ZOOM_PADDING = 40;
+  const navEl = document.querySelector("#nav");
+  const navHeight = navEl ? navEl.getBoundingClientRect().height : 0;
+  const topPadding = navHeight + ZOOM_PADDING;
+
+  const detailPanelEl = document.querySelector(".right");
+  const isPanelVisible = detailPanelEl && !detailPanelEl.classList.contains("d-none");
+  const panelWidth = isPanelVisible ? detailPanelEl.getBoundingClientRect().width : 0;
+  const rightPadding = panelWidth + ZOOM_PADDING;
+
+  const projection = d3.geoEqualEarth().fitExtent(
+    [
+      [ZOOM_PADDING, topPadding],
+      [W - rightPadding, H - ZOOM_PADDING],
+    ],
+    filteredCountryGeoJSON,
+  );
   const path = d3.geoPath().projection(projection);
 
   g = svg.append("g");
