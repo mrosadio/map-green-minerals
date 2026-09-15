@@ -1,5 +1,5 @@
 import { loadAndMergeData, mergeMulti, createBlocGeoJSON, mergeWorldWithPartnerData, filterCountriesByPartner, filterEUandPartners } from "./modules/dataUtils.js";
-import { drawMap, drawMapWithPartnerColors, fitSizeMap, resetMapPan, panMapforPartner } from "./modules/mapUtils.js";
+import { drawMap, drawMapWithPartnerColors, drawMultilateralOverview, multilateralColorScale, fitSizeMap, resetMapPan, panMapforPartner } from "./modules/mapUtils.js";
 import { highlightPartnership, populatePartnerships, populateMultilateral, highlightBloc, highlightEu, clearCardContent } from "./modules/selectionUtils.js";
 import { addLegend } from "./modules/legendUtils.js";
 import { svg, blocColors, worldGeojsonPath, jsonFilePath, multiJsonFilePath, noPartnerFilePath } from "./modules/globals.js";
@@ -35,15 +35,14 @@ function refresh() {
 
 fetch("./db/partnerNarratives.json")
   .then((r) => r.json())
-  .then((data) => { partnerNarratives = data; })
+  .then((data) => {
+    partnerNarratives = data;
+  })
   .catch((error) => console.error("Error loading partner narratives:", error));
 // Fetch the world GeoJSON once, up front - previously loadAndMergeData,
 // mergeMulti, and createBlocGeoJSON each fetched it independently, meaning
 // every page load re-downloaded the same large file two or three times.
-Promise.all([
-  fetch(worldGeojsonPath).then((r) => r.json()),
-  fetch("./db/partnerNarratives.json").then((r) => r.json()),
-])
+Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerNarratives.json").then((r) => r.json())])
   .then(([worldGeoJSON, partnerNarrativesData]) => {
     partnerNarratives = partnerNarrativesData;
 
