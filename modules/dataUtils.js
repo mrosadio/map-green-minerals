@@ -39,8 +39,6 @@ export async function loadAndMergeData(
         }
       });
     });
-    console.log("partnership map", partnershipMap);
-
     jsonData.forEach((partner) => {
       if (partner.center) {
         centerMap.set(partner.nonafrican, partner.center);
@@ -136,9 +134,6 @@ export async function mergeMulti(worldGeoJSON, multiJsonFilePath) {
 }
 
 export async function createBlocGeoJSON(worldGeoJSON, multiJsonFilePath, targetBlocName, euGeojsonPath) {
-  console.log("====== createBlocGeoJSON CALLED ======");
-  console.log("targetBlocName:", targetBlocName);
-  console.log("euGeojsonPath:", euGeojsonPath);
   try {
     const multiJsonResponse = await fetch(multiJsonFilePath);
     const multiJsonData = await multiJsonResponse.json();
@@ -149,17 +144,13 @@ export async function createBlocGeoJSON(worldGeoJSON, multiJsonFilePath, targetB
     
     multiJsonData.forEach((bloc) => {
       if (bloc.blocName === targetBlocName) {
-        console.log("Found bloc:", targetBlocName);
-        console.log("Type of bloc members", typeof bloc.members);
         if (Array.isArray(bloc.members)) {
           targetMembers = bloc.members;
-        } else {
-          console.log("bloc members structure:", bloc.members);          
+        } else {        
           if (bloc.members.countries) {
             explicitCountries = bloc.members.countries;
           }
           for (let key in bloc.members) {
-            console.log("Processing key:", key);
             if (key === "EU") {
               hasEUKey = true;
               targetMembers.push("EU");
@@ -168,7 +159,6 @@ export async function createBlocGeoJSON(worldGeoJSON, multiJsonFilePath, targetB
                   targetMembers.push(item);
                 }
               });
-              console.log("Found EU key! Added EU and explicitly mentioned EU countries to targetMembers");
             } else if (bloc.members[key]) {
               bloc.members[key].forEach((item) => {
                 targetMembers.push(item);
@@ -178,9 +168,6 @@ export async function createBlocGeoJSON(worldGeoJSON, multiJsonFilePath, targetB
         }
       }
     });
-    
-    console.log("hasEUKey:", hasEUKey);
-    console.log("targetMembers:", targetMembers);
 
     // Copy the features array before mutating - worldGeoJSON is shared
     // across all consumers, so pushing the EU feature directly onto
@@ -188,14 +175,11 @@ export async function createBlocGeoJSON(worldGeoJSON, multiJsonFilePath, targetB
     let features = [...worldGeoJSON.features];
     
     if (hasEUKey && euGeojsonPath) {
-      console.log("Loading EU GeoJSON from:", euGeojsonPath);
       try {
         const euResponse = await fetch(euGeojsonPath);
         const euData = await euResponse.json();
-        console.log("EU GeoJSON loaded:", euData);
         if (euData.features && euData.features.length > 0) {
           features.push(euData.features[0]);
-          console.log("Added EU feature to geojsonData. EU feature name:", euData.features[0].properties.name);
         }
       } catch (euError) {
         console.error("Could not load EU GeoJSON:", euError);
@@ -206,10 +190,6 @@ export async function createBlocGeoJSON(worldGeoJSON, multiJsonFilePath, targetB
     // Set for O(1) membership checks instead of .includes() (O(n)) inside filter.
     const targetSet = new Set(targetMembers);
     const filteredFeatures = features.filter((feature) => targetSet.has(feature.properties.name));
-    console.log("Filtered features count:", filteredFeatures.length);
-    console.log("Filtered features names:", filteredFeatures.map((f) => f.properties.name));
-
-
     const filteredGeoJSON = {
       type: "FeatureCollection",
       features: filteredFeatures,
@@ -241,13 +221,10 @@ export function mergeWorldWithPartnerData(geojsonData, partnersNoData) {
 }
 
 export function filterCountriesByPartner(mergedBiData, selectedCountry) {
-  console.log('Merged Bi data in filterCountriesByPartner', mergedBiData)
-  console.log("Selected country in function filterCountriesByPartner", selectedCountry);
   if (selectedCountry === "United Kingdom") {
     selectedCountry = "England";
   }
   const selectedCountryFeature = mergedBiData.features.find((feature) => feature.properties.name === selectedCountry);
-  console.log("Selected country", selectedCountryFeature);
   // Set for O(1) membership checks instead of .includes() (O(n)) inside filter
   const partnerSet = new Set(selectedCountryFeature.properties.partners || []);
   const filteredGeoJSON = {

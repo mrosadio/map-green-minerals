@@ -16,7 +16,6 @@ let numberData;
 let colorScale;
 
 function resetToInitialView() {
-  console.log("reseting in main.js");
   document.querySelector("#legend-container").classList.remove("legend-hidden");
   removeThirdColumn();
   filteredGeoJSON = mergeWorldWithPartnerData(mergedBiData, numberData);
@@ -34,8 +33,6 @@ function refresh() {
   }
 }
 
-console.log("console before promise");
-
 fetch("./db/partnerNarratives.json")
   .then((r) => r.json())
   .then((data) => { partnerNarratives = data; })
@@ -49,7 +46,6 @@ Promise.all([
 ])
   .then(([worldGeoJSON, partnerNarrativesData]) => {
     partnerNarratives = partnerNarrativesData;
-    console.log("DEBUG partnerNarratives loaded:", partnerNarratives);
 
     return Promise.all([loadAndMergeData(worldGeoJSON, jsonFilePath, noPartnerFilePath), mergeMulti(worldGeoJSON, multiJsonFilePath)]).then(([bilateralData, multiData]) => {
       if (bilateralData && multiData) {
@@ -58,7 +54,6 @@ Promise.all([
         numberData = bilateralData.nojsonData;
         const multiGeoData = multiData.geojsonMultiData;
         const multiJsonData = multiData.multiJsonData;
-        console.log("multi geojson content showing", multiGeoData);
         mergedBiData.features.forEach((feature) => {
           const country = feature.properties.name;
           if (feature.properties.partners) {
@@ -131,7 +126,6 @@ Promise.all([
                 populatePartnerships(biData, selectedCountry, partnerNarratives);
               });
             } else {
-              console.log("selectedCountry in ELSE CONDITION", selectedCountry);
               const filteredCountryGeoJSON = filterCountriesByPartner(mergedBiData, internalSelectedCountry);
               drawMap(mergedBiData, filteredCountryGeoJSON, internalSelectedCountry);
               highlightPartnership(svg, filteredCountryGeoJSON, item.textContent);

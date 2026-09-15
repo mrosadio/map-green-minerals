@@ -85,28 +85,29 @@ function createAreaTag(area, colorMap, tooltipMap) {
 // here so it stays accurate even as bilateralPartner.json changes,
 // and works for all 29 partners, not just the 12 with narratives
 function countAgreements(partnershipList) {
-  let total = 0
-  let publicCount = 0
+  let total = 0;
+  let publicCount = 0;
   partnershipList.forEach((item) => {
     if (item.agreements) {
       item.agreements.forEach((sub) => {
         total += 1;
         if (sub.linkAgreement && sub.linkAgreement.trim()) publicCount += 1;
-      })
+      });
     } else {
       total += 1;
       if (item.linkAgreement && item.linkAgreement.trim()) publicCount += 1;
     }
   });
-  return { total, publicCount }
+  return { total, publicCount };
 }
 
 // Renders one agreement's details (type, date, access, areas of cooperation)
 // into partnershipCard. Used for both the single-agreement case and each
 // item inside a partner's nested agreements array
-function renderAgreementDetails(agreement, partnershipCard) {
+function renderAgreementDetails(agreement, partnershipCard, needsSeparator = false) {
   const partnerAgreement = document.createElement("h5");
   partnerAgreement.classList.add("card-subtitle", "agreement");
+  if (needsSeparator) partnerAgreement.classList.add("agreement-separator");
   partnerAgreement.style.paddingBottom = "0px";
   partnerAgreement.innerHTML = agreement.typeAgreement ? `${agreement.typeAgreement}` : "";
   partnershipCard.appendChild(partnerAgreement);
@@ -172,17 +173,17 @@ function renderAgreementDetails(agreement, partnershipCard) {
 // partnerNarratives.json. Only the 12 report-backed partners have an
 // entry, everyone else silently received a fallback treatment
 function renderNarrativePanel(container, narrativeEntry, partnershipList) {
-  if (narrativeEntry) { 
-  const badge = document.createElement("span");
-  badge.classList.add("mechanism-badge");
-  badge.style.backgroundColor = MECHANISM_COLORS[narrativeEntry.mechanism] || "#E8E4DF";
-  badge.textContent = MECHANISM_LABELS[narrativeEntry.mechanism] || narrativeEntry.mechanism;
-  container.appendChild(badge);
+  if (narrativeEntry) {
+    const badge = document.createElement("span");
+    badge.classList.add("mechanism-badge");
+    badge.style.backgroundColor = MECHANISM_COLORS[narrativeEntry.mechanism] || "#E8E4DF";
+    badge.textContent = MECHANISM_LABELS[narrativeEntry.mechanism] || narrativeEntry.mechanism;
+    container.appendChild(badge);
 
-  const rationale = document.createElement("p");
-  rationale.classList.add("narrative-rationale");
-  rationale.textContent = narrativeEntry.rationale;
-  container.appendChild(rationale);
+    const rationale = document.createElement("p");
+    rationale.classList.add("narrative-rationale");
+    rationale.textContent = narrativeEntry.rationale;
+    container.appendChild(rationale);
   } else {
     const fallbackNote = document.createElement("p");
     fallbackNote.classList.add("narrative-fallback-note");
@@ -257,10 +258,11 @@ export function populatePartnerships(biData, selectedCountry, partnerNarratives 
   if (selectedCountry === "European Union") internalSelected = "EU";
   if (selectedCountry === "United States") internalSelected = "USA";
   let partnerSelected;
+
   const infoPartnerContainer = document.querySelector(".card.partnership");
   infoPartnerContainer.innerHTML = "";
   const bilateralPartner = document.createElement("h2");
-  bilateralPartner.classList.add("card-title", "card-title-fixed", "partner-select", "h2");
+  bilateralPartner.classList.add("card-title", "card-title-fixed", "partner-select");
 
   let displayName;
   if (internalSelected === "EU") {
@@ -284,12 +286,26 @@ export function populatePartnerships(biData, selectedCountry, partnerNarratives 
   partnerSubTitle.innerHTML = "Partnerships with African countries";
   infoPartnerContainer.appendChild(partnerSubTitle);
 
+  // toggle to view agreements
+  const toggleButton = document.createElement("button");
+  toggleButton.classList.add("agreements-toggle");
+  toggleButton.type = "button";
+  const agreementCount = partnerSelected.partnership.length;
+  toggleButton.textContent = `▾ View the ${agreementCount} documented agreement${agreementCount === 1 ? "" : "s"}`;
+  infoPartnerContainer.appendChild(toggleButton);
+
   const scrollContainer = document.createElement("div");
-  scrollContainer.classList.add("custom-scroll");
+  scrollContainer.classList.add("custom-scroll", "agreements-collapsed");
   scrollContainer.style.maxHeight = "100%";
   scrollContainer.style.overflowY = "auto";
   scrollContainer.style.marginTop = "0px";
   infoPartnerContainer.appendChild(scrollContainer);
+
+  toggleButton.addEventListener("click", () => {
+    const isCollapsed = scrollContainer.classList.contains("agreements-collapsed");
+    scrollContainer.classList.toggle("agreements-collapsed");
+    toggleButton.textContent = isCollapsed ? `▴ Hide agreements` : `▾ View the ${agreementCount} documented agreement${agreementCount === 1 ? "" : "s"}`;
+  });
 
   // Sort partnerships: newest to oldest based on year/date
   const sortedPartnerships = [...partnerSelected.partnership].sort((a, b) => {
@@ -313,7 +329,7 @@ export function populatePartnerships(biData, selectedCountry, partnerNarratives 
 
   sortedPartnerships.forEach((partner) => {
     const partnershipCard = document.createElement("div");
-    partnershipCard.classList.add("card-body", "partner", "custom-scroll");
+    partnershipCard.classList.add("card-body", "partner");
     const partnerTitle = document.createElement("h5");
     partnerTitle.classList.add("card-title", "list-partners");
     partnerTitle.innerHTML = `${partner.country}`;
@@ -325,20 +341,11 @@ export function populatePartnerships(biData, selectedCountry, partnerNarratives 
         return new Date(b.year) - new Date(a.year);
       });
       sortedAgreements.forEach((agreement, index) => {
-        renderAgreementDetails(agreement, partnershipCard);
-        if (index < partner.agreements.length - 1) {
-          const line = document.createElement("hr");
-          line.classList.add("line_black");
-          line.style.border = "0.5px solid gray";
-          line.style.margin = "6px 0 3px 0";
-          line.style.padding = "0px";
-          partnershipCard.appendChild(line);
-        }
+        renderAgreementDetails(agreement, partnershipCard, index > 0);
       });
     } else if (partner.typeAgreement) {
       renderAgreementDetails(partner, partnershipCard);
     }
-       
     scrollContainer.appendChild(partnershipCard);
     infoPartnerContainer.appendChild(scrollContainer);
   });
@@ -497,7 +504,6 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
           activeTooltip = null;
         });
 
-
         const tooltipText = document.createElement("div");
         tooltipText.innerText = "Description";
         tooltipText.style.marginRight = "15px";
@@ -540,7 +546,6 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
         tooltipMulti.classList.remove("active");
         activeTooltip = null;
       });
-
 
       const tooltipText = document.createElement("div");
       tooltipText.innerText = "Description";
