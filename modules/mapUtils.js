@@ -47,12 +47,6 @@ const highlightColors = {
 
 // -- Public: overview map ---------------------------------------------------------
 export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
-  console.log("drawMapWithPartnerColors called, existing paths:", svg.selectAll("path").size());
-  console.log(
-    "Partners of Uganda",
-    numberData.find((d) => d.africanCountry === "Uganda"),
-  );
-
   const mapEl = document.querySelector("#map");
   if (!mapEl) {
     console.error("drawMapWithPartnerColors: #map not found");
@@ -168,14 +162,10 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
         .attr("fill", colorScale(count));
       // Restore individual partners
       const individualPartners = new Set(rawPartners.map(cleanPartnerName).filter((p) => p !== "European Union" && p !== "EU"));
-      console.log("mouseout for:", d.properties.name);
-      console.log("partners to restore:", [...individualPartners]);
 
       // Check how many paths match
       const matched = svg.selectAll("path").filter((p) => p?.properties && individualPartners.has(p.properties.name));
-      console.log("paths matched for restore:", matched.size());
       matched.each(function (p) {
-        console.log("restoring:", p.properties.name, "current fill:", d3.select(this).attr("fill"), "target fill:", partnerLookup.get(p.properties.name)?.partnersNo > 0 ? "choropleth" : DEFAULT_FILL);
         setTimeout(() => {
           const austriaFill = svg
             .selectAll("path")
@@ -232,7 +222,6 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
 }
 // -- Public: bilateral / multilateral map --------------------------------------------
 export function drawMap(geojson, filteredCountryGeoJSON, partner) {
-  console.log("Content of filtered", filteredCountryGeoJSON);
   const mapEl = document.querySelector("#map");
   if (!mapEl) {
     console.error("drawMap: #map not found");
