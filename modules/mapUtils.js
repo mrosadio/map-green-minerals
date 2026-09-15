@@ -44,7 +44,12 @@ const highlightColors = {
   euBloc: "#FCE0B1", // lighter amber — EU as bloc
   euMember: "#FCC12C", // same as individual — Germany etc. treated as individual
 };
-
+export const multilateralColorScale = d3.scaleQuantize().domain([0, 3]).range([
+  "#F0EDEA", // 0 — no coalitions, same neutral as bilateral's 0
+  "#9FE1CB", // 1
+  "#5DCAA5", // 2
+  "#0F6E56", // 3+
+]);
 // -- Public: overview map ---------------------------------------------------------
 export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
   const mapEl = document.querySelector("#map");
@@ -265,6 +270,58 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
       positionTooltip(event, tooltip);
     })
     .on("mouseout", function () {
+      tooltip.style("display", "none");
+    });
+}
+// -- Public: multilateral map -----------------------------------------------
+export function drawMultilateralOverview(svg, multiGeoData, numberData) {
+  const mapEl = document.querySelector("#map");
+  if (!mapEl) { console.error("drawMultilateralOverview: #map not found"); return; }
+
+  svg.selectAll("*").remove();
+  svg.attr("viewBox", getViewBox(mapEl));
+
+  const svgNode = svg.node();
+  const W = svgNode.clientWidth;
+  const H = svgNode.clientHeight;
+  if (!W || !H) { console.error("drawMultilateralOverview: #map has no dimensions"); return; }
+
+  const projection = d3.geoEqualEarth().fitSize([W, H], multiGeoData);
+  const path = d3.geoPath().projection(projection);
+
+  // Same reference set bilateral uses to distinguish African partner
+  // countries from the rest of the world — otherwise non-African coalition
+  // members (US, Japan, various EU states) get colored too, since they're
+  // legitimately members of these blocs, just not the African side of them.
+  const africanCountries = new Set(numberData.map((d) => d.africanCountry));
+
+  g = svg.append("g");
+  const tooltip = getOrCreateTooltip();
+
+  g.selectAll("path")
+    .data(multiGeoData.features)
+    .enter()
+    .append("path")
+    .attr("d", path)
+    .attr("class", "country-path")
+    .attr("fill", (d) => {
+      if (!africanCountries.has(d.properties.name)) return "#E8E4DF";
+      return multilateralColorScale(d.properties.blocs?.length || 0);
+    })
+    .attr("stroke", "white")
+    .attr("stroke-width", 0.5)
+    .on("mouseover", function (event, d) {
+      if (!africanCountries.has(d.properties.name)) return;
+      const count = d.properties.blocs?.length || 0;
+      if (count === 0) return;
+      d3.select(this).transition().duration(200).attr("fill", "#04342C");
+      tooltip.html(`<h3 class="fw-bold mb-0" style="font-size:12pt">${d.properties.name}</h3><p class="text-secondary mb-0" style="font-size:9pt">${count} coalition${count !== 1 ? "s" : ""}</p>`).style("display", window.innerWidth > 768 ? "block" : "none");
+    })
+    .on("mousemove", function (event) { positionTooltip(event, tooltip); })
+    .on("mouseout", function (event, d) {
+      if (!africanCountries.has(d.properties.name)) return;
+      const count = d.properties.blocs?.length || 0;
+      d3.select(this).transition().duration(200).attr("fill", multilateralColorScale(count));
       tooltip.style("display", "none");
     });
 }
