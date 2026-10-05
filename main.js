@@ -179,6 +179,10 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
               .catch((error) => console.error("Error processing filtered GeoJSON:", error));
           });
         });
+        if (/Mobi|Android/i.test(navigator.userAgent)) {
+          document.querySelector("#bilateralToggle")?.removeAttribute("data-bs-toggle");
+          document.querySelector("#multilateralToggle")?.removeAttribute("data-bs-toggle");
+        }
         document.querySelector("#bilateralToggle").addEventListener("click", (e) => {
           if (/Mobi|Android/i.test(navigator.userAgent)) {
             e.preventDefault();
@@ -193,6 +197,21 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
             showPickerMultilateral();
           }
         });
+        function positionUtilityLinks() {
+          const navEl = document.querySelector("#nav");
+          const utilityLinksEl = document.querySelector(".nav-utility-links");
+          const overlayEl = document.querySelector("#showScrollable");
+          if (!navEl) return;
+          if (window.innerWidth > 768) return; // desktop keeps its own bottom-right CSS positioning, untouched
+
+          const navHeight = navEl.getBoundingClientRect().height;
+          if (utilityLinksEl) utilityLinksEl.style.top = `${navHeight + 8}px`;
+          if (overlayEl) overlayEl.style.top = `${navHeight + 12}px`;
+        }
+
+        window.addEventListener("resize", positionUtilityLinks);
+        // call once after initial render, e.g. right after resetToInitialView() in your load sequence
+        positionUtilityLinks();
       }
     });
   })

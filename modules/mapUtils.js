@@ -71,7 +71,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
   }
 
   // fitSize automatically scales and centers the projection to fill [W, H]
-  const projection = d3.geoEqualEarth().fitSize([W, H], geojsonData);
+  const projection = d3.geoEqualEarth().fitSize([W, H], getOverviewFitTarget(geojsonData, numberData));
   const path = d3.geoPath().projection(projection);
 
   const colorScale = d3.scaleQuantize().domain([0, 6]).range([
@@ -115,6 +115,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
     .attr("stroke", "white")
     .attr("stroke-width", 0.5)
     .on("mouseover", function (event, d) {
+        if (!window.matchMedia("(hover: hover)").matches) return;
       const countryName = d.properties.name;
       const countryData = partnerLookup.get(countryName);
       const count = countryData?.partnersNo || 0;
@@ -155,6 +156,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
       tooltip.html(buildTooltipHTML(countryName, count, rawPartners)).style("display", window.innerWidth > 768 ? "block" : "none");
     })
     .on("mouseout", function (event, d) {
+        if (!window.matchMedia("(hover: hover)").matches) return;
       const countryName = d.properties.name;
       const countryData = partnerLookup.get(countryName);
       const count = countryData?.partnersNo || 0;
@@ -259,13 +261,27 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
 
   const detailPanelEl = document.querySelector(".right");
   const isPanelVisible = detailPanelEl && !detailPanelEl.classList.contains("d-none");
-  const panelWidth = isPanelVisible ? detailPanelEl.getBoundingClientRect().width : 0;
-  const rightPadding = panelWidth + ZOOM_PADDING;
+  const isPhoneLayout = window.innerWidth <= 768;
+
+  // On phone, the panel is a bottom sheet (eats into height); on desktop,
+  // it's a right-side panel (eats into width). Same underlying goal —
+  // don't let the zoomed content render behind either overlay — but which
+  // edge needs the padding flips at this breakpoint.
+  let rightPadding = ZOOM_PADDING;
+  let bottomPadding = ZOOM_PADDING;
+  if (isPanelVisible) {
+    if (isPhoneLayout) {
+      bottomPadding = detailPanelEl.getBoundingClientRect().height + ZOOM_PADDING;
+    } else {
+      rightPadding = detailPanelEl.getBoundingClientRect().width + ZOOM_PADDING;
+    }
+  }
+  console.log("DEBUG zoom padding:", { W, H, topPadding, rightPadding, bottomPadding, isPhoneLayout, panelWidth: detailPanelEl?.getBoundingClientRect().width, panelHeight: detailPanelEl?.getBoundingClientRect().height });
 
   const projection = d3.geoEqualEarth().fitExtent(
     [
       [ZOOM_PADDING, topPadding],
-      [W - rightPadding, H - ZOOM_PADDING],
+      [W - rightPadding, H - bottomPadding],
     ],
     filteredCountryGeoJSON,
   );
@@ -286,6 +302,10 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
     .attr("stroke", "white")
     .attr("stroke-width", 0.5)
     .on("mouseover", function (event, d) {
+      if (!window.matchMedia("(hover: hover)").matches) return;
+      const countryName = d.properties.name;
+      const countryData = partnerLookup.get(countryName);
+      const count = countryData?.partnersNo || 0;
       const hasData = filteredCountryGeoJSON.features.some((f) => f.properties.name === d.properties.name);
       if (!hasData) return; // no tooltip for countries with no data
       tooltip.html(`<h3 class="fw-bold mb-0" style="font-size:12pt">${d.properties.name}</h3>`).style("display", window.innerWidth > 768 ? "block" : "none");
@@ -294,6 +314,11 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
       positionTooltip(event, tooltip);
     })
     .on("mouseout", function () {
+      if (!window.matchMedia("(hover: hover)").matches) return;
+
+      const countryName = d.properties.name;
+      const countryData = partnerLookup.get(countryName);
+      const count = countryData?.partnersNo || 0;
       tooltip.style("display", "none");
     });
 }
@@ -316,7 +341,7 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
     return;
   }
 
-  const projection = d3.geoEqualEarth().fitSize([W, H], multiGeoData);
+  const projection = d3.geoEqualEarth().fitSize([W, H], getOverviewFitTarget(multiGeoData, numberData));
   const path = d3.geoPath().projection(projection);
 
   // Same reference set bilateral uses to distinguish African partner
@@ -341,6 +366,7 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
     .attr("stroke", "white")
     .attr("stroke-width", 0.5)
     .on("mouseover", function (event, d) {
+      if (!window.matchMedia("(hover: hover)").matches) return;
       if (!africanCountries.has(d.properties.name)) return;
       const blocs = d.properties.blocs || [];
       if (blocs.length === 0) return;
@@ -361,6 +387,7 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
       positionTooltip(event, tooltip);
     })
     .on("mouseout", function (event, d) {
+      if (!window.matchMedia("(hover: hover)").matches) return;
       if (!africanCountries.has(d.properties.name)) return;
       const count = d.properties.blocs?.length || 0;
       d3.select(this).interrupt("blocHoverSelf").transition("blocHoverSelf").duration(200).attr("fill", multilateralColorScale(count));
@@ -392,7 +419,7 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
 
 // -- Private: layout helper detector ----------------------------------------
 function isStackedLayout() {
-  return window.matchMedia("(min-width: 769px) and (max-width: 1366px) and (orientation: portrait)").matches;
+  return window.matchMedia("(max-width: 768px), (min-width: 769px) and (max-width: 1366px) and (orientation: portrait)").matches;
 }
 // -- Public: registers is map is already shifted ------------------------------
 // Module-level flag in mapUtils.js
@@ -472,10 +499,8 @@ function buildTooltipHTML(countryName, partnerCount, rawPartners) {
     name: cleanPartnerName(p),
     year: p.match(/\((\d{4})\)/)?.[1] || null,
   }));
-
   const euEntry = cleaned.find((p) => p.name === "EU" || p.name === "European Union");
   const individuals = cleaned.filter((p) => p.name !== "EU" && p.name !== "European Union");
-
   const partnersHTML = [...individuals.map((p) => `<p class="mb-0">${p.name}${p.year ? ` <span class="text-secondary" style="font-size:8pt">${p.year}</span>` : ""}</p>`), ...(euEntry ? [`<p class="mb-0">European Union <span class="text-secondary" style="font-size:8pt">(as bloc${euEntry.year ? ` · ${euEntry.year}` : ""})</span></p>`] : [])].join("");
 
   return `
@@ -536,4 +561,17 @@ function computeShiftedViewBox() {
     vb[0] += 150;
   }
   return vb.join(" ");
+}
+
+// -- Private: refit map for mobile view ---------------------------------------
+// Shared helper on phone, fit the projection to just African countries
+// instead of the whole world, so limited screen space isn't spent on
+// Russia/Canada/South America just to reach the actual content.
+function getOverviewFitTarget(geoData, numberData) {
+  const isPhoneLayout = window.innerWidth <= 768;
+  if (!isPhoneLayout) return geoData;
+
+  const africanCountries = new Set(numberData.map((d) => d.africanCountry));
+  const africanFeatures = geoData.features.filter((f) => africanCountries.has(f.properties.name));
+  return { type: "FeatureCollection", features: africanFeatures };
 }
