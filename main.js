@@ -61,7 +61,23 @@ function setMode(mode) {
   resetToCurrentOverview();
   resetMapPan();
 }
-
+// Phone/touch: route Partner/Coalition taps to the wheel picker instead of
+// Bootstrap's dropdown. Bootstrap 5 registers its delegated click handler on
+// `document` in the capture phase, so a listener on the button (bubble phase)
+// always fires too late to stop it. `window` capture runs earlier.
+window.addEventListener(
+  "click",
+  (e) => {
+    if (!/Mobi|Android/i.test(navigator.userAgent)) return;
+    const btn = e.target.closest("#bilateralToggle, #multilateralToggle");
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (btn.id === "bilateralToggle") showPickerBilateral();
+    else showPickerMultilateral();
+  },
+  true
+);
 // Fetch the world GeoJSON once, up front - previously loadAndMergeData,
 // mergeMulti, and createBlocGeoJSON each fetched it independently, meaning
 // every page load re-downloaded the same large file two or three times.
@@ -179,24 +195,24 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
               .catch((error) => console.error("Error processing filtered GeoJSON:", error));
           });
         });
-        if (/Mobi|Android/i.test(navigator.userAgent)) {
-          document.querySelector("#bilateralToggle")?.removeAttribute("data-bs-toggle");
-          document.querySelector("#multilateralToggle")?.removeAttribute("data-bs-toggle");
-        }
-        document.querySelector("#bilateralToggle").addEventListener("click", (e) => {
-          if (/Mobi|Android/i.test(navigator.userAgent)) {
-            e.preventDefault();
-            e.stopPropagation();
-            showPickerBilateral();
-          }
-        });
-        document.querySelector("#multilateralToggle").addEventListener("click", (e) => {
-          if (/Mobi|Android/i.test(navigator.userAgent)) {
-            e.preventDefault();
-            e.stopPropagation();
-            showPickerMultilateral();
-          }
-        });
+        // if (/Mobi|Android/i.test(navigator.userAgent)) {
+        //   document.querySelector("#bilateralToggle")?.removeAttribute("data-bs-toggle");
+        //   document.querySelector("#multilateralToggle")?.removeAttribute("data-bs-toggle");
+        // }
+        // document.querySelector("#bilateralToggle").addEventListener("click", (e) => {
+        //   if (/Mobi|Android/i.test(navigator.userAgent)) {
+        //     e.preventDefault();
+        //     e.stopPropagation();
+        //     showPickerBilateral();
+        //   }
+        // });
+        // document.querySelector("#multilateralToggle").addEventListener("click", (e) => {
+        //   if (/Mobi|Android/i.test(navigator.userAgent)) {
+        //     e.preventDefault();
+        //     e.stopPropagation();
+        //     showPickerMultilateral();
+        //   }
+        // });
         function positionUtilityLinks() {
           const navEl = document.querySelector("#nav");
           const utilityLinksEl = document.querySelector(".nav-utility-links");
