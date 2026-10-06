@@ -261,7 +261,7 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
 
   const detailPanelEl = document.querySelector(".right");
   const isPanelVisible = detailPanelEl && !detailPanelEl.classList.contains("d-none");
-  const isPhoneLayout = window.innerWidth <= 768;
+const isSheetLayout = isStackedLayout();
 
   // On phone, the panel is a bottom sheet (eats into height); on desktop,
   // it's a right-side panel (eats into width). Same underlying goal —
@@ -270,7 +270,7 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
   let rightPadding = ZOOM_PADDING;
   let bottomPadding = ZOOM_PADDING;
   if (isPanelVisible) {
-    if (isPhoneLayout) {
+    if (isSheetLayout) {
       bottomPadding = detailPanelEl.getBoundingClientRect().height + ZOOM_PADDING;
     } else {
       rightPadding = detailPanelEl.getBoundingClientRect().width + ZOOM_PADDING;
@@ -568,8 +568,7 @@ function computeShiftedViewBox() {
 // instead of the whole world, so limited screen space isn't spent on
 // Russia/Canada/South America just to reach the actual content.
 function getOverviewFitTarget(geoData, numberData) {
-  const isPhoneLayout = window.innerWidth <= 768;
-  if (!isPhoneLayout) return geoData;
+  if (!isStackedLayout) return geoData;
 
   const africanCountries = new Set(numberData.map((d) => d.africanCountry));
   const africanFeatures = geoData.features.filter((f) => africanCountries.has(f.properties.name));
