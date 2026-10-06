@@ -641,9 +641,9 @@ h2.title {
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 70px;
+  top: var(--nav-h, 70px);
   right: 0;
-  height: calc(100% - 70px);
+  height: calc(100% - var(--nav-h, 70px));
 }
 
 .third-col {

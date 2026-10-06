@@ -545,11 +545,13 @@ function wrapText(text, maxLength) {
 
 // -- Private ------------------------------------------------------------------
 function computeShiftedViewBox() {
-  const vb = getViewBox().split(" ").map(Number);
-  if (!isStackedLayout()) {
-    vb[0] += 150;
-  }
-  return vb.join(" ");
+  // const vb = getViewBox().split(" ").map(Number);
+  // if (!isStackedLayout()) {
+  //   vb[0] += 150;
+  // }
+  // return vb.join(" ");
+  // drawMap now reserves room for the detail panel itself, so no extra shift is needed
+  return getViewBox();
 }
 
 // -- Private: refit map for mobile view ---------------------------------------
