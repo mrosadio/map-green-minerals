@@ -5,6 +5,7 @@
 //   fitSizeMap(geoJSON)                                     -> returns path generator
 
 import { svg } from "./globals.js";
+import { isStackedLayout } from "./layout.js";
 
 let g; // at the module-level container. Reassigned at each draw
 let isPanned = false; // whether the horizontal shift is currently applied
@@ -39,17 +40,14 @@ const partnerNameNormalization = {
   "United Kingdom": "England",
   // add others as you find them
 };
-const highlightColors = {
-  individualPartner: "#FCC12C", // amber — single country bilateral partner
-  euBloc: "#FCE0B1", // lighter amber — EU as bloc
-  euMember: "#FCC12C", // same as individual — Germany etc. treated as individual
-};
 export const multilateralColorScale = d3.scaleQuantize().domain([0, 3]).range([
   "#F0EDEA", // 0 — no coalitions, same neutral as bilateral's 0
   "#9FE1CB", // 1
   "#5DCAA5", // 2
   "#0F6E56", // 3+
 ]);
+const getLabelScale = (W) => (isStackedLayout() ? Math.min(Math.max(W / 600, 1), 1.8) : 1);
+
 // -- Public: overview map ---------------------------------------------------------
 export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
   const mapEl = document.querySelector("#map");
@@ -71,7 +69,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
   }
 
   // fitSize automatically scales and centers the projection to fill [W, H]
-  const projection = d3.geoEqualEarth().fitSize([W, H], getOverviewFitTarget(geojsonData, numberData));
+  const projection = d3.geoEqualEarth().fitExtent(getOverviewExtent(W, H), getOverviewFitTarget(geojsonData, numberData));
   const path = d3.geoPath().projection(projection);
 
   const colorScale = d3.scaleQuantize().domain([0, 6]).range([
@@ -115,7 +113,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
     .attr("stroke", "white")
     .attr("stroke-width", 0.5)
     .on("mouseover", function (event, d) {
-        if (!window.matchMedia("(hover: hover)").matches) return;
+      if (!window.matchMedia("(hover: hover)").matches) return;
       const countryName = d.properties.name;
       const countryData = partnerLookup.get(countryName);
       const count = countryData?.partnersNo || 0;
@@ -156,7 +154,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
       tooltip.html(buildTooltipHTML(countryName, count, rawPartners)).style("display", window.innerWidth > 768 ? "block" : "none");
     })
     .on("mouseout", function (event, d) {
-        if (!window.matchMedia("(hover: hover)").matches) return;
+      if (!window.matchMedia("(hover: hover)").matches) return;
       const countryName = d.properties.name;
       const countryData = partnerLookup.get(countryName);
       const count = countryData?.partnersNo || 0;
@@ -212,19 +210,19 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
 
   // Labels - only for African countries with partnerships
   const featuresWithData = geojsonData.features.filter((d) => (partnerLookup.get(d.properties.name)?.partnersNo || 0) > 0);
-
+  const labelScale = getLabelScale(W);
   g.selectAll("text.country-label")
     .data(featuresWithData)
     .enter()
     .append("text")
     .attr("class", "country-label")
     .attr("text-anchor", "middle")
-    .attr("font-size", "5pt")
+    .attr("font-size", `${5 * labelScale}pt`)
     .attr("fill", "black")
     .attr("pointer-events", "none")
     .attr("opacity", 1)
     .each(function (d) {
-      renderLabel(d3.select(this), d, path);
+      renderLabel(d3.select(this), d, path, labelScale);
     });
 }
 // -- Public: bilateral / multilateral map --------------------------------------------
@@ -261,7 +259,7 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
 
   const detailPanelEl = document.querySelector(".right");
   const isPanelVisible = detailPanelEl && !detailPanelEl.classList.contains("d-none");
-  const isPhoneLayout = window.innerWidth <= 768;
+  const isSheetLayout = isStackedLayout();
 
   // On phone, the panel is a bottom sheet (eats into height); on desktop,
   // it's a right-side panel (eats into width). Same underlying goal —
@@ -270,13 +268,13 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
   let rightPadding = ZOOM_PADDING;
   let bottomPadding = ZOOM_PADDING;
   if (isPanelVisible) {
-    if (isPhoneLayout) {
+    if (isSheetLayout) {
       bottomPadding = detailPanelEl.getBoundingClientRect().height + ZOOM_PADDING;
     } else {
       rightPadding = detailPanelEl.getBoundingClientRect().width + ZOOM_PADDING;
     }
   }
-  console.log("DEBUG zoom padding:", { W, H, topPadding, rightPadding, bottomPadding, isPhoneLayout, panelWidth: detailPanelEl?.getBoundingClientRect().width, panelHeight: detailPanelEl?.getBoundingClientRect().height });
+  console.log("DEBUG zoom padding:", { W, H, topPadding, rightPadding, bottomPadding, panelWidth: detailPanelEl?.getBoundingClientRect().width, panelHeight: detailPanelEl?.getBoundingClientRect().height });
 
   const projection = d3.geoEqualEarth().fitExtent(
     [
@@ -288,9 +286,6 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
   const path = d3.geoPath().projection(projection);
 
   g = svg.append("g");
-
-  // All countries — grey base layer
-  //g.selectAll("path").data(geojson.features).enter().append("path").attr("d", path).attr("fill", "#d3d3d3").attr("stroke", "white").attr("stroke-width", 0.5);
 
   const tooltip = getOrCreateTooltip();
   g.selectAll("path")
@@ -329,7 +324,6 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
     console.error("drawMultilateralOverview: #map not found");
     return;
   }
-
   svg.selectAll("*").remove();
   svg.attr("viewBox", getViewBox(mapEl));
 
@@ -340,8 +334,7 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
     console.error("drawMultilateralOverview: #map has no dimensions");
     return;
   }
-
-  const projection = d3.geoEqualEarth().fitSize([W, H], getOverviewFitTarget(multiGeoData, numberData));
+  const projection = d3.geoEqualEarth().fitExtent(getOverviewExtent(W, H), getOverviewFitTarget(multiGeoData, numberData));
   const path = d3.geoPath().projection(projection);
 
   // Same reference set bilateral uses to distinguish African partner
@@ -401,26 +394,22 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
   // Labels - only for African countries with at least one coalition,
   // same pattern as the bilateral overview's featuresWithData filter
   const featuresWithData = multiGeoData.features.filter((d) => africanCountries.has(d.properties.name) && (d.properties.blocs?.length || 0) > 0);
-
+  const labelScale = getLabelScale(W);
   g.selectAll("text.country-label")
     .data(featuresWithData)
     .enter()
     .append("text")
     .attr("class", "country-label")
     .attr("text-anchor", "middle")
-    .attr("font-size", "5pt")
+    .attr("font-size", `${5 * labelScale}pt`)
     .attr("fill", "black")
     .attr("pointer-events", "none")
     .attr("opacity", 1)
     .each(function (d) {
-      renderLabel(d3.select(this), d, path);
+      renderLabel(d3.select(this), d, path, labelScale);
     });
 }
 
-// -- Private: layout helper detector ----------------------------------------
-function isStackedLayout() {
-  return window.matchMedia("(max-width: 768px), (min-width: 769px) and (max-width: 1366px) and (orientation: portrait)").matches;
-}
 // -- Public: registers is map is already shifted ------------------------------
 // Module-level flag in mapUtils.js
 export function panMapforPartner() {
@@ -454,7 +443,7 @@ function cleanPartnerName(name) {
   return partnerNameNormalization[cleaned] || cleaned;
 }
 // -- Private: label rendering --------------------------------------------------
-function renderLabel(textEl, feature, path) {
+function renderLabel(textEl, feature, path, labelScale = 1) {
   const name = feature.properties.name;
   const config = countryLabelConfig[name] || {};
   const centroid = path.centroid(feature);
@@ -470,7 +459,7 @@ function renderLabel(textEl, feature, path) {
     textEl
       .append("tspan")
       .attr("x", cx)
-      .attr("y", cy + i * 8)
+      .attr("y", cy + i * 8 * labelScale)
       .text(line)
       .attr("font-size", "1.25em")
       .attr("color", "var(--color-text-primary)");
@@ -568,10 +557,24 @@ function computeShiftedViewBox() {
 // instead of the whole world, so limited screen space isn't spent on
 // Russia/Canada/South America just to reach the actual content.
 function getOverviewFitTarget(geoData, numberData) {
-  const isPhoneLayout = window.innerWidth <= 768;
-  if (!isPhoneLayout) return geoData;
-
+  if (!isStackedLayout) return geoData;
   const africanCountries = new Set(numberData.map((d) => d.africanCountry));
   const africanFeatures = geoData.features.filter((f) => africanCountries.has(f.properties.name));
   return { type: "FeatureCollection", features: africanFeatures };
+}
+
+// In stacked layouts the nav floats over the map, so fit Africa into the
+// space below it. Desktop keeps the full-canvas fit
+function getOverviewExtent(W, H) {
+  if (!isStackedLayout())
+    return [
+      [0, 0],
+      [W, H],
+    ];
+  const PAD = 16;
+  const navH = document.querySelector("#nav")?.getBoundingClientRect().height || 0;
+  return [
+    [PAD, navH + PAD],
+    [W - PAD, H - PAD],
+  ];
 }

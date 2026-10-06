@@ -3,7 +3,7 @@ import { drawMap, drawMapWithPartnerColors, drawMultilateralOverview, multilater
 import { highlightPartnership, populatePartnerships, populateMultilateral, highlightBloc, highlightEu, clearCardContent } from "./modules/selectionUtils.js";
 import { addLegend } from "./modules/legendUtils.js";
 import { svg, blocColors, worldGeojsonPath, jsonFilePath, multiJsonFilePath, noPartnerFilePath } from "./modules/globals.js";
-import { showThirdColumn, removeThirdColumn } from "./modules/layout.js";
+import { showThirdColumn, removeThirdColumn, isPhone } from "./modules/layout.js";
 import { showPickerBilateral, showPickerMultilateral, showPickerAfrica } from "./modules/picker.js";
 const euGeojsonPath = `./db/eu.geojson`;
 
@@ -44,8 +44,7 @@ function resetToCurrentOverview() {
 }
 
 function refresh() {
-  if (/Mobi|Android/i.test(navigator.userAgent)) {
-    console.log("refreshing in main.js");
+  if (isPhone()) {
     showPickerAfrica();
   } else {
     resetToCurrentOverview();
@@ -68,7 +67,7 @@ function setMode(mode) {
 window.addEventListener(
   "click",
   (e) => {
-    if (!/Mobi|Android/i.test(navigator.userAgent)) return;
+    if (!isPhone()) return;
     const btn = e.target.closest("#bilateralToggle, #multilateralToggle");
     if (!btn) return;
     e.preventDefault();
@@ -195,30 +194,13 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
               .catch((error) => console.error("Error processing filtered GeoJSON:", error));
           });
         });
-        // if (/Mobi|Android/i.test(navigator.userAgent)) {
-        //   document.querySelector("#bilateralToggle")?.removeAttribute("data-bs-toggle");
-        //   document.querySelector("#multilateralToggle")?.removeAttribute("data-bs-toggle");
-        // }
-        // document.querySelector("#bilateralToggle").addEventListener("click", (e) => {
-        //   if (/Mobi|Android/i.test(navigator.userAgent)) {
-        //     e.preventDefault();
-        //     e.stopPropagation();
-        //     showPickerBilateral();
-        //   }
-        // });
-        // document.querySelector("#multilateralToggle").addEventListener("click", (e) => {
-        //   if (/Mobi|Android/i.test(navigator.userAgent)) {
-        //     e.preventDefault();
-        //     e.stopPropagation();
-        //     showPickerMultilateral();
-        //   }
-        // });
+
         function positionUtilityLinks() {
           const navEl = document.querySelector("#nav");
           const utilityLinksEl = document.querySelector(".nav-utility-links");
           const overlayEl = document.querySelector("#showScrollable");
+          if (!isPhone()) return;
           if (!navEl) return;
-          if (window.innerWidth > 768) return; // desktop keeps its own bottom-right CSS positioning, untouched
 
           const navHeight = navEl.getBoundingClientRect().height;
           if (utilityLinksEl) utilityLinksEl.style.top = `${navHeight + 8}px`;
