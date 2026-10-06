@@ -41,52 +41,19 @@ const Multilateral = [
   { text: "Critical Minerals Mapping Initiative", value: 9, disabled: false },
   { text: "Lobito Corridor Project", value: 10, disabled: false },
 ];
-const AfricanOverview = [
-  { text: "General overview", value: 0, disabled: false },
-  { text: "Algeria", value: 1, disabled: false },
-  { text: "Angola", value: 2, disabled: false },
-  { text: "Chad", value: 3, disabled: false },
-  { text: "Democratic Republic of the Congo", value: 4, disabled: false },
-  { text: "Ivory Coast", value: 5, disabled: false },
-  { text: "Ethiopia", value: 6, disabled: false },
-  { text: "Guinea", value: 7, disabled: false },
-  { text: "Guinea Bissau", value: 8, disabled: false },
-  { text: "Kenya", value: 9, disabled: false },
-  { text: "Libya", value: 10, disabled: false },
-  { text: "Madagascar", value: 11, disabled: false },
-  { text: "Malawi", value: 12, disabled: false },
-  { text: "Mali", value: 13, disabled: false },
-  { text: "Morocco", value: 14, disabled: false },
-  { text: "Mozambique", value: 15, disabled: false },
-  { text: "Namibia", value: 16, disabled: false },
-  { text: "Niger", value: 17, disabled: false },
-  { text: "Nigeria", value: 18, disabled: false },
-  { text: "Rwanda", value: 19, disabled: false },
-  { text: "Senegal", value: 20, disabled: false },
-  { text: "Somalia", value: 21, disabled: false },
-  { text: "South Africa", value: 22, disabled: false },
-  { text: "Sudan", value: 23, disabled: false },
-  { text: "United Republic of Tanzania", value: 24, disabled: false },
-  { text: "Uganda", value: 25, disabled: false },
-  { text: "Zambia", value: 26, disabled: false },
-  { text: "Zimbabwe", value: 27, disabled: false },
-];
 let selectedIndex = 0;
 let pickerData;
 let wheelList = document.getElementById("wheelList");
 let selectedValue = ""; // tracks the current pick; no DOM node for this in this template
 
-function showPickerAfrica() {
-  picker.style.display = "block";
-  pickerData = AfricanOverview;
-  createWheel();
-}
 function showPickerBilateral() {
+  selectedIndex = 0; 
   picker.style.display = "block";
   pickerData = Bilateral;
   createWheel();
 }
 function showPickerMultilateral() {
+  selectedIndex = 0; 
   picker.style.display = "block";
   pickerData = Multilateral;
   createWheel();
@@ -103,17 +70,9 @@ function cancel() {
 function confirmPicker() {
   picker.style.display = "none";
   selectedValue = pickerData[selectedIndex].text;
-
-  const showScrollable = document.getElementById("showScrollable");
-  showScrollable.classList.add("hidden");
-
   const divElement = document.querySelector('.tooltip2');
   if (divElement) {
     divElement.style.display = 'none';
-  }
-  if (selectedValue === "General overview") {
-    document.dispatchEvent(new CustomEvent("overview:selected"));
-    return;
   }
   const button = Array.from(document.querySelectorAll(".bloc-select")).find(
     (b) => b.textContent.trim() === selectedValue
@@ -212,5 +171,5 @@ wheelList.addEventListener("touchend", () => {
 window.cancel = cancel;
 window.confirmPicker = confirmPicker;
 
-export { showPickerBilateral, showPickerMultilateral, showPickerAfrica, confirmPicker };
+export { showPickerBilateral, showPickerMultilateral, confirmPicker };
 
