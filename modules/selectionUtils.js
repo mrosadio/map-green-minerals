@@ -352,10 +352,6 @@ export function populatePartnerships(biData, selectedCountry, partnerNarratives 
 }
 
 export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
-  console.log("Multi data to populate", multiData);
-  console.log("Multi JSON data to populate", multiJsonData);
-  console.log("Selected bloc", selectedBloc);
-
   selectedBloc = selectedBloc.replace(/\s+/g, " ");
   let blocCountries = multiData.features;
   const infoMultiContainer = document.querySelector(".card");
@@ -395,8 +391,6 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
 
   let des = multiJsonData.find((item) => item.blocName === nombre).description;
   loremText.innerHTML = des;
-
-  console.log(des);
   scrollContainer.appendChild(loremText);
 
   // Crear el contenedor para el ícono y el enlace

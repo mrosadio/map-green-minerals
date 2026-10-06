@@ -274,8 +274,6 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
       rightPadding = detailPanelEl.getBoundingClientRect().width + ZOOM_PADDING;
     }
   }
-  console.log("DEBUG zoom padding:", { W, H, topPadding, rightPadding, bottomPadding, panelWidth: detailPanelEl?.getBoundingClientRect().width, panelHeight: detailPanelEl?.getBoundingClientRect().height });
-
   const projection = d3.geoEqualEarth().fitExtent(
     [
       [ZOOM_PADDING, topPadding],
@@ -298,9 +296,9 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
     .attr("stroke-width", 0.5)
     .on("mouseover", function (event, d) {
       if (!window.matchMedia("(hover: hover)").matches) return;
-      const countryName = d.properties.name;
-      const countryData = partnerLookup.get(countryName);
-      const count = countryData?.partnersNo || 0;
+      // const countryName = d.properties.name;
+      // const countryData = partnerLookup.get(countryName);
+      // const count = countryData?.partnersNo || 0;
       const hasData = filteredCountryGeoJSON.features.some((f) => f.properties.name === d.properties.name);
       if (!hasData) return; // no tooltip for countries with no data
       tooltip.html(`<h3 class="fw-bold mb-0" style="font-size:12pt">${d.properties.name}</h3>`).style("display", window.innerWidth > 768 ? "block" : "none");
@@ -311,9 +309,9 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
     .on("mouseout", function () {
       if (!window.matchMedia("(hover: hover)").matches) return;
 
-      const countryName = d.properties.name;
-      const countryData = partnerLookup.get(countryName);
-      const count = countryData?.partnersNo || 0;
+      // const countryName = d.properties.name;
+      // const countryData = partnerLookup.get(countryName);
+      // const count = countryData?.partnersNo || 0;
       tooltip.style("display", "none");
     });
 }

@@ -168,9 +168,6 @@
   font-size: 11px;
   line-height: 1.4;
 }
-.overlay {
-  display: none;
-}
 .country-item {
   display: flex;
   align-items: center;
@@ -898,50 +895,48 @@ img[alt="Icono de acceso"] {
   .title {
     font-size: 15px;
   }
-  .subtitle {
-    font-size: 11px;
-  }
   .nav-divider {
     display: none;
-  }
-  .explore-cluster {
-    margin-left: 0;
-    margin-top: 10px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  .explore-label {
-    margin-bottom: 4px;
-  }
-
-  .mode-toggle {
-    width: 100%;
-    box-sizing: border-box;
   }
   .mode-toggle-btn {
     flex: 1; /* both segments split the toggle's width evenly */
     box-sizing: border-box;
     text-align: center;
   }
-
+  /* Compact phone nav: title on top, toggle + picker button on one row */
+  .subtitle {
+    display: none; /* hover-based copy, meaningless on touch */
+  }
+  .explore-label {
+    display: none; /* the toggle group keeps aria-label="Explore by mode" */
+  }
+  .explore-cluster {
+    margin-left: 0;
+    margin-top: 8px;
+    width: 100%;
+    flex-direction: row;
+    align-items: stretch; /* both controls get the same height */
+    gap: 6px;
+  }
+  .mode-toggle {
+    flex: 1;
+    width: auto;
+    margin-right: 0;
+    box-sizing: border-box;
+  }
   #bilateralDropdownGroup,
   #multilateralDropdownGroup {
-    width: 100%;
+    flex: 0 0 auto;
+    width: auto;
   }
-
   #bilateralToggle,
   #multilateralToggle {
-    width: 100%;
+    width: auto;
+    white-space: nowrap;
     box-sizing: border-box;
-    text-align: center;
-  }
-  .mode-toggle-btn,
-  #bilateralToggle,
-  #multilateralToggle {
-    padding: 5px 10px;
   }
   .nav-utility-links {
+    top: calc(var(--nav-h, 110px) + 8px);
     position: static;
     bottom: auto;
     right: auto;
@@ -958,12 +953,10 @@ img[alt="Icono de acceso"] {
   .allview {
     border: 0px;
     border-radius: 0px;
-    /* Curva las esquinas */
     padding: 0px;
     justify-content: space-between;
     margin: 0 0px 0 0px;
     box-sizing: border-box;
-    /* Asegura que los bordes no causen desbordamiento */
     height: 100%;
     width: 100%;
     display: grid;
@@ -1161,34 +1154,8 @@ img[alt="Icono de acceso"] {
     font-size: 8.5pt;
     text-align: justify;
   }
-  #showScrollable.overlay {
-    display: flex;
-    position: absolute;
-    top: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: auto;
-    height: auto;
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(4px);
-    padding: 6px 14px;
-    border-radius: 999px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  }
-  .overlay-text {
-    display: flex;
-    gap: 4px;
-  }
   .hidden {
     display: none;
-  }
-  .titleBlur {
-    font-size: 11px;
-    color: var(--color-text-primary);
-    margin: 0;
-  }
-  .subtitleBlur {
-    display: none; 
   }
   .divAfrican {
     margin-top: 3px !important;
@@ -1235,5 +1202,36 @@ img[alt="Icono de acceso"] {
 @media (min-width: 769px) and (max-width: 1366px) and (orientation: portrait) {
   :root {
     --nav-btn-font-size: 0.85rem;
+  }
+}
+/* Phone-in-landscape prompt: visibility is pure CSS. JS only remembers dismissal */
+.rotate-prompt {
+  position: fixed;
+  inset: 0;
+  z-index: 2000; /* above nav (1045), picker (1050) and Bootstrap modals (1055) */
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(37, 38, 45, 0.4);
+  backdrop-filter: blur(3px);
+}
+.rotate-prompt-card {
+  max-width: 62%;
+  padding: 14px 22px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+.rotate-prompt-icon { display: block; width: 34px; height: 34px; margin: 0 auto 6px; }
+.rotate-prompt-title { margin: 0; font-size: 13px; font-weight: 600; color: var(--color-text-primary); }
+.rotate-prompt-text { margin: 3px 0 0; font-size: 11px; line-height: 1.4; color: var(--color-text-secondary); }
+.rotate-prompt-dismiss { margin-top: 6px; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  html:not(.rotate-dismissed) .rotate-prompt { display: flex; }
+  .subtitle {
+    display: none;
   }
 }

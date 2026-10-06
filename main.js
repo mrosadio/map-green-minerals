@@ -2,9 +2,10 @@ import { loadAndMergeData, mergeMulti, createBlocGeoJSON, mergeWorldWithPartnerD
 import { drawMap, drawMapWithPartnerColors, drawMultilateralOverview, multilateralColorScale, fitSizeMap, resetMapPan, panMapforPartner } from "./modules/mapUtils.js";
 import { highlightPartnership, populatePartnerships, populateMultilateral, highlightBloc, highlightEu, clearCardContent } from "./modules/selectionUtils.js";
 import { addLegend } from "./modules/legendUtils.js";
-import { svg, blocColors, worldGeojsonPath, jsonFilePath, multiJsonFilePath, noPartnerFilePath } from "./modules/globals.js";
+import { svg, worldGeojsonPath, jsonFilePath, multiJsonFilePath, noPartnerFilePath } from "./modules/globals.js";
 import { showThirdColumn, removeThirdColumn, isPhone } from "./modules/layout.js";
-import { showPickerBilateral, showPickerMultilateral, showPickerAfrica } from "./modules/picker.js";
+import { showPickerBilateral, showPickerMultilateral } from "./modules/picker.js";
+import { initRotatePrompt } from "./modules/rotatePrompt.js";
 const euGeojsonPath = `./db/eu.geojson`;
 
 let partnerMap = {};
@@ -16,8 +17,10 @@ let numberData;
 let colorScale;
 let multiGeoDataRef; // set once loaded — needed by the mode toggle's multilateral overview call
 let currentMode = "bilateral"; // "bilateral" , "multilateral"
+let currentView = { type: "overview" }; // "overview" | "partner" | "bloc" — what redraw() should redraw
 
 function resetToInitialView() {
+  currentView = { type: "overview" };
   document.querySelector("#legend-container").classList.remove("legend-hidden");
   removeThirdColumn();
   filteredGeoJSON = mergeWorldWithPartnerData(mergedBiData, numberData);
@@ -26,28 +29,20 @@ function resetToInitialView() {
   addLegend(svg, colorScale);
 }
 function resetToMultilateralOverview() {
+  currentView = { type: "overview" };
   document.querySelector("#legend-container").classList.remove("legend-hidden");
   removeThirdColumn();
   drawMultilateralOverview(svg, multiGeoDataRef, numberData);
   clearCardContent();
   addLegend(svg, multilateralColorScale, "Number of coalitions", ["1", "3+"]);
 }
-// Resets to whichever mode is currently active — used by the "Overview"
-// button and the overview:selected event, so both respect the toggle
-// state instead of always assuming bilateral.
+// Resets to whichever mode is currently active used by the "Overview"
+// button, so both respect the toggle state instead of always assuming bilateral
 function resetToCurrentOverview() {
   if (currentMode === "multilateral") {
     resetToMultilateralOverview();
   } else {
     resetToInitialView();
-  }
-}
-
-function refresh() {
-  if (isPhone()) {
-    showPickerAfrica();
-  } else {
-    resetToCurrentOverview();
   }
 }
 function setMode(mode) {
@@ -84,11 +79,12 @@ window.addEventListener(
     if (btn.id === "bilateralToggle") showPickerBilateral();
     else showPickerMultilateral();
   },
-  true
+  true,
 );
 // Fetch the world GeoJSON once, up front - previously loadAndMergeData,
 // mergeMulti, and createBlocGeoJSON each fetched it independently, meaning
 // every page load re-downloaded the same large file two or three times.
+initRotatePrompt();
 Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerNarratives.json").then((r) => r.json())])
   .then(([worldGeoJSON, partnerNarrativesData]) => {
     partnerNarratives = partnerNarrativesData;
@@ -140,9 +136,6 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
           resetToCurrentOverview();
           resetMapPan();
         });
-        document.querySelector("#showScrollable").addEventListener("click", () => {
-          refresh();
-        });
         document.addEventListener("overview:selected", () => {
           resetToCurrentOverview();
           resetMapPan();
@@ -152,73 +145,86 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
         });
         document.getElementById("bilateralModeBtn").addEventListener("click", () => setMode("bilateral"));
         document.getElementById("multilateralModeBtn").addEventListener("click", () => setMode("multilateral"));
-        document.querySelectorAll(".country-select").forEach((item) => {
-          item.addEventListener("click", function () {
-            document.querySelector("#legend-container").classList.add("legend-hidden");
-            showThirdColumn();
-            let selectedCountry = this.textContent.trim();
-            let internalSelectedCountry = selectedCountry;
-            if (selectedCountry === "United Kingdom") internalSelectedCountry = "England";
-            if (selectedCountry === "European Union") internalSelectedCountry = "EU";
-            if (selectedCountry === "United States") internalSelectedCountry = "USA";
-            if (item.textContent.includes("EU") || item.textContent.includes("European Union")) {
-              filterEUandPartners(mergedBiData, biData).then((filteredCountryGeoJSON) => {
-                drawMap(mergedBiData, filteredCountryGeoJSON, "EU");
-                highlightEu(svg, filteredCountryGeoJSON);
-                panMapforPartner(selectedCountry);
-                populatePartnerships(biData, selectedCountry, partnerNarratives);
-              });
-            } else {
-              const filteredCountryGeoJSON = filterCountriesByPartner(mergedBiData, internalSelectedCountry);
-              drawMap(mergedBiData, filteredCountryGeoJSON, internalSelectedCountry);
-              highlightPartnership(svg, filteredCountryGeoJSON, item.textContent);
+        function drawPartnerMap(item) {
+          const selectedCountry = item.textContent.trim();
+          let internalSelectedCountry = selectedCountry;
+          if (selectedCountry === "United Kingdom") internalSelectedCountry = "England";
+          if (selectedCountry === "European Union") internalSelectedCountry = "EU";
+          if (selectedCountry === "United States") internalSelectedCountry = "USA";
+
+          if (item.textContent.includes("EU") || item.textContent.includes("European Union")) {
+            return filterEUandPartners(mergedBiData, biData).then((filtered) => {
+              drawMap(mergedBiData, filtered, "EU");
+              highlightEu(svg, filtered);
               panMapforPartner(selectedCountry);
-              populatePartnerships(biData, selectedCountry, partnerNarratives);
-            }
-          });
-        });
-
-        document.querySelectorAll(".bloc-select").forEach((item) => {
-          item.addEventListener("click", function () {
-            document.querySelector("#legend-container").classList.add("legend-hidden");
-            showThirdColumn();
-            const selectedBloc = this.textContent.trim();
-            createBlocGeoJSON(worldGeoJSON, multiJsonFilePath, selectedBloc, euGeojsonPath)
-              .then((filteredGeoJSON) => {
-                const mergedMapData = {
-                  type: "FeatureCollection",
-                  features: [...mergedBiData.features],
-                };
-                const existingNames = new Set(mergedBiData.features.map((f) => f.properties.name));
-                filteredGeoJSON.features.forEach((feature) => {
-                  if (!existingNames.has(feature.properties.name)) {
-                    mergedMapData.features.push(feature);
-                  }
-                });
-                drawMap(mergedMapData, filteredGeoJSON, selectedBloc);
-                highlightBloc(svg, filteredGeoJSON, new Set(numberData.map((d) => d.africanCountry)));
-                populateMultilateral(filteredGeoJSON, selectedBloc, multiJsonData);
-                panMapforPartner();
-              })
-              .catch((error) => console.error("Error processing filtered GeoJSON:", error));
-          });
-        });
-
-        function positionUtilityLinks() {
-          const navEl = document.querySelector("#nav");
-          const utilityLinksEl = document.querySelector(".nav-utility-links");
-          const overlayEl = document.querySelector("#showScrollable");
-          if (!isPhone()) return;
-          if (!navEl) return;
-
-          const navHeight = navEl.getBoundingClientRect().height;
-          if (utilityLinksEl) utilityLinksEl.style.top = `${navHeight + 8}px`;
-          if (overlayEl) overlayEl.style.top = `${navHeight + 12}px`;
+            });
+          }
+          const filtered = filterCountriesByPartner(mergedBiData, internalSelectedCountry);
+          drawMap(mergedBiData, filtered, internalSelectedCountry);
+          highlightPartnership(svg, filtered, item.textContent);
+          panMapforPartner(selectedCountry);
+          return Promise.resolve();
         }
 
-        window.addEventListener("resize", positionUtilityLinks);
-        // call once after initial render, e.g. right after resetToInitialView() in your load sequence
-        positionUtilityLinks();
+        function showPartner(item) {
+          currentView = { type: "partner", item };
+          document.querySelector("#legend-container").classList.add("legend-hidden");
+          showThirdColumn();
+          drawPartnerMap(item);
+          populatePartnerships(biData, item.textContent.trim(), partnerNarratives);
+        }
+
+        function drawBlocMap(item) {
+          const selectedBloc = item.textContent.trim();
+          return createBlocGeoJSON(worldGeoJSON, multiJsonFilePath, selectedBloc, euGeojsonPath).then((filtered) => {
+            const mergedMapData = { type: "FeatureCollection", features: [...mergedBiData.features] };
+            const existingNames = new Set(mergedBiData.features.map((f) => f.properties.name));
+            filtered.features.forEach((feature) => {
+              if (!existingNames.has(feature.properties.name)) mergedMapData.features.push(feature);
+            });
+            drawMap(mergedMapData, filtered, selectedBloc);
+            highlightBloc(svg, filtered, new Set(numberData.map((d) => d.africanCountry)));
+            panMapforPartner();
+            return filtered;
+          });
+        }
+
+        function showBloc(item) {
+          currentView = { type: "bloc", item };
+          document.querySelector("#legend-container").classList.add("legend-hidden");
+          showThirdColumn();
+          drawBlocMap(item)
+            .then((filtered) => populateMultilateral(filtered, item.textContent.trim(), multiJsonData))
+            .catch((error) => console.error("Error processing filtered GeoJSON:", error));
+        }
+
+        document.querySelectorAll(".country-select").forEach((item) => item.addEventListener("click", () => showPartner(item)));
+        document.querySelectorAll(".bloc-select").forEach((item) => item.addEventListener("click", () => showBloc(item)));
+
+        // Redraw the map (not the panel) when the container's size changes:
+        // rotation, window resize, split-screen
+        function redraw() {
+          if (currentView.type === "partner") drawPartnerMap(currentView.item);
+          else if (currentView.type === "bloc") drawBlocMap(currentView.item).catch(console.error);
+          else resetToCurrentOverview();
+        }
+
+        let lastSize = null;
+        let resizeTimer;
+        new ResizeObserver(([entry]) => {
+          const { width, height } = entry.contentRect;
+          if (!lastSize) {
+            lastSize = { width, height };
+            return;
+          } // first callback = initial size
+          // Ignore jitter (e.g. a phone's URL bar collapsing); redraw on real changes only
+          if (Math.abs(width - lastSize.width) <= 2 && Math.abs(height - lastSize.height) <= 120) return;
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            lastSize = { width, height };
+            redraw();
+          }, 150);
+        }).observe(document.querySelector("#map"));
       }
     });
   })
