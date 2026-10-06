@@ -60,6 +60,15 @@ function setMode(mode) {
   resetToCurrentOverview();
   resetMapPan();
 }
+// Publish the nav's real height as --nav-h so overlays can sit below it
+// It changes with title wrapping, fonts and breakpoints, so it can't be hardcoded
+// resizeobserver fires on load and when nav size changes - no manual resize listener
+const navEl = document.querySelector("#nav");
+if (navEl) {
+  new ResizeObserver(([entry]) => {
+    document.documentElement.style.setProperty("--nav-h", `${entry.target.getBoundingClientRect().height}px`);
+  }).observe(navEl);
+}
 // Phone/touch: route Partner/Coalition taps to the wheel picker instead of
 // Bootstrap's dropdown. Bootstrap 5 registers its delegated click handler on
 // `document` in the capture phase, so a listener on the button (bubble phase)
