@@ -762,23 +762,22 @@ p.card-text .access-icon {
 }
 
 .agreements-toggle {
-  appearance: none;
-  -webkit-appearance: none;
-  background: none;
-  border: none;
-  outline: none;
-  box-shadow: none;
-  padding: 6px 0;
-  margin-bottom: 8px;
-  font-family: inherit;
-  font-size: 10pt;
-  font-weight: 500;
-  line-height: 1.4;
-  text-align: left;
-  color: var(--color-text-secondary);
-  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
 }
-
+.agreements-toggle::before {
+  content: "";
+  width: 0.6em;
+  height: 0.6em;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-0.2em) rotate(45deg);
+  transition: transform 0.2s ease;
+}
+.agreements-toggle[aria-expanded="true"]::before {
+  transform: translateY(0.14em) rotate(-135deg);
+}
 .agreements-toggle:hover {
   color: var(--color-accent);
   text-decoration: underline;
@@ -1022,6 +1021,9 @@ img[alt="Icono de acceso"] {
     width: 100vw;
     margin-left: 0px;
     /* height: 300px; */
+  }
+  .card-title.partner-select {
+    font-size: 1.1rem !important; /* base rule is 1.4rem !important, so this needs !important and to come later */
   }
   .card.partnership {
     width: 100%;

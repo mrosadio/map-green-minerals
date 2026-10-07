@@ -288,6 +288,7 @@ export function populatePartnerships(biData, selectedCountry, partnerNarratives 
 
   // toggle to view agreements
   const toggleButton = document.createElement("button");
+  toggleButton.setAttribute("aria-expanded", "false");        // where the button is created
   toggleButton.classList.add("agreements-toggle");
   toggleButton.type = "button";
   const agreementCount = partnerSelected.partnership.length;
@@ -302,7 +303,8 @@ export function populatePartnerships(biData, selectedCountry, partnerNarratives 
   toggleButton.addEventListener("click", () => {
     const isCollapsed = scrollContainer.classList.contains("agreements-collapsed");
     scrollContainer.classList.toggle("agreements-collapsed");
-    toggleButton.textContent = isCollapsed ? `▴ Hide agreements` : `▾ View the ${agreementCount} documented agreement${agreementCount === 1 ? "" : "s"}`;
+    toggleButton.setAttribute("aria-expanded", String(isCollapsed)); // it was collapsed, so it's expanded now
+    toggleButton.textContent = isCollapsed ? `Hide agreements` : `View the ${agreementCount} documented agreement${agreementCount === 1 ? "" : "s"}`;
   });
 
   // Sort partnerships: newest to oldest based on year/date
