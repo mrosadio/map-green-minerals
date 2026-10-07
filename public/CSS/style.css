@@ -1,10 +1,7 @@
-.body {
-  height: 100% !important;
-  min-height: 100vh !important;
-}
 /* The container-fluid Bootstrap injects needs height too */
 .container-fluid.g-0.flex-grow-1.position-relative.container-map {
-  height: 100vh;
+  height: 100vh; /* fallback for browsers without dvh */
+  height: 100dvh; /* matches what is actually visible, even with Safari's toolbars showing */
   display: flex;
   flex-direction: column;
 }
