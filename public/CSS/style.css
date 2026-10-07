@@ -769,6 +769,11 @@ p.card-text .access-icon {
 .agreements-collapsed {
   display: none;
 }
+/* The panel card is a fixed-height flex column, so its children can shrink.
+   Keep the agreements list at its natural height and let the card scroll */
+.agreements-list {
+  flex: 0 0 auto;
+}
 .agreement-separator {
   margin-top: 14px;
   padding-top: 14px;

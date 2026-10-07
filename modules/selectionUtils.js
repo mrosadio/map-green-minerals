@@ -295,9 +295,7 @@ export function populatePartnerships(biData, selectedCountry, partnerNarratives 
   infoPartnerContainer.appendChild(toggleButton);
 
   const scrollContainer = document.createElement("div");
-  scrollContainer.classList.add("custom-scroll", "agreements-collapsed");
-  scrollContainer.style.maxHeight = "100%";
-  scrollContainer.style.overflowY = "auto";
+  scrollContainer.classList.add("custom-scroll", "agreements-collapsed", "agreements-list");
   scrollContainer.style.marginTop = "0px";
   infoPartnerContainer.appendChild(scrollContainer);
 
