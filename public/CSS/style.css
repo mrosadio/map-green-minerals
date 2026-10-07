@@ -655,10 +655,31 @@ h2.title {
 .card.partnership {
   border: none;
   border-radius: 0;
-  padding: 20px var(--content-gutter) 0 var(--content-gutter);
+  padding: 0 var(--content-gutter);
   height: 100%;
   overflow-y: auto;
   background: transparent;
+}
+/* Panel titles carry their own top spacing, so the pinned title can sit flush at the top */
+.card.partnership > .partner-select {
+  padding-top: 20px;
+}
+/* Pinned title (bilateral panel) */
+.card.partnership > .partner-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--color-bg-subtle); /* opaque, so scrolling text can't show through */
+}
+/* Cover the 8px gap under the title (plus its 2px border) */
+.card.partnership > .partner-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 2px);
+  height: 8px;
+  background: var(--color-bg-subtle);
 }
 
 /* -- Scrollbar thin and minimal -- */
@@ -768,6 +789,11 @@ p.card-text .access-icon {
 }
 .agreements-collapsed {
   display: none;
+}
+/* The panel card is a fixed-height flex column, so its children can shrink.
+   Keep the agreements list at its natural height and let the card scroll */
+.agreements-list {
+  flex: 0 0 auto;
 }
 .agreement-separator {
   margin-top: 14px;
@@ -1002,6 +1028,9 @@ img[alt="Icono de acceso"] {
     border-radius: 5px !important;
     border: 0px solid lightgray;
   }
+  .card.partnership > .partner-select {
+    padding-top: 0; /* the phone card never had top padding */
+  }
   .right.bilateral {
     margin-left: 0px;
     width: 100vw;
@@ -1224,13 +1253,35 @@ img[alt="Icono de acceso"] {
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
-.rotate-prompt-icon { display: block; width: 34px; height: 34px; margin: 0 auto 6px; }
-.rotate-prompt-title { margin: 0; font-size: 13px; font-weight: 600; color: var(--color-text-primary); }
-.rotate-prompt-text { margin: 3px 0 0; font-size: 11px; line-height: 1.4; color: var(--color-text-secondary); }
-.rotate-prompt-dismiss { margin-top: 6px; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
+.rotate-prompt-icon {
+  display: block;
+  width: 34px;
+  height: 34px;
+  margin: 0 auto 6px;
+}
+.rotate-prompt-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.rotate-prompt-text {
+  margin: 3px 0 0;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+}
+.rotate-prompt-dismiss {
+  margin-top: 6px;
+  font-size: 11px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 
 @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
-  html:not(.rotate-dismissed) .rotate-prompt { display: flex; }
+  html:not(.rotate-dismissed) .rotate-prompt {
+    display: flex;
+  }
   .subtitle {
     display: none;
   }
