@@ -272,6 +272,7 @@
   --color-map-default: #e8e4df;
   --content-gutter: 1rem;
   --nav-btn-font-size: 0.95rem; /* pick the value that looks right to you */
+   --scrim-blur: 2px; 
 }
 .content-gutter-left {
   margin-left: var(--content-gutter);
@@ -313,7 +314,8 @@ body {
   z-index: 1045;
   padding: 12px var(--content-gutter);
   background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(var(--scrim-blur));
+  backdrop-filter: blur(var(--scrim-blur));
   border-bottom: none;
 }
 #nav .btn {
@@ -597,7 +599,8 @@ h2.title {
   top: auto;
   margin-left: calc(var(--content-gutter) - 14px);
   background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(var(--scrim-blur));
+  backdrop-filter: blur(var(--scrim-blur));
   padding: 10px 14px;
   border-radius: 4px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
@@ -628,7 +631,8 @@ h2.title {
 .right {
   width: 340px;
   background: transparent;
-  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(var(--scrim-blur));
+  backdrop-filter: blur(var(--scrim-blur));
   /* border-left: 0.5px solid var(--color-border); */
   z-index: 10;
   overflow: hidden;
@@ -874,7 +878,8 @@ img[alt="Icono de acceso"] {
 .tooltip2 {
   position: absolute;
   background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(var(--scrim-blur));
+  backdrop-filter: blur(var(--scrim-blur));
   /* border: 0.5px solid var(--color-border);
   border-radius: 4px; */
   padding: 10px 14px;
@@ -964,7 +969,8 @@ img[alt="Icono de acceso"] {
     bottom: auto;
     right: auto;
     background: none;
-    backdrop-filter: none;
+  -webkit-backdrop-filter: blur(var(--scrim-blur));
+  backdrop-filter: blur(var(--scrim-blur));
     padding: 0;
     border-radius: 0;
     margin-top: 10px;
@@ -1239,14 +1245,16 @@ img[alt="Icono de acceso"] {
   align-items: center;
   justify-content: center;
   background: rgba(37, 38, 45, 0.4);
-  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(var(--scrim-blur));
+  backdrop-filter: blur(var(--scrim-blur));
 }
 .rotate-prompt-card {
   max-width: 62%;
   padding: 14px 22px;
   text-align: center;
   background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(var(--scrim-blur));
+  backdrop-filter: blur(var(--scrim-blur));
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
