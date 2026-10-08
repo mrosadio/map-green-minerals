@@ -762,9 +762,26 @@ p.card-text .access-icon {
 }
 
 .agreements-toggle {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  padding: 6px 0;
+  margin-bottom: 8px;
+  font-family: inherit;
+  font-size: 10pt;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: left;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  /* layout for the chevron */
   display: inline-flex;
   align-items: center;
   gap: 0.6em;
+
 }
 .agreements-toggle::before {
   content: "";

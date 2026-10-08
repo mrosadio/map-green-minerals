@@ -292,7 +292,7 @@ export function populatePartnerships(biData, selectedCountry, partnerNarratives 
   toggleButton.classList.add("agreements-toggle");
   toggleButton.type = "button";
   const agreementCount = partnerSelected.partnership.length;
-  toggleButton.textContent = `▾ View the ${agreementCount} documented agreement${agreementCount === 1 ? "" : "s"}`;
+  toggleButton.textContent = `View the ${agreementCount} documented agreement${agreementCount === 1 ? "" : "s"}`;
   infoPartnerContainer.appendChild(toggleButton);
 
   const scrollContainer = document.createElement("div");
