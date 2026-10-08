@@ -280,6 +280,7 @@
 html[data-mode="multilateral"] {
   --mode-accent: #0f6e56; /* the multilateral map's teal */
 }
+
 .content-gutter-left {
   margin-left: var(--content-gutter);
 }
@@ -335,7 +336,7 @@ h2.title {
   letter-spacing: -0.02em;
 }
 .explore-cluster {
-  align-items: center;
+  align-items: stretch;
   margin-left: 16px;
 }
 
@@ -373,8 +374,8 @@ h2.title {
 /* -- Buttons -- */
 .btn-danger,
 .btn-danger.dropdown-toggle {
-  background-color: var(--color-accent) !important;
-  border-color: var(--color-accent) !important;
+  background-color: var(--mode-accent) !important;
+  border-color: var(--mode-accent) !important;
   color: #fff !important;
 }
 
@@ -415,19 +416,25 @@ h2.title {
 .mode-toggle .mode-toggle-btn {
   background: transparent;
   color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
 }
 .mode-toggle .mode-toggle-btn.active {
   background: var(--mode-tint);
   border-color: var(--mode-accent);
   color: var(--mode-accent-strong);
   font-weight: 600;
+  position: relative;
+  z-index: 1;
+}
+.mode-toggle .mode-toggle-btn + .mode-toggle-btn {
+  margin-left: -1px;
 }
 .mode-toggle .mode-toggle-btn:hover:not(.active) {
   background: var(--mode-tint);
 }
 .mode-toggle-btn:first-child {
   border-radius: 4px 0 0 4px;
-  border-right: none;
+  /* border-right: none; */
 }
 .mode-toggle-btn:last-child {
   border-radius: 0 4px 4px 0;
@@ -932,15 +939,6 @@ img[alt="Icono de acceso"] {
   border-top: 0.5px solid var(--color-border);
   background: var(--color-bg);
 }
-/* Primary action (Partner / Coalition): the one filled element */
-.button-dropdown {
-  --bs-btn-bg: var(--mode-accent);
-  --bs-btn-border-color: var(--mode-accent);
-  --bs-btn-hover-bg: color-mix(in srgb, var(--mode-accent) 85%, black);
-  --bs-btn-hover-border-color: color-mix(in srgb, var(--mode-accent) 85%, black);
-  --bs-btn-active-bg: color-mix(in srgb, var(--mode-accent) 78%, black);
-  --bs-btn-active-border-color: color-mix(in srgb, var(--mode-accent) 78%, black);
-}
 /* Touch devices: comfortable tap targets */
 @media (pointer: coarse) {
   .mode-toggle-btn,
@@ -984,7 +982,9 @@ img[alt="Icono de acceso"] {
     display: none; /* hover-based copy, meaningless on touch */
   }
   .explore-label {
-    display: none; /* the toggle group keeps aria-label="Explore by mode" */
+    display: none;
+    align-self: center;
+
   }
   .explore-cluster {
     margin-left: 0;
@@ -993,6 +993,7 @@ img[alt="Icono de acceso"] {
     flex-direction: row;
     align-items: stretch; /* both controls get the same height */
     gap: 6px;
+    max-width: 440px;
   }
   .mode-toggle {
     flex: 1;

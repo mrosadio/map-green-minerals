@@ -253,7 +253,7 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
   // is a different concern — it nudges the view to clear the detail
   // panel, and still runs regardless of how tightly we've zoomed here.
   const isSheetLayout = isStackedLayout();
-  const ZOOM_PADDING = isSheetLayout ? 12 : 40;
+  const ZOOM_PADDING = isSheetLayout ? 12 : 28;
   const navEl = document.querySelector("#nav");
   const navHeight = navEl ? navEl.getBoundingClientRect().height : 0;
   const topPadding = navHeight + ZOOM_PADDING;

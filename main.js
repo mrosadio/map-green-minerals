@@ -46,6 +46,7 @@ function resetToCurrentOverview() {
   }
 }
 function setMode(mode) {
+  document.documentElement.dataset.mode = mode;
   currentMode = mode;
   const isBilateral = mode === "bilateral";
   document.getElementById("bilateralModeBtn").classList.toggle("active", isBilateral);
