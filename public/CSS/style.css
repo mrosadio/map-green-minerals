@@ -1292,4 +1292,27 @@ img[alt="Icono de acceso"] {
   .subtitle {
     display: none;
   }
+    #nav {
+    padding-block: 8px;
+  }
+  .nav-main-group {
+    flex-wrap: wrap;
+  }
+  .nav-main-group > div:first-child {
+    flex: 0 0 100%; /* the title gets its own row */
+  }
+  .nav-main-group .title {
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
+  .nav-divider {
+    display: none;
+  }
+  .explore-cluster {
+    margin-left: 0;
+    margin-top: 6px;
+  }
+  .nav-utility-links {
+    align-self: flex-start; /* About and Overview line up with the title row */
+  }
 }
