@@ -47,7 +47,8 @@ export const multilateralColorScale = d3.scaleQuantize().domain([0, 3]).range([
   "#0F6E56", // 3+
 ]);
 const getLabelScale = (W) => (isStackedLayout() ? Math.min(Math.max(W / 600, 1), 1.8) : 1);
-
+const canHover = () => window.matchMedia("(hover: hover)").matches;
+const isAfricaFocus = () => isStackedLayout() && !canHover();
 // -- Public: overview map ---------------------------------------------------------
 export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
   const mapEl = document.querySelector("#map");
@@ -296,9 +297,6 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
     .attr("stroke-width", 0.5)
     .on("mouseover", function (event, d) {
       if (!window.matchMedia("(hover: hover)").matches) return;
-      // const countryName = d.properties.name;
-      // const countryData = partnerLookup.get(countryName);
-      // const count = countryData?.partnersNo || 0;
       const hasData = filteredCountryGeoJSON.features.some((f) => f.properties.name === d.properties.name);
       if (!hasData) return; // no tooltip for countries with no data
       tooltip.html(`<h3 class="fw-bold mb-0" style="font-size:12pt">${d.properties.name}</h3>`).style("display", window.innerWidth > 768 ? "block" : "none");
@@ -308,12 +306,30 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
     })
     .on("mouseout", function () {
       if (!window.matchMedia("(hover: hover)").matches) return;
-
-      // const countryName = d.properties.name;
-      // const countryData = partnerLookup.get(countryName);
-      // const count = countryData?.partnersNo || 0;
       tooltip.style("display", "none");
     });
+  // No hover on touch devices: print the names of the highlighted countries
+  if (!canHover()) {
+    const labelScale = getLabelScale(W);
+    const MIN_AREA = 700 * labelScale ** 2; // px²: countries too small for a label are skipped
+    const labelled = filteredCountryGeoJSON.features.filter((f) => !(partner === "EU" && euMemberNames.has(f.properties.name)) && path.area(f) > MIN_AREA);
+    g.selectAll("text.country-label")
+      .data(labelled)
+      .enter()
+      .append("text")
+      .attr("class", "country-label")
+      .attr("text-anchor", "middle")
+      .attr("font-size", `${5 * labelScale}pt`)
+      .attr("fill", "black")
+      .attr("stroke", "white") // white halo: readable on any fill, including the dark teal
+      .attr("stroke-width", 2.5)
+      .attr("stroke-linejoin", "round")
+      .attr("paint-order", "stroke")
+      .attr("pointer-events", "none")
+      .each(function (d) {
+        renderLabel(d3.select(this), d, path, labelScale);
+      });
+  }
 }
 // -- Public: multilateral map -----------------------------------------------
 export function drawMultilateralOverview(svg, multiGeoData, numberData) {
@@ -557,10 +573,24 @@ function computeShiftedViewBox() {
 // instead of the whole world, so limited screen space isn't spent on
 // Russia/Canada/South America just to reach the actual content.
 function getOverviewFitTarget(geoData, numberData) {
-  if (!isStackedLayout) return geoData;
+  if (!isAfricaFocus()) return geoData;
   const africanCountries = new Set(numberData.map((d) => d.africanCountry));
-  const africanFeatures = geoData.features.filter((f) => africanCountries.has(f.properties.name));
-  return { type: "FeatureCollection", features: africanFeatures };
+  const features = geoData.features.filter((f) => africanCountries.has(f.properties.name));
+  // Countries without data (e.g. Tunisia) arent in numberData: add Africa's extreme points so the fit covers the whole continent
+  features.push({
+    type: "Feature",
+    properties: {},
+    geometry: {
+      type: "MultiPoint",
+      coordinates: [
+        [9.8, 37.4],
+        [20, -34.9],
+        [-17.6, 14.7],
+        [51.4, 10.4],
+      ],
+    },
+  });
+  return { type: "FeatureCollection", features };
 }
 
 // In stacked layouts the nav floats over the map, so fit Africa into the

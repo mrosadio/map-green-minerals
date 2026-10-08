@@ -733,7 +733,7 @@ h2.title {
   font-weight: 700;
   color: var(--color-text-primary);
   letter-spacing: -0.02em;
-  border-bottom: 2px solid var(--color-accent) !important;
+  border-bottom: 2px solid var(--mode-accent) !important;
   padding-bottom: 10px !important;
   margin-bottom: 8px !important;
   margin-top: 0 !important;

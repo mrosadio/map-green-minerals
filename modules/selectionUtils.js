@@ -396,15 +396,15 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
   // Crear el contenedor para el ícono y el enlace
   const iconLinkContainer = document.createElement("div");
   iconLinkContainer.style.display = "flex";
-  iconLinkContainer.style.alignItems = "center"; // Alinear verticalmente el icono y el enlace
-  iconLinkContainer.style.justifyContent = "flex-start"; // Alinear a la izquierda
+  iconLinkContainer.style.alignItems = "center";
+  iconLinkContainer.style.justifyContent = "flex-start"; 
 
-  // Crear el ícono
+
   const icon = document.createElement("img");
-  icon.src = `${themeUrl}/img/icons/web.svg`; // Ruta del ícono PNG
-  icon.alt = "Icono de acceso"; // Texto alternativo
+  icon.src = `${themeUrl}/img/icons/web.svg`; 
+  icon.alt = "Icono de acceso"; 
   icon.style.height = "20px";
-  iconLinkContainer.appendChild(icon); // Añadir el ícono al contenedor
+  iconLinkContainer.appendChild(icon);
 
   // Crear el enlace de "Source"
   const blocSource = document.createElement("a");
