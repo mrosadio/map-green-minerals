@@ -456,6 +456,7 @@ h2.title {
   font-weight: 600;
   color: var(--color-text-primary);
   margin-bottom: 10px;
+  align-self: flex-start;
 }
 
 .narrative-rationale {
@@ -502,8 +503,9 @@ h2.title {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   padding: 4px 0;
   font-size: 0.875rem;
-  max-height: 420px;
+  max-height: calc(100dvh - var(--nav-h, 100px) - 16px);
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .dropdown-item {
@@ -686,6 +688,10 @@ h2.title {
   height: 100%;
   overflow-y: auto;
   background: transparent;
+}
+.card.partnership p {
+  text-align: left;
+  hyphens: auto; /* uses lang="en" on <html> */
 }
 /* Panel titles carry their own top spacing, so the pinned title can sit flush at the top */
 .card.partnership > .partner-select {
