@@ -271,8 +271,14 @@
   --color-text-muted: #b4b2a9;
   --color-map-default: #e8e4df;
   --content-gutter: 1rem;
-  --nav-btn-font-size: 0.95rem; /* pick the value that looks right to you */
-   --scrim-blur: 2px; 
+  --nav-btn-font-size: 0.95rem;
+  --scrim-blur: 2px;
+  --mode-accent: var(--color-accent);
+  --mode-accent-strong: color-mix(in srgb, var(--mode-accent) 82%, black); /* darker, for text on the tint */
+  --mode-tint: color-mix(in srgb, var(--mode-accent) 12%, transparent);
+}
+html[data-mode="multilateral"] {
+  --mode-accent: #0f6e56; /* the multilateral map's teal */
 }
 .content-gutter-left {
   margin-left: var(--content-gutter);
@@ -356,7 +362,7 @@ h2.title {
 }
 
 .nav-link-plain:hover {
-  color: var(--color-accent);
+  color: var(--mode-accent);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -404,6 +410,20 @@ h2.title {
   font-weight: 500;
   color: var(--color-text-secondary);
   cursor: pointer;
+}
+/* Mode toggle: quiet segmented control tinted in the mode's color */
+.mode-toggle .mode-toggle-btn {
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+.mode-toggle .mode-toggle-btn.active {
+  background: var(--mode-tint);
+  border-color: var(--mode-accent);
+  color: var(--mode-accent-strong);
+  font-weight: 600;
+}
+.mode-toggle .mode-toggle-btn:hover:not(.active) {
+  background: var(--mode-tint);
 }
 .mode-toggle-btn:first-child {
   border-radius: 4px 0 0 4px;
@@ -596,7 +616,7 @@ h2.title {
   z-index: 1040;
   bottom: 1em;
   top: auto;
-  margin-left: calc(var(--content-gutter) - 14px);
+  margin-left: var(--content-gutter);
   background: rgba(255, 255, 255, 0.72);
   -webkit-backdrop-filter: blur(var(--scrim-blur));
   backdrop-filter: blur(var(--scrim-blur));
@@ -780,7 +800,6 @@ p.card-text .access-icon {
   display: inline-flex;
   align-items: center;
   gap: 0.6em;
-
 }
 .agreements-toggle::before {
   content: "";
@@ -913,10 +932,24 @@ img[alt="Icono de acceso"] {
   border-top: 0.5px solid var(--color-border);
   background: var(--color-bg);
 }
+/* Primary action (Partner / Coalition): the one filled element */
+.button-dropdown {
+  --bs-btn-bg: var(--mode-accent);
+  --bs-btn-border-color: var(--mode-accent);
+  --bs-btn-hover-bg: color-mix(in srgb, var(--mode-accent) 85%, black);
+  --bs-btn-hover-border-color: color-mix(in srgb, var(--mode-accent) 85%, black);
+  --bs-btn-active-bg: color-mix(in srgb, var(--mode-accent) 78%, black);
+  --bs-btn-active-border-color: color-mix(in srgb, var(--mode-accent) 78%, black);
+}
+/* Touch devices: comfortable tap targets */
+@media (pointer: coarse) {
+  .mode-toggle-btn,
+  .button-dropdown,
+  .nav-link-plain {
+    min-height: 40px;
+  }
+}
 
-/* .button-dropdown {
-  line-height: 1.1;
-} */
 /* -- Mobile -- */
 @media (max-width: 768px) {
   #nav {
@@ -984,8 +1017,8 @@ img[alt="Icono de acceso"] {
     bottom: auto;
     right: auto;
     background: none;
-  -webkit-backdrop-filter: blur(var(--scrim-blur));
-  backdrop-filter: blur(var(--scrim-blur));
+    -webkit-backdrop-filter: blur(var(--scrim-blur));
+    backdrop-filter: blur(var(--scrim-blur));
     padding: 0;
     border-radius: 0;
     margin-top: 10px;
@@ -1220,6 +1253,9 @@ img[alt="Icono de acceso"] {
     padding-left: 15px;
     padding-top: 0.5rem;
   }
+  #legend-container {
+    margin-left: 16px; /* same as the nav's horizontal padding on phone */
+  }
 }
 
 /* Stacked layouts (phone + portrait tablet): detail panel is a bottom sheet */
@@ -1308,7 +1344,7 @@ img[alt="Icono de acceso"] {
   .subtitle {
     display: none;
   }
-    #nav {
+  #nav {
     padding-block: 8px;
   }
   .nav-main-group {
@@ -1330,5 +1366,24 @@ img[alt="Icono de acceso"] {
   }
   .nav-utility-links {
     align-self: flex-start; /* About and Overview line up with the title row */
+  }
+  .explore-label { display: none; }
+  .mode-toggle,
+  .mode-toggle-btn { 
+    flex: 0 0 auto; 
+    width: auto; 
+  } /* the toggle keeps its natural width */
+}
+/* Phones (portrait, and landscape after "Continue anyway"): About stays easy to find */
+@media (max-width: 768px), (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .nav-utility-links .nav-link-plain {
+    font-size: 0.95rem;
+    padding: 8px 12px;
+    color: var(--color-text-secondary);
+  }
+  .nav-utility-links .nav-link-plain:first-child { /* About */
+    padding-left: 0; /* text lines up with the title edge */
+    font-weight: 600;
+    color: var(--color-text-primary);
   }
 }

@@ -252,19 +252,19 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
   // panMapforPartner()'s viewBox shift (called separately, after this)
   // is a different concern — it nudges the view to clear the detail
   // panel, and still runs regardless of how tightly we've zoomed here.
-  const ZOOM_PADDING = 40;
+  const isSheetLayout = isStackedLayout();
+  const ZOOM_PADDING = isSheetLayout ? 12 : 40;
   const navEl = document.querySelector("#nav");
   const navHeight = navEl ? navEl.getBoundingClientRect().height : 0;
   const topPadding = navHeight + ZOOM_PADDING;
 
   const detailPanelEl = document.querySelector(".right");
   const isPanelVisible = detailPanelEl && !detailPanelEl.classList.contains("d-none");
-  const isSheetLayout = isStackedLayout();
 
   // On phone, the panel is a bottom sheet (eats into height); on desktop,
-  // it's a right-side panel (eats into width). Same underlying goal —
-  // don't let the zoomed content render behind either overlay — but which
-  // edge needs the padding flips at this breakpoint.
+  // it's a right-side panel (eats into width). Same goal —
+  // the zoomed content shouldnt render behind either overlay but which
+  // edge needs the padding flips at this breakpoint
   let rightPadding = ZOOM_PADDING;
   let bottomPadding = ZOOM_PADDING;
   if (isPanelVisible) {
