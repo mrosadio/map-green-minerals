@@ -508,8 +508,7 @@ h2.title {
 }
 
 .modal-header {
-  padding: 24px 28px 8px 28px;
-  /* border-bottom: none; */
+  padding: 0px 0px 0px 28px;
 }
 
 /* Hide the redundant "About" header label */
