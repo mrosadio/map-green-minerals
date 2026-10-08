@@ -176,7 +176,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
             .selectAll("path")
             .filter((p) => p?.properties?.name === "Austria")
             .attr("fill");
-          console.log("Austria fill 500ms after mouseout:", austriaFill);
+          //console.log("Austria fill 500ms after mouseout:", austriaFill);
         }, 500);
       });
       // Restore partner countries — use their original fill, not DEFAULT_FILL
