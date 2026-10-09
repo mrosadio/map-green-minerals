@@ -175,6 +175,11 @@
   font-size: var(--text-md);
   display: inline-block;
 }
+.label-leader {
+  stroke: var(--color-text-muted);
+  stroke-width: 0.5;
+  pointer-events: none;
+}
 .country-label {
   fill: var(--color-text-primary);
   stroke: var(--color-bg); /* halo: readable on any fill */
@@ -1147,7 +1152,7 @@ img[alt="Icono de acceso"] {
 }
 
 /* -- Mobile -- */
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
   #nav {
     flex-direction: column;
     align-items: flex-start;
@@ -1458,7 +1463,7 @@ img[alt="Icono de acceso"] {
 }
 
 /* Stacked layouts (phone + portrait tablet): detail panel is a bottom sheet */
-@media (max-width: 768px), (min-width: 769px) and (max-width: 1366px) and (orientation: portrait) {
+@media (max-width: 767.98px), (min-width: 768px) and (max-width: 1366px) and (orientation: portrait) {
   .right {
     width: 100%;
     left: 0;
@@ -1484,7 +1489,7 @@ img[alt="Icono de acceso"] {
     background: transparent;
   }
 }
-@media (min-width: 769px) and (max-width: 1366px) and (orientation: portrait) {
+@media (min-width: 768px) and (max-width: 1366px) and (orientation: portrait) {
   :root {
     --nav-btn-font-size: var(--text-sm);
   }
@@ -1574,7 +1579,7 @@ img[alt="Icono de acceso"] {
   } /* the toggle keeps its natural width */
 }
 /* Phones (portrait, and landscape after "Continue anyway"): About stays easy to find */
-@media (max-width: 768px), (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+@media (max-width: 767.98px), (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
   .nav-utility-links .nav-link-plain {
     font-size: var(--text-md);
     padding: var(--space-sm) var(--space-md);

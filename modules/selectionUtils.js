@@ -420,7 +420,6 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
 
   // Variable global para rastrear el tooltip activo
   let activeTooltip = null;
-  const isMobile = window.innerWidth <= 768; // Si el ancho de la pantalla es menor o igual a 768px, asumimos que es móvil
 
   // Check if EU exists in the original data and filter display accordingly
   const blocData = multiJsonData.find((item) => item.blocName === nombre);
