@@ -1422,7 +1422,7 @@ img[alt="Icono de acceso"] {
     height: 36px;
     overflow: hidden;
     white-space: nowrap;
-    color: var(--color-text-faint);
+    color: var(--color-text-muted);
     cursor: pointer;
     font-family: var(--font-sans);
   }
@@ -1430,7 +1430,8 @@ img[alt="Icono de acceso"] {
     opacity: 1;
   }
   .selected-item {
-    color: var(--color-text-secondary);
+    color: var(--color-text-primary);
+    font-weight: var(--fw-semibold); /* idle and selected were told apart by colour alone; weight makes it clear */
     text-decoration: underline;
   }
   .instruccions {
