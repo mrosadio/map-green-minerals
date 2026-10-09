@@ -1342,6 +1342,8 @@ img[alt="Icono de acceso"] {
     font-size: var(--text-md);
     color: var(--mode-accent);
     font-family: var(--font-sans);
+    background: none;
+    border: 0;
   }
   .confirm {
     right: 0;

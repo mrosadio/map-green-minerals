@@ -136,19 +136,18 @@
       </div>
     </nav>
     <div class="container-fluid position-relative g-0 flex-grow-1 container-map">
-      <div class="picker" id="picker" style="display: none">
+      <div class="picker" id="picker" role="dialog" aria-modal="true" style="display: none">
         <div class="picker-panel">
           <div class="picker-choose">
-            <span class="cancel" onclick="cancel()">Close</span>
-            <span class="confirm" onclick="confirmPicker()">Select</span>
-            <h1 class="picker-title"></h1>
+            <button type="button" class="cancel">Close</button>
+            <button type="button" class="confirm">Select</button>
           </div>
           <div class="picker-content">
             <div class="wheel-wrapper">
               <div class="wheel-scrollbar"></div>
               <!-- Scrollbar simulado -->
               <div class="wheel" id="wheelWrapper">
-                <ul class="wheel-scroll" id="wheelList"></ul>
+                <ul class="wheel-scroll" id="wheelList" role="listbox" tabindex="0"></ul>
               </div>
             </div>
           </div>
