@@ -1,5 +1,6 @@
 import { svg, themeUrl } from "./globals.js";
 import { euMemberNames } from "./mapUtils.js";
+import { getMapColors } from "./colors.js";
 
 const tooltipMap = {
   "Economic linkages and diversification": "Provisions broadly relating to the integration of value chains, fostering economic diversification and creating business models that strengthen trade, governance and infrastructure development.",
@@ -8,12 +9,13 @@ const tooltipMap = {
   "Knowledge and capacity building": "Initiatives such as the establishment of data banks, the sharing of expertise, joint research initiatives, specialized training and the exchange of technical knowledge to enhance skills, foster innovation and support sustainable development in the sector.",
   "Extraction and exploration partnerships": "Joint efforts in mineral exploration, secure supply chain development, technical expertise exchange and geological infrastructure creation through public-private partnerships to promote sustainable mining and investment.",
 };
+// Colours are the --cat-* tokens in style.css; inline styles accept var()
 const colorMap = {
-  "Economic linkages and diversification": "#75D1D1",
-  "Capital mobilization": "#F4A27D",
-  "Sustainable governance": "#E3F5F5",
-  "Knowledge and capacity building": "#FFDC94",
-  "Extraction and exploration partnerships": "#EF9CAF",
+  "Economic linkages and diversification": "var(--cat-teal)",
+  "Capital mobilization": "var(--cat-peach)",
+  "Sustainable governance": "var(--cat-mist)",
+  "Knowledge and capacity building": "var(--cat-sand)",
+  "Extraction and exploration partnerships": "var(--cat-rose)",
 };
 const MECHANISM_LABELS = {
   "direct-cooperation": "Direct state cooperation",
@@ -22,10 +24,10 @@ const MECHANISM_LABELS = {
   "security-linked": "Security-linked",
 };
 const MECHANISM_COLORS = {
-  "direct-cooperation": "#F0C97A",
-  "private-investment": "#75D1D1",
-  "infrastructure-for-resources": "#F4A27D",
-  "security-linked": "#EF9CAF",
+  "direct-cooperation": "var(--cat-sand)",
+  "private-investment": "var(--cat-teal)",
+  "infrastructure-for-resources": "var(--cat-peach)",
+  "security-linked": "var(--cat-rose)",
 };
 
 function createAreaTag(area, colorMap, tooltipMap) {
@@ -33,22 +35,22 @@ function createAreaTag(area, colorMap, tooltipMap) {
   tag.classList.add("tag");
   tag.textContent = area;
   tag.style.whiteSpace = "nowrap";
-  tag.style.backgroundColor = colorMap[area] || "#000000";
-  tag.style.color = "black";
+  tag.style.backgroundColor = colorMap[area] || "var(--color-text-primary)";
+  tag.style.color = "var(--color-text-primary)";
   tag.style.padding = "2px 10px";
   tag.style.borderRadius = "var(--radius-sm)";
   tag.style.fontSize = "9pt";
 
   tag.addEventListener("mouseover", function () {
     tag.style.boxSizing = "border-box";
-    tag.style.border = "1px solid black";
+    tag.style.border = "1px solid var(--color-text-primary)";
   });
   tag.addEventListener("mouseleave", function () {
     tag.style.border = "none";
   });
   tag.addEventListener("touchstart", function () {
     tag.style.boxSizing = "border-box";
-    tag.style.border = "1px solid black";
+    tag.style.border = "1px solid var(--color-text-primary)";
   });
   tag.addEventListener("mouseenter", function () {
     const tooltip = document.createElement("span");
@@ -176,7 +178,7 @@ function renderNarrativePanel(container, narrativeEntry, partnershipList) {
   if (narrativeEntry) {
     const badge = document.createElement("span");
     badge.classList.add("mechanism-badge");
-    badge.style.backgroundColor = MECHANISM_COLORS[narrativeEntry.mechanism] || "#E8E4DF";
+    badge.style.backgroundColor = MECHANISM_COLORS[narrativeEntry.mechanism] || "var(--color-border)";
     badge.textContent = MECHANISM_LABELS[narrativeEntry.mechanism] || narrativeEntry.mechanism;
     container.appendChild(badge);
 
@@ -214,7 +216,8 @@ function renderNarrativePanel(container, narrativeEntry, partnershipList) {
 }
 
 export function highlightPartnership(svg, filteredGeoJSON, itemSelected) {
-  svg.selectAll("path").interrupt("highlight").transition("highlight").duration(200).attr("fill", "#E8E4DF").attr("stroke", "white").attr("stroke-width", 0.5);
+  const C = getMapColors();
+  svg.selectAll("path").interrupt("highlight").transition("highlight").duration(200).attr("fill", C.mapDefault).attr("stroke", C.mapStroke).attr("stroke-width", 0.5);
   const partnerCountries = new Set(filteredGeoJSON.features.map((f) => f.properties.name));
   // Step 2: then apply new highlights
   svg
@@ -223,11 +226,12 @@ export function highlightPartnership(svg, filteredGeoJSON, itemSelected) {
     .interrupt("highlight")
     .transition("highlight")
     .duration(400)
-    .attr("fill", (d) => (d.properties.name === itemSelected ? "#D4891A" : "#F0C97A"));
+    .attr("fill", (d) => (d.properties.name === itemSelected ? C.partnerSelected : C.partnerHighlight));
 }
 
 export function highlightEu(svg, filteredGeoJSON) {
-  svg.selectAll("path").interrupt("highlight").transition("highlight").duration(200).attr("fill", "#E8E4DF").attr("stroke", "white").attr("stroke-width", 0.5);
+  const C = getMapColors();
+  svg.selectAll("path").interrupt("highlight").transition("highlight").duration(200).attr("fill", C.mapDefault).attr("stroke", C.mapStroke).attr("stroke-width", 0.5);
 
   const euCountries = new Set(euMemberNames); // eu member states
   const africanPartners = new Set(filteredGeoJSON.features.map((f) => f.properties.name).filter((name) => !euCountries.has(name)));
@@ -238,7 +242,7 @@ export function highlightEu(svg, filteredGeoJSON) {
     .interrupt("highlight")
     .transition("highlight")
     .duration(400)
-    .attr("fill", "#D4891A");
+    .attr("fill", C.partnerSelected);
 
   svg
     .selectAll("path")
@@ -246,7 +250,7 @@ export function highlightEu(svg, filteredGeoJSON) {
     .interrupt("highlight")
     .transition("highlight")
     .duration(400)
-    .attr("fill", "#F0C97A");
+    .attr("fill", C.partnerHighlight);
 }
 
 export function populatePartnerships(biData, selectedCountry, partnerNarratives = []) {
@@ -370,7 +374,7 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
 
   // Crear y agregar el título principal
   const multiPartner = document.createElement("h2");
-  multiPartner.style.borderBottom = "2pt solid #ffb300"; // Línea roja de 2px
+  multiPartner.style.borderBottom = "2pt solid var(--mode-accent)";
   multiPartner.style.paddingBottom = "10px"; // Espacio entre el texto y la línea
   multiPartner.style.fontSize = "22pt";
   multiPartner.style.fontWeight = "bold";
@@ -415,7 +419,7 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
   blocSource.style.textDecoration = "none"; // Eliminar el subrayado
   blocSource.style.fontSize = "11pt"; // Tamaño de fuente
   blocSource.style.marginLeft = "4px"; // Tamaño de fuente
-  blocSource.style.color = "#0071BC"; // Cambiar color
+  blocSource.style.color = "var(--color-link)";
   blocSource.innerHTML = "View agreement";
 
   iconLinkContainer.appendChild(blocSource); // Añadir el enlace al contenedor
@@ -590,7 +594,8 @@ export function clearCardContent() {
   }
 }
 export function highlightBloc(svg, filteredGeoJSON, africanCountries) {
-  svg.selectAll("path").interrupt("highlight").transition("highlight").duration(200).attr("fill", "#E8E4DF").attr("stroke", "white").attr("stroke-width", 0.5);
+  const C = getMapColors();
+  svg.selectAll("path").interrupt("highlight").transition("highlight").duration(200).attr("fill", C.mapDefault).attr("stroke", C.mapStroke).attr("stroke-width", 0.5);
 
   const blocMembers = new Set(filteredGeoJSON.features.map((f) => f.properties.name));
   const nonAfricanMembers = new Set([...blocMembers].filter((name) => !africanCountries.has(name)));
@@ -602,7 +607,7 @@ export function highlightBloc(svg, filteredGeoJSON, africanCountries) {
     .interrupt("highlight")
     .transition("highlight")
     .duration(400)
-    .attr("fill", "#0F6E56"); // darker teal — non-African members, mirrors EU's darker amber
+    .attr("fill", C.blocNonAfrican); // darker teal: non-African members, mirrors EU's darker amber
 
   svg
     .selectAll("path")
@@ -610,5 +615,5 @@ export function highlightBloc(svg, filteredGeoJSON, africanCountries) {
     .interrupt("highlight")
     .transition("highlight")
     .duration(400)
-    .attr("fill", "#5DCAA5"); // lighter teal — African members, mirrors partner countries' lighter amber
+    .attr("fill", C.blocAfrican); // lighter teal: African members, mirrors partner countries' lighter amber
 }

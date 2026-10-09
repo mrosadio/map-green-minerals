@@ -6,6 +6,7 @@ import { svg, worldGeojsonPath, jsonFilePath, multiJsonFilePath, noPartnerFilePa
 import { showThirdColumn, removeThirdColumn, isPhone } from "./modules/layout.js";
 import { showPickerBilateral, showPickerMultilateral } from "./modules/picker.js";
 import { initRotatePrompt } from "./modules/rotatePrompt.js";
+import { amberRamp } from "./modules/colors.js";
 const euGeojsonPath = `./db/eu.geojson`;
 
 let partnerMap = {};
@@ -122,15 +123,7 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
         colorScale = d3
           .scaleQuantize()
           .domain([0, d3.max(numberData, (d) => d.partnersNo)])
-          .range([
-            "#F0EDEA", // 0 - warm grey, neutral
-            "#F5DFB8", // 1 - pale sand
-            "#F0C97A",
-            "#E8B044",
-            "#D4891A",
-            "#B86C0A", // 5
-            "#8C4D00", //+6
-          ]);
+          .range(amberRamp()); // --seq-amber-* tokens in style.css
 
         resetToInitialView();
         document.querySelector("#africaButton").addEventListener("click", () => {

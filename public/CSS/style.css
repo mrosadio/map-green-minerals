@@ -43,17 +43,17 @@
   display: none;
 }
 .custom-scroll::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: var(--color-text-faint);
   border-radius: 10px;
 }
 .custom-scroll::-webkit-scrollbar-track {
-  background: #ccc;
+  background: var(--color-border);
 }
 .hidden {
   display: none;
 }
 .card-title.tooltip-title {
-  color: #fff;
+  color: var(--color-on-dark);
 }
 .card-title.list-partners {
   font-weight: bold;
@@ -61,12 +61,12 @@
   font-size: 15pt;
 }
 .tooltip-text {
-  color: #fff;
+  color: var(--color-on-dark);
 }
 .allview {
   display: flex;
   box-sizing: border-box;
-  border: 0.5px solid #d7d7d7;
+  border: 0.5px solid var(--color-border);
   border-radius: 10px;
   /* padding: 20px; */
   justify-content: space-between;
@@ -82,21 +82,15 @@
 .divAfrican {
   margin-top: 0px !important;
 }
-.line {
-  width: 100%;
-  height: 3px;
-  background-color: #fcc12c;
-  margin-bottom: 14px;
-}
 
 .tag {
   position: relative;
   display: inline-block;
-  background-color: #e0f7fa;
+  background-color: var(--cat-mist); /* createAreaTag overrides this inline per area */
   padding: 1px 10px;
   margin: 0.5px;
   border-radius: var(--radius-sm);
-  color: #00796b;
+  color: var(--color-text-primary);
   font-size: 0.7em;
   cursor: pointer;
   font-family: var(--vr-font-primary);
@@ -104,8 +98,8 @@
 .tooltip {
   position: absolute;
   padding: 5px;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
+  background-color: var(--color-ink-raised);
+  color: var(--color-on-dark);
   border-radius: var(--radius-sm);
   font-size: 10pt;
 }
@@ -118,8 +112,8 @@
   text-align: left;
   padding: 8px 10px;
   font-size: 8pt;
-  background-color: #333;
-  color: #fff;
+  background-color: var(--color-ink-raised);
+  color: var(--color-on-dark);
   border-radius: var(--radius-sm);
   width: 250px;
   position: absolute;
@@ -143,7 +137,7 @@
 }
 .label {
   font-size: 14px;
-  color: #000;
+  color: var(--color-text-primary);
   margin: 0px;
   margin-right: 12px;
   font-family: var(--vr-font-primary);
@@ -183,7 +177,7 @@
 }
 .country-label {
   fill: var(--color-text-primary);
-  stroke: #fff; /* halo: readable on any fill */
+  stroke: var(--color-bg); /* halo: readable on any fill */
   stroke-width: 0.35em; /* scales with the label size */
   stroke-linejoin: round;
   paint-order: stroke;
@@ -193,8 +187,8 @@
 .tooltipMulti {
   visibility: hidden;
   width: 150px;
-  background-color: #333;
-  color: #fff;
+  background-color: var(--color-ink-raised);
+  color: var(--color-on-dark);
   text-align: center;
   border-radius: var(--radius-sm);
   padding: 10px;
@@ -222,7 +216,7 @@
   transform: translateX(-50%);
   border-width: 5px;
   border-style: solid;
-  border-color: #333 transparent transparent transparent;
+  border-color: var(--color-ink-raised) transparent transparent transparent;
 }
 .tooltipMulti,
 .tooltipMulti.active {
@@ -243,12 +237,12 @@
   right: 5px;
   background-color: transparent;
   border: none;
-  color: #fff;
+  color: var(--color-on-dark);
   font-size: 12px;
   cursor: pointer;
 }
 .partner-header {
-  border-bottom: 2px solid #f8ae1a;
+  border-bottom: 2px solid var(--mode-accent);
   padding-bottom: 10px;
   margin-top: 0;
 }
@@ -268,23 +262,63 @@
 
 /* ── CSS Variables ── */
 :root {
-  --color-accent: #c1440e;
-  --color-accent-hover: #a33a0c;
-  --color-accent-light: #f2e0d8;
-  --color-accent-border: #e8c4b0;
+  /* Surfaces and text */
   --color-bg: #ffffff;
   --color-bg-subtle: #fafaf8;
   --color-border: #e8e4df;
   --color-text-primary: #1c1c1a;
-  --color-text-secondary: #222222;
-  --color-text-muted: #b4b2a9;
-  --color-map-default: #e8e4df;
+  --color-text-secondary: #4a4a47;
+  --color-text-muted: #5f5e5a; /* AA contrast on white; was #b4b2a9 */
+  --color-text-faint: #9a998f; /* decorative only (idle picker items, scrollbar thumb) */
+  --color-ink-raised: #333331; /* tooltips, secondary button hover */
+  --color-on-dark: #ffffff; /* text on accent, dark and tooltip surfaces */
+
+  /* Brand accent (terracotta) */
+  --color-accent: #c1440e;
+  --color-accent-hover: #a33a0c;
+  --color-accent-light: #f2e0d8;
+  --color-accent-border: #e8c4b0;
+
+  /* Map */
+  --color-map-default: #e8e4df; /* countries without data */
+  --color-map-stroke: #ffffff; /* borders between countries */
+  /* Bilateral choropleth, 0 = no partners ... 6 = 6+ */
+  --seq-zero: #f0edea;
+  --seq-amber-0: var(--seq-zero);
+  --seq-amber-1: #f5dfb8;
+  --seq-amber-2: #f0c97a;
+  --seq-amber-3: #e8b044;
+  --seq-amber-4: #d4891a;
+  --seq-amber-5: #b86c0a;
+  --seq-amber-6: #8c4d00;
+  /* Multilateral choropleth, 0 = none ... 3 = 3+ */
+  --seq-teal-0: var(--seq-zero);
+  --seq-teal-1: #9fe1cb;
+  --seq-teal-2: #5dcaa5;
+  --seq-teal-3: #0f6e56;
+  --seq-teal-ink: #04342c;
+
+  /* Categories: mechanisms and areas of cooperation */
+  --cat-teal: #75d1d1;
+  --cat-peach: #f4a27d;
+  --cat-sand: #ffdc94;
+  --cat-rose: #ef9caf;
+  --cat-mist: #e3f5f5;
+
+  /* Scrims */
+  --scrim-light: rgba(255, 255, 255, 0.72);
+  --scrim-strong: rgba(255, 255, 255, 0.92);
+  --scrim-dark: rgba(37, 38, 45, 0.4);
+  --scrim-blur: 2px;
+
   --content-gutter: 1rem;
   --nav-btn-font-size: 0.95rem;
-  --scrim-blur: 2px;
   --mode-accent: var(--color-accent);
   --mode-accent-strong: color-mix(in srgb, var(--mode-accent) 82%, black); /* darker, for text on the tint */
   --mode-tint: color-mix(in srgb, var(--mode-accent) 12%, transparent);
+  --mode-accent-hover: color-mix(in srgb, var(--mode-accent) 75%, black); /* hover/pressed state of anything in the mode colour */
+  --color-link: var(--mode-accent-strong);
+  --color-link-hover: var(--mode-accent-hover);
   --radius-sm: 4px;  /* tags, tooltips, bars */
   --radius-md: 6px;  /* buttons, toggle, dropdown menu, legend, modal, rotate card */
   --radius-lg: 16px; /* bottom sheet */
@@ -292,7 +326,7 @@
   --bs-border-radius-lg: var(--radius-md); /* Bootstrap modal */
 }
 html[data-mode="multilateral"] {
-  --mode-accent: #0f6e56; /* the multilateral map's teal */
+  --mode-accent: var(--seq-teal-3); /* the multilateral map's teal */
 }
 
 .content-gutter-left {
@@ -334,7 +368,7 @@ body {
   right: 0;
   z-index: 1045;
   padding: 12px var(--content-gutter);
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--scrim-light);
   -webkit-backdrop-filter: blur(var(--scrim-blur));
   backdrop-filter: blur(var(--scrim-blur));
   border-bottom: none;
@@ -382,7 +416,7 @@ h2.title {
   text-underline-offset: 3px;
 }
 .nav-link-plain:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--mode-accent);
   outline-offset: 2px;
 }
 /* -- Buttons -- */
@@ -390,25 +424,25 @@ h2.title {
 .btn-danger.dropdown-toggle {
   background-color: var(--mode-accent) !important;
   border-color: var(--mode-accent) !important;
-  color: #fff !important;
+  color: var(--color-on-dark) !important;
 }
 
 .btn-danger:hover,
 .btn-danger.dropdown-toggle:hover {
-  background-color: var(--color-accent-hover) !important;
-  border-color: var(--color-accent-hover) !important;
+  background-color: var(--mode-accent-hover) !important;
+  border-color: var(--mode-accent-hover) !important;
 }
 
 .btn-secondary {
-  background-color: #4a4a47 !important;
-  border-color: #4a4a47 !important;
-  color: #fff !important;
+  background-color: var(--color-text-secondary) !important;
+  border-color: var(--color-text-secondary) !important;
+  color: var(--color-on-dark) !important;
   font-size: 0.85rem;
 }
 
 .btn-secondary:hover {
-  background-color: #333331 !important;
-  border-color: #333331 !important;
+  background-color: var(--color-ink-raised) !important;
+  border-color: var(--color-ink-raised) !important;
 }
 /* -- Multilateral/Bilateral toggle -- */
 .mode-toggle {
@@ -452,14 +486,6 @@ h2.title {
 }
 .mode-toggle-btn:last-child {
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
-}
-.mode-toggle-btn.active {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-  color: #fff;
-}
-.mode-toggle-btn:hover:not(.active) {
-  background: var(--color-accent-light);
 }
 /* -- Bilateral panel -- */
 .mechanism-badge {
@@ -528,15 +554,16 @@ h2.title {
   transition: background 0.12s;
 }
 
-.dropdown-item:hover {
-  background-color: var(--color-accent-light);
-  color: var(--color-accent);
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: var(--mode-tint);
+  color: var(--mode-accent-strong);
 }
 
 .dropdown-item.active,
 .dropdown-item:active {
-  background-color: var(--color-accent) !important;
-  color: #fff !important;
+  background-color: var(--mode-accent) !important;
+  color: var(--color-on-dark) !important;
 }
 
 /* -- Modal -- */
@@ -624,12 +651,12 @@ h2.title {
 }
 
 .modal-body a {
-  color: var(--color-accent);
+  color: var(--color-link);
   text-decoration: none;
 }
 
 .modal-body a:hover {
-  color: var(--color-accent-hover);
+  color: var(--color-link-hover);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -640,7 +667,7 @@ h2.title {
   bottom: 1em;
   top: auto;
   margin-left: var(--content-gutter);
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--scrim-light);
   -webkit-backdrop-filter: blur(var(--scrim-blur));
   backdrop-filter: blur(var(--scrim-blur));
   padding: 10px 14px;
@@ -841,12 +868,12 @@ p.card-text .access-icon {
   transform: translateY(0.14em) rotate(-135deg);
 }
 .agreements-toggle:hover {
-  color: var(--color-accent);
+  color: var(--mode-accent);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 .agreements-toggle:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--mode-accent);
   outline-offset: 2px;
 }
 .agreements-collapsed {
@@ -878,14 +905,14 @@ p.card-text .access-icon {
 /* -- View source link -- */
 a.source-link,
 .card a[href] {
-  color: var(--color-accent);
+  color: var(--color-link);
   font-size: 0.8rem;
   text-decoration: none;
 }
 
 a.source-link:hover,
 .card a[href]:hover {
-  color: var(--color-accent-hover);
+  color: var(--color-link-hover);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -899,7 +926,7 @@ a.source-link:hover,
   flex-shrink: 0;
 }
 .access-link {
-  color: #0071bc !important;
+  color: var(--color-link) !important;
   text-decoration: underline !important;
 }
 .access-line {
@@ -938,7 +965,7 @@ img[alt="Icono de acceso"] {
 /* -- Tooltip -- */
 .tooltip2 {
   position: absolute;
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--scrim-light);
   -webkit-backdrop-filter: blur(var(--scrim-blur));
   backdrop-filter: blur(var(--scrim-blur));
   /* border: 0.5px solid var(--color-border);
@@ -1069,8 +1096,8 @@ img[alt="Icono de acceso"] {
     justify-content: flex-start;
   }
   .second-col {
-    border-bottom: 1px solid lightgray;
-    border-top: 1px solid lightgray;
+    border-bottom: 1px solid var(--color-border);
+    border-top: 1px solid var(--color-border);
   }
   .second-col {
     justify-content: center;
@@ -1101,7 +1128,7 @@ img[alt="Icono de acceso"] {
     margin: 0px;
     padding: 0px 20px 0px 20px;
     border-radius: 5px !important;
-    border: 0px solid lightgray;
+    border: 0px solid var(--color-border);
   }
   .card.partnership > .partner-select {
     padding-top: 0; /* the phone card never had top padding */
@@ -1127,7 +1154,7 @@ img[alt="Icono de acceso"] {
     overflow: hidden;
     text-align: center;
     font-size: 14px;
-    background-color: rgba(37, 38, 45, 0.4);
+    background-color: var(--scrim-dark);
     display: none;
   }
   .picker-panel {
@@ -1136,12 +1163,12 @@ img[alt="Icono de acceso"] {
     bottom: 0;
     width: 100%;
     height: 273px;
-    background: white;
+    background: var(--color-bg);
   }
   .picker-choose {
     position: relative;
     height: 60px;
-    color: #999;
+    color: var(--color-text-faint);
   }
   .picker-title {
     margin: 0;
@@ -1149,7 +1176,7 @@ img[alt="Icono de acceso"] {
     font-weight: normal;
     text-align: center;
     font-size: 18px;
-    color: #333;
+    color: var(--color-ink-raised);
   }
   .confirm,
   .cancel {
@@ -1157,7 +1184,7 @@ img[alt="Icono de acceso"] {
     top: 6px;
     padding: 16px;
     font-size: 14px;
-    color: #fec03c;
+    color: var(--mode-accent);
     font-family: var(--vr-font-primary);
   }
   .confirm {
@@ -1226,7 +1253,7 @@ img[alt="Icono de acceso"] {
     width: 8px;
     /* Ancho del scrollbar */
     height: 100%;
-    background: #ccc;
+    background: var(--color-border);
     border-radius: 4px;
   }
   .wheel::-webkit-scrollbar {
@@ -1237,7 +1264,7 @@ img[alt="Icono de acceso"] {
     height: 36px;
     overflow: hidden;
     white-space: nowrap;
-    color: #cbcbcbf3;
+    color: var(--color-text-faint);
     cursor: pointer;
     font-family: var(--vr-font-primary);
   }
@@ -1245,7 +1272,7 @@ img[alt="Icono de acceso"] {
     opacity: 1;
   }
   .selected-item {
-    color: #737373;
+    color: var(--color-text-secondary);
     text-decoration: underline;
   }
   .instruccions {
@@ -1319,7 +1346,7 @@ img[alt="Icono de acceso"] {
   display: none;
   align-items: center;
   justify-content: center;
-  background: rgba(37, 38, 45, 0.4);
+  background: var(--scrim-dark);
   -webkit-backdrop-filter: blur(var(--scrim-blur));
   backdrop-filter: blur(var(--scrim-blur));
 }
@@ -1327,7 +1354,7 @@ img[alt="Icono de acceso"] {
   max-width: 62%;
   padding: 14px 22px;
   text-align: center;
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--scrim-strong);
   -webkit-backdrop-filter: blur(var(--scrim-blur));
   backdrop-filter: blur(var(--scrim-blur));
   border-radius: var(--radius-md);

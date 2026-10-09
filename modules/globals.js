@@ -28,19 +28,5 @@ let svg = d3
   .attr("height", "100%") 
   .attr("width", "100%");
 
-const customColors = ["#fcc12c", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#d62728", "#bcbd22", "#17becf", "#aec7e8", "#ffbb78", "#98df8a", "#ff9896", "#c5b0d5", "#c49c94", "#f7b6d2", "#c75b38", "#dbdb8d", "#9edae5"];
-const blocColors = {
-  "BRICS Geological Platform": "#fcc12c", // Blue
-  "Minerals Security Partnership": "#fcc12c", // Orange
-  "EU Raw Materials Club": "#fcc12c", // Green
-  "Energy Resource Governance Initiative": "#fcc12c", // Red
-  "Indo-Pacific Economic Framework for Prosperity (IPEF) Critical Minerals Dialogue": "#fcc12c", // Purple
-  "Sustainable Critical Mineral Alliance": "#fcc12c",
-  "Conference on Critical Materials and Minerals": "#fcc12c",
-  "France-Germany-Italy Joint Communique on Critical Raw Materials": "#fcc12c",
-  "Critical Minerals Mapping Initiative": "#fcc12c",
-  "Lobito Corridor Project": "#fcc12c",
-};
-
 // Export the variables
-export { width, height, svg, customColors, blocColors, worldGeojsonPath, jsonFilePath, multiJsonFilePath, noPartnerFilePath, legendWidth, legendHeight, legendMargin, themeUrl };
+export { width, height, svg, worldGeojsonPath, jsonFilePath, multiJsonFilePath, noPartnerFilePath, legendWidth, legendHeight, legendMargin, themeUrl };
