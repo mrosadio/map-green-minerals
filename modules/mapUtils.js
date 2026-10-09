@@ -109,7 +109,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
       // Highlight hovered African country
       d3.select(this).transition().duration(200).attr("fill", colorScaleHover(count));
       if (count === 0) {
-        tooltip.html(`<h3 class="fw-bold mb-0" style="font-size:12pt">${countryName}</h3>`).style("display", window.innerWidth > 768 ? "block" : "none");
+        tooltip.html(`<h3 class="tip-title mb-0">${countryName}</h3>`).style("display", window.innerWidth > 768 ? "block" : "none");
         return;
       }
       const rawPartners = countryData?.partners || [];
@@ -271,7 +271,7 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
       if (!window.matchMedia("(hover: hover)").matches) return;
       const hasData = filteredCountryGeoJSON.features.some((f) => f.properties.name === d.properties.name);
       if (!hasData) return; // no tooltip for countries with no data
-      tooltip.html(`<h3 class="fw-bold mb-0" style="font-size:12pt">${d.properties.name}</h3>`).style("display", window.innerWidth > 768 ? "block" : "none");
+      tooltip.html(`<h3 class="tip-title mb-0">${d.properties.name}</h3>`).style("display", window.innerWidth > 768 ? "block" : "none");
     })
     .on("mousemove", function (event) {
       positionTooltip(event, tooltip);
@@ -453,11 +453,11 @@ function buildBlocTooltipHTML(countryName, blocs) {
   const blocsHTML = blocs.map((name) => `<p class="mb-0">${name}</p>`).join("");
 
   return `
-    <p class="fw-bold mb-1" style="font-size:12pt">${countryName}</p>
-    <p class="text-secondary mb-2" style="font-size:9pt">
+    <p class="tip-title mb-1">${countryName}</p>
+    <p class="tip-meta mb-2">
       ${blocs.length} coalition${blocs.length !== 1 ? "s" : ""}
     </p>
-    <div style="font-size:9.5pt">${blocsHTML}</div>
+    <div class="tip-list">${blocsHTML}</div>
   `;
 }
 function buildTooltipHTML(countryName, partnerCount, rawPartners) {
@@ -467,14 +467,14 @@ function buildTooltipHTML(countryName, partnerCount, rawPartners) {
   }));
   const euEntry = cleaned.find((p) => p.name === "EU" || p.name === "European Union");
   const individuals = cleaned.filter((p) => p.name !== "EU" && p.name !== "European Union");
-  const partnersHTML = [...individuals.map((p) => `<p class="mb-0">${p.name}${p.year ? ` <span class="text-secondary" style="font-size:8pt">${p.year}</span>` : ""}</p>`), ...(euEntry ? [`<p class="mb-0">European Union <span class="text-secondary" style="font-size:8pt">(as bloc${euEntry.year ? ` · ${euEntry.year}` : ""})</span></p>`] : [])].join("");
+  const partnersHTML = [...individuals.map((p) => `<p class="mb-0">${p.name}${p.year ? ` <span class="tip-note">${p.year}</span>` : ""}</p>`), ...(euEntry ? [`<p class="mb-0">European Union <span class="tip-note">(as bloc${euEntry.year ? ` · ${euEntry.year}` : ""})</span></p>`] : [])].join("");
 
   return `
-    <p class="fw-bold mb-1" style="font-size:12pt">${countryName}</p>
-    <p class="text-secondary mb-2" style="font-size:9pt">
+    <p class="tip-title mb-1">${countryName}</p>
+    <p class="tip-meta mb-2">
       ${partnerCount} bilateral agreement${partnerCount !== 1 ? "s" : ""}
     </p>
-    <div style="font-size:9.5pt">${partnersHTML}</div>
+    <div class="tip-list">${partnersHTML}</div>
   `;
 }
 

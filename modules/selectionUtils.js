@@ -39,7 +39,7 @@ function createAreaTag(area, colorMap, tooltipMap) {
   tag.style.color = "var(--color-text-primary)";
   tag.style.padding = "2px 10px";
   tag.style.borderRadius = "var(--radius-sm)";
-  tag.style.fontSize = "9pt";
+  tag.style.fontSize = "var(--text-xs)";
 
   tag.addEventListener("mouseover", function () {
     tag.style.boxSizing = "border-box";
@@ -56,7 +56,7 @@ function createAreaTag(area, colorMap, tooltipMap) {
     const tooltip = document.createElement("span");
     tooltip.classList.add("tooltip");
     tooltip.textContent = tooltipMap[area];
-    tooltip.style.lineHeight = "1.5";
+    tooltip.style.lineHeight = "var(--lh-snug)";
     tag.appendChild(tooltip);
     tooltip.style.visibility = "visible";
     tooltip.style.opacity = "1";
@@ -376,8 +376,8 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
   const multiPartner = document.createElement("h2");
   multiPartner.style.borderBottom = "2pt solid var(--mode-accent)";
   multiPartner.style.paddingBottom = "10px"; // Espacio entre el texto y la línea
-  multiPartner.style.fontSize = "22pt";
-  multiPartner.style.fontWeight = "bold";
+  multiPartner.style.fontSize = "var(--text-xl)";
+  multiPartner.style.fontWeight = "var(--fw-bold)";
 
   multiPartner.classList.add("card-title", "card-title-fixed", "partner-select", "mt-3");
   multiPartner.innerHTML = `${selectedBloc}`;
@@ -388,7 +388,7 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
   // Agregar el texto Lorem Ipsum debajo del título
   const loremText = document.createElement("p");
   loremText.classList.add("card-text", "mt-2");
-  loremText.style.fontSize = "11pt";
+  loremText.style.fontSize = "var(--text-md)";
   loremText.style.paddingLeft = "0rem"; // Aplicar la fuente personalizada
 
   let nombre = selectedBloc.replace(/\s+/g, " ");
@@ -417,7 +417,7 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
   blocSource.target = "_blank";
   // Aplicar estilos al enlace
   blocSource.style.textDecoration = "none"; // Eliminar el subrayado
-  blocSource.style.fontSize = "11pt"; // Tamaño de fuente
+  blocSource.style.fontSize = "var(--text-md)";
   blocSource.style.marginLeft = "4px"; // Tamaño de fuente
   blocSource.style.color = "var(--color-link)";
   blocSource.innerHTML = "View agreement";
