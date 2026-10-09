@@ -109,7 +109,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
       // Highlight hovered African country
       d3.select(this).transition().duration(DUR.fast).attr("fill", colorScaleHover(count));
       if (count === 0) {
-        tooltip.html(`<h3 class="tip-title mb-0">${countryName}</h3>`).style("display", window.innerWidth > 768 ? "block" : "none");
+        tooltip.html(`<h3 class="tip-title mb-0">${countryName}</h3>`).style("display", "block");
         return;
       }
       const rawPartners = countryData?.partners || [];
@@ -135,7 +135,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
           .attr("fill", EU_FILL);
       }
 
-      tooltip.html(buildTooltipHTML(countryName, count, rawPartners)).style("display", window.innerWidth > 768 ? "block" : "none");
+      tooltip.html(buildTooltipHTML(countryName, count, rawPartners)).style("display", "block");
     })
     .on("mouseout", function (event, d) {
       if (!window.matchMedia("(hover: hover)").matches) return;
@@ -271,7 +271,7 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
       if (!window.matchMedia("(hover: hover)").matches) return;
       const hasData = filteredCountryGeoJSON.features.some((f) => f.properties.name === d.properties.name);
       if (!hasData) return; // no tooltip for countries with no data
-      tooltip.html(`<h3 class="tip-title mb-0">${d.properties.name}</h3>`).style("display", window.innerWidth > 768 ? "block" : "none");
+      tooltip.html(`<h3 class="tip-title mb-0">${d.properties.name}</h3>`).style("display", "block");
     })
     .on("mousemove", function (event) {
       positionTooltip(event, tooltip);
@@ -280,15 +280,15 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
       if (!window.matchMedia("(hover: hover)").matches) return;
       tooltip.style("display", "none");
     });
-  // No hover on touch devices: print the names of the highlighted countries
+  // No hover on touch devices: print the name of every highlighted country.
+  // Labels that would collide are nudged apart (and joined to their country by a thin line), never dropped.
   if (!canHover()) {
-    const labelScale = getLabelScale(W);
-    const MIN_AREA = 700 * labelScale ** 2; // px²: countries too small for a label are skipped
     addCountryLabels(
       g,
-      filteredCountryGeoJSON.features.filter((f) => !(partner === "EU" && euMemberNames.has(f.properties.name)) && path.area(f) > MIN_AREA),
+      filteredCountryGeoJSON.features.filter((f) => !(partner === "EU" && euMemberNames.has(f.properties.name))),
       path,
-      labelScale
+      getLabelScale(W),
+      { avoidOverlap: true, bounds: [W, H] }
     );
   }
 }
@@ -350,7 +350,7 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
         .duration(DUR.fast)
         .attr("fill", (p) => (africanCountries.has(p.properties.name) ? C.blocAfrican : C.blocNonAfrican));
 
-      tooltip.html(buildBlocTooltipHTML(d.properties.name, blocs)).style("display", window.innerWidth > 768 ? "block" : "none");
+      tooltip.html(buildBlocTooltipHTML(d.properties.name, blocs)).style("display", "block");
     })
     .on("mousemove", function (event) {
       positionTooltip(event, tooltip);
@@ -408,24 +408,92 @@ function cleanPartnerName(name) {
 }
 
 // -- Private: One label routine for every map view to homogenize styling ------
-function addCountryLabels(g, features, path, labelScale = 1) {
-  g.selectAll("text.country-label")
-    .data(features)
-    .enter()
-    .append("text")
-    .attr("class", "country-label")
-    .attr("font-size", `${5 * labelScale}pt`)
-    .each(function (d) {
-      renderLabel(d3.select(this), d, path, labelScale);
-    });
+function addCountryLabels(g, features, path, labelScale = 1, { avoidOverlap = false, bounds = null } = {}) {
+  const ordered = avoidOverlap ? [...features].sort((a, b) => path.area(b) - path.area(a)) : features;
+  const items = [];
+
+  ordered.forEach((d, i) => {
+    const text = g.append("text").attr("class", "country-label").attr("font-size", `${5 * labelScale}pt`);
+    const anchor = renderLabel(text, d, path, labelScale, { mainPartOnly: avoidOverlap });
+    if (!avoidOverlap) return;
+    if (!anchor) return text.remove();
+    const b = text.node().getBBox();
+    items.push({ text, anchor, box: { x: b.x, y: b.y, w: b.width, h: b.height }, dx: 0, dy: 0, weight: i < ordered.length / 3 ? 0.25 : 1 });
+  });
+  if (!avoidOverlap) return;
+
+  spreadLabels(items, bounds);
+
+  items.forEach((it) => {
+    if (!it.dx && !it.dy) return;
+    it.text.attr("transform", `translate(${it.dx},${it.dy})`);
+    if (Math.hypot(it.dx, it.dy) < 8 * labelScale) return;
+    // leader line from the country to its displaced label
+    g.insert("line", "text.country-label")
+      .attr("class", "label-leader")
+      .attr("x1", it.anchor[0])
+      .attr("y1", it.anchor[1])
+      .attr("x2", it.box.x + it.box.w / 2 + it.dx)
+      .attr("y2", it.box.y + it.box.h / 2 + it.dy);
+  });
+}
+// Push overlapping label boxes apart along the axis of least overlap (big countries move less)
+function spreadLabels(items, bounds, pad = 2, rounds = 80) {
+  const rect = (it) => ({ l: it.box.x + it.dx, t: it.box.y + it.dy, r: it.box.x + it.dx + it.box.w, b: it.box.y + it.dy + it.box.h });
+  for (let n = 0; n < rounds; n++) {
+    let moved = false;
+    for (let i = 0; i < items.length; i++) {
+      for (let j = i + 1; j < items.length; j++) {
+        const A = items[i], B = items[j];
+        const a = rect(A), b = rect(B);
+        const ox = Math.min(a.r, b.r) - Math.max(a.l, b.l) + pad;
+        const oy = Math.min(a.b, b.b) - Math.max(a.t, b.t) + pad;
+        if (ox <= 0 || oy <= 0) continue;
+        const wA = A.weight, wB = B.weight, total = wA + wB;
+        const k = oy <= ox ? "dy" : "dx";
+        const amount = oy <= ox ? oy : ox;
+        const sign = (oy <= ox ? (a.t + a.b) - (b.t + b.b) : (a.l + a.r) - (b.l + b.r)) >= 0 ? 1 : -1;
+        A[k] += sign * amount * (wA / total);
+        B[k] -= sign * amount * (wB / total);
+        moved = true;
+      }
+    }
+    if (bounds) {
+      items.forEach((it) => {
+        const r = rect(it);
+        if (r.l < 2) it.dx += 2 - r.l;
+        if (r.r > bounds[0] - 2) it.dx -= r.r - (bounds[0] - 2);
+        if (r.t < 2) it.dy += 2 - r.t;
+        if (r.b > bounds[1] - 2) it.dy -= r.b - (bounds[1] - 2);
+      });
+    }
+    if (!moved) break;
+  }
+}
+
+// A MultiPolygon's centroid is pulled towards far-flung parts (France + French Guiana).
+// Use only its largest polygon so the label sits on the main landmass.
+function largestPart(feature, path) {
+  if (feature.geometry.type !== "MultiPolygon") return feature;
+  let best = null;
+  let bestArea = -1;
+  feature.geometry.coordinates.forEach((coordinates) => {
+    const part = { type: "Feature", properties: feature.properties, geometry: { type: "Polygon", coordinates } };
+    const area = path.area(part);
+    if (area > bestArea) {
+      best = part;
+      bestArea = area;
+    }
+  });
+  return best || feature;
 }
 // -- Private: label rendering --------------------------------------------------
-function renderLabel(textEl, feature, path, labelScale = 1) {
+function renderLabel(textEl, feature, path, labelScale = 1, { mainPartOnly = false } = {}) {
   const name = feature.properties.name;
   const config = countryLabelConfig[name] || {};
-  const centroid = path.centroid(feature);
+  const centroid = path.centroid(mainPartOnly ? largestPart(feature, path) : feature);
 
-  if (!centroid || isNaN(centroid[0])) return; // for invalid centroids
+  if (!centroid || isNaN(centroid[0])) return null; // for invalid centroids
 
   const cx = centroid[0] + (config.dx || 0);
   const cy = centroid[1] + (config.dy || 0);
@@ -441,6 +509,7 @@ function renderLabel(textEl, feature, path, labelScale = 1) {
       .attr("font-size", "1.25em")
       .attr("color", "var(--color-text-primary)");
   });
+  return [cx, cy];
 }
 
 // -- Private: tooltip --------------------------------------------------

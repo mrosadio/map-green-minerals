@@ -175,6 +175,11 @@
   font-size: var(--text-md);
   display: inline-block;
 }
+.label-leader {
+  stroke: var(--color-text-muted);
+  stroke-width: 0.5;
+  pointer-events: none;
+}
 .country-label {
   fill: var(--color-text-primary);
   stroke: var(--color-bg); /* halo: readable on any fill */
