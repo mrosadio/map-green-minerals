@@ -424,7 +424,7 @@ body {
 #nav .btn {
   font-size: var(--nav-btn-font-size);
 }
-h2.title {
+h1.title {
   font-size: var(--text-xl);
   font-weight: var(--fw-bold);
   color: var(--color-text-primary);

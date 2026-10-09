@@ -52,6 +52,8 @@ function setMode(mode) {
   const isBilateral = mode === "bilateral";
   document.getElementById("bilateralModeBtn").classList.toggle("active", isBilateral);
   document.getElementById("multilateralModeBtn").classList.toggle("active", !isBilateral);
+  document.getElementById("bilateralModeBtn").setAttribute("aria-pressed", String(isBilateral));
+  document.getElementById("multilateralModeBtn").setAttribute("aria-pressed", String(!isBilateral));
   document.getElementById("bilateralDropdownGroup").classList.toggle("d-none", !isBilateral);
   document.getElementById("multilateralDropdownGroup").classList.toggle("d-none", isBilateral);
   resetToCurrentOverview();
