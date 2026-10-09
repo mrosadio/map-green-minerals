@@ -14,6 +14,6 @@ export function addLegend(svg, colorScale, title = "Number of partnerships", lab
         .style("background-color", color)
         .style("height", "12px");
   });
-  labelRow.append("span").text(labels[0]).style("font-size", "11px").style("color", "#5F5E5A");
-  labelRow.append("span").text(labels[1]).style("font-size", "11px").style("color", "#5F5E5A");
+  labelRow.append("span").text(labels[0]).style("color", "var(--color-text-muted)");
+  labelRow.append("span").text(labels[1]).style("color", "var(--color-text-muted)");
 }

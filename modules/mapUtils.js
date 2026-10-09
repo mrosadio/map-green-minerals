@@ -6,6 +6,7 @@
 
 import { svg } from "./globals.js";
 import { isStackedLayout } from "./layout.js";
+import { tealRamp, amberRamp, amberHoverRamp, getMapColors } from "./colors.js";
 
 let g; // at the module-level container. Reassigned at each draw
 let isPanned = false; // whether the horizontal shift is currently applied
@@ -40,12 +41,8 @@ const partnerNameNormalization = {
   "United Kingdom": "England",
   // add others as you find them
 };
-export const multilateralColorScale = d3.scaleQuantize().domain([0, 3]).range([
-  "#F0EDEA", // 0 — no coalitions, same neutral as bilateral's 0
-  "#9FE1CB", // 1
-  "#5DCAA5", // 2
-  "#0F6E56", // 3+
-]);
+// Colours come from the --seq-teal-* tokens in style.css (0 = no coalitions ... 3 = 3+)
+export const multilateralColorScale = d3.scaleQuantize().domain([0, 3]).range(tealRamp());
 const getLabelScale = (W) => (isStackedLayout() ? Math.min(Math.max(W / 600, 1), 1.8) : 1);
 const canHover = () => window.matchMedia("(hover: hover)").matches;
 const isAfricaFocus = () => isStackedLayout() && !canHover();
@@ -73,27 +70,13 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
   const projection = d3.geoEqualEarth().fitExtent(getOverviewExtent(W, H), getOverviewFitTarget(geojsonData, numberData));
   const path = d3.geoPath().projection(projection);
 
-  const colorScale = d3.scaleQuantize().domain([0, 6]).range([
-    "#F0EDEA", // 0 — warm grey, clearly neutral
-    "#F5DFB8", // 1 — pale sand
-    "#F0C97A", // 2
-    "#E8B044", // 3
-    "#D4891A", // 4
-    "#B86C0A", // 5
-    "#8C4D00",
-  ]);
-
-  const colorScaleHover = d3.scaleQuantize().domain([0, 6]).range(["#F5F0EC", "#FAE9CA", "#F5D898", "#EEC268", "#DDA040", "#C87E20", "#A05C10"]);
-
-  // Individual bilateral partner country fill
-  const PARTNER_FILL = "#E8B044";
-
-  // EU bloc — border only, no fill
-  const EU_STROKE = "#B86C0A";
-  const EU_STROKE_WIDTH = 2;
-
-  // Non-partner, non-African countries
-  const DEFAULT_FILL = "#E8E4DF"; // warm grey, not cold
+  // All colours come from the design tokens in style.css (see colors.js)
+  const C = getMapColors();
+  const colorScale = d3.scaleQuantize().domain([0, 6]).range(C.amber);
+  const colorScaleHover = d3.scaleQuantize().domain([0, 6]).range(amberHoverRamp());
+  const PARTNER_FILL = C.partnerHover; // individual bilateral partner country
+  const EU_FILL = C.partnerSelected; // EU members
+  const DEFAULT_FILL = C.mapDefault; // non-partner countries
   // Build lookup for O(1) country data access
   const partnerLookup = new Map(numberData.map((d) => [d.africanCountry, d]));
 
@@ -111,7 +94,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
       const count = partnerLookup.get(d.properties.name)?.partnersNo || 0;
       return colorScale(count);
     })
-    .attr("stroke", "white")
+    .attr("stroke", C.mapStroke)
     .attr("stroke-width", 0.5)
     .on("mouseover", function (event, d) {
       if (!window.matchMedia("(hover: hover)").matches) return;
@@ -126,7 +109,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
       // Highlight hovered African country
       d3.select(this).transition().duration(200).attr("fill", colorScaleHover(count));
       if (count === 0) {
-        tooltip.html(`<h3 class="fw-bold mb-0" style="font-size:12pt">${countryName}</h3>`).style("display", window.innerWidth > 768 ? "block" : "none");
+        tooltip.html(`<h3 class="tip-title mb-0">${countryName}</h3>`).style("display", window.innerWidth > 768 ? "block" : "none");
         return;
       }
       const rawPartners = countryData?.partners || [];
@@ -149,7 +132,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
           .filter((p) => euMemberNames.has(p.properties.name))
           .transition()
           .duration(200)
-          .attr("fill", "#D4891A");
+          .attr("fill", EU_FILL);
       }
 
       tooltip.html(buildTooltipHTML(countryName, count, rawPartners)).style("display", window.innerWidth > 768 ? "block" : "none");
@@ -191,7 +174,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
           const count = partnerLookup.get(p.properties.name)?.partnersNo || 0;
           return count > 0 ? colorScale(count) : DEFAULT_FILL;
         })
-        .attr("stroke", "white")
+        .attr("stroke", C.mapStroke)
         .attr("stroke-width", 0.5);
       // Restore EU borders
       g.selectAll("path")
@@ -200,7 +183,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
         .transition()
         .duration(200)
         .attr("fill", DEFAULT_FILL)
-        .attr("stroke", "white")
+        .attr("stroke", C.mapStroke)
         .attr("stroke-width", 0.5);
 
       tooltip.style("display", "none");
@@ -274,20 +257,21 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
 
   g = svg.append("g");
 
+  const C = getMapColors();
   const tooltip = getOrCreateTooltip();
   g.selectAll("path")
     .data(geojson.features)
     .enter()
     .append("path")
     .attr("d", path)
-    .attr("fill", "#d3d3d3")
-    .attr("stroke", "white")
+    .attr("fill", C.mapDefault)
+    .attr("stroke", C.mapStroke)
     .attr("stroke-width", 0.5)
     .on("mouseover", function (event, d) {
       if (!window.matchMedia("(hover: hover)").matches) return;
       const hasData = filteredCountryGeoJSON.features.some((f) => f.properties.name === d.properties.name);
       if (!hasData) return; // no tooltip for countries with no data
-      tooltip.html(`<h3 class="fw-bold mb-0" style="font-size:12pt">${d.properties.name}</h3>`).style("display", window.innerWidth > 768 ? "block" : "none");
+      tooltip.html(`<h3 class="tip-title mb-0">${d.properties.name}</h3>`).style("display", window.innerWidth > 768 ? "block" : "none");
     })
     .on("mousemove", function (event) {
       positionTooltip(event, tooltip);
@@ -334,6 +318,7 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
   // legitimately members of these blocs, just not the African side of them.
   const africanCountries = new Set(numberData.map((d) => d.africanCountry));
 
+  const C = getMapColors();
   g = svg.append("g");
   const tooltip = getOrCreateTooltip();
 
@@ -344,10 +329,10 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
     .attr("d", path)
     .attr("class", "country-path")
     .attr("fill", (d) => {
-      if (!africanCountries.has(d.properties.name)) return "#E8E4DF";
+      if (!africanCountries.has(d.properties.name)) return C.mapDefault;
       return multilateralColorScale(d.properties.blocs?.length || 0);
     })
-    .attr("stroke", "white")
+    .attr("stroke", C.mapStroke)
     .attr("stroke-width", 0.5)
     .on("mouseover", function (event, d) {
       if (!window.matchMedia("(hover: hover)").matches) return;
@@ -355,7 +340,7 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
       const blocs = d.properties.blocs || [];
       if (blocs.length === 0) return;
 
-      d3.select(this).interrupt("blocHoverSelf").transition("blocHoverSelf").duration(200).attr("fill", "#04342C");
+      d3.select(this).interrupt("blocHoverSelf").transition("blocHoverSelf").duration(200).attr("fill", C.tealInk);
 
       const hoveredBlocs = new Set(blocs);
       g.selectAll("path")
@@ -363,7 +348,7 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
         .interrupt("blocHover")
         .transition("blocHover")
         .duration(200)
-        .attr("fill", (p) => (africanCountries.has(p.properties.name) ? "#5DCAA5" : "#0F6E56"));
+        .attr("fill", (p) => (africanCountries.has(p.properties.name) ? C.blocAfrican : C.blocNonAfrican));
 
       tooltip.html(buildBlocTooltipHTML(d.properties.name, blocs)).style("display", window.innerWidth > 768 ? "block" : "none");
     })
@@ -379,7 +364,7 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
         .interrupt("blocHoverOthers")
         .transition("blocHoverOthers")
         .duration(200)
-        .attr("fill", (p) => (africanCountries.has(p.properties.name) ? multilateralColorScale(p.properties.blocs?.length || 0) : "#E8E4DF"));
+        .attr("fill", (p) => (africanCountries.has(p.properties.name) ? multilateralColorScale(p.properties.blocs?.length || 0) : C.mapDefault));
       tooltip.style("display", "none");
     });
   // Labels - only for African countries with at least one coalition,
@@ -468,11 +453,11 @@ function buildBlocTooltipHTML(countryName, blocs) {
   const blocsHTML = blocs.map((name) => `<p class="mb-0">${name}</p>`).join("");
 
   return `
-    <p class="fw-bold mb-1" style="font-size:12pt">${countryName}</p>
-    <p class="text-secondary mb-2" style="font-size:9pt">
+    <p class="tip-title mb-1">${countryName}</p>
+    <p class="tip-meta mb-2">
       ${blocs.length} coalition${blocs.length !== 1 ? "s" : ""}
     </p>
-    <div style="font-size:9.5pt">${blocsHTML}</div>
+    <div class="tip-list">${blocsHTML}</div>
   `;
 }
 function buildTooltipHTML(countryName, partnerCount, rawPartners) {
@@ -482,14 +467,14 @@ function buildTooltipHTML(countryName, partnerCount, rawPartners) {
   }));
   const euEntry = cleaned.find((p) => p.name === "EU" || p.name === "European Union");
   const individuals = cleaned.filter((p) => p.name !== "EU" && p.name !== "European Union");
-  const partnersHTML = [...individuals.map((p) => `<p class="mb-0">${p.name}${p.year ? ` <span class="text-secondary" style="font-size:8pt">${p.year}</span>` : ""}</p>`), ...(euEntry ? [`<p class="mb-0">European Union <span class="text-secondary" style="font-size:8pt">(as bloc${euEntry.year ? ` · ${euEntry.year}` : ""})</span></p>`] : [])].join("");
+  const partnersHTML = [...individuals.map((p) => `<p class="mb-0">${p.name}${p.year ? ` <span class="tip-note">${p.year}</span>` : ""}</p>`), ...(euEntry ? [`<p class="mb-0">European Union <span class="tip-note">(as bloc${euEntry.year ? ` · ${euEntry.year}` : ""})</span></p>`] : [])].join("");
 
   return `
-    <p class="fw-bold mb-1" style="font-size:12pt">${countryName}</p>
-    <p class="text-secondary mb-2" style="font-size:9pt">
+    <p class="tip-title mb-1">${countryName}</p>
+    <p class="tip-meta mb-2">
       ${partnerCount} bilateral agreement${partnerCount !== 1 ? "s" : ""}
     </p>
-    <div style="font-size:9.5pt">${partnersHTML}</div>
+    <div class="tip-list">${partnersHTML}</div>
   `;
 }
 
