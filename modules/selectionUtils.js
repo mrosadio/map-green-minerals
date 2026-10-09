@@ -37,7 +37,7 @@ function createAreaTag(area, colorMap, tooltipMap) {
   tag.style.whiteSpace = "nowrap";
   tag.style.backgroundColor = colorMap[area] || "var(--color-text-primary)";
   tag.style.color = "var(--color-text-primary)";
-  tag.style.padding = "2px 10px";
+  tag.style.padding = "var(--space-2xs) var(--space-sm)";
   tag.style.borderRadius = "var(--radius-sm)";
   tag.style.fontSize = "var(--text-xs)";
 
@@ -132,24 +132,15 @@ function renderAgreementDetails(agreement, partnershipCard, needsSeparator = fal
   const areasCoop = Array.isArray(agreement.areasCoop) ? agreement.areasCoop : agreement.areasCoop ? [agreement.areasCoop] : [];
   if (areasCoop.length > 0) {
     const areasTitleContainer = document.createElement("div");
-    areasTitleContainer.style.display = "flex";
-    areasTitleContainer.style.alignItems = "center";
-    areasTitleContainer.style.flexWrap = "wrap";
-    areasTitleContainer.style.gap = "5px";
+    areasTitleContainer.classList.add("areas-row");
 
     const areasTitle = document.createElement("span");
-    areasTitle.classList.add("card-text", "mb-1");
-    areasTitle.style.paddingBottom = "0px";
-    areasTitle.style.marginBottom = "0px";
-    areasTitle.style.marginRight = "10px";
+    areasTitle.classList.add("card-text", "mb-1", "areas-label");
     areasTitle.innerHTML = "Areas of cooperation:";
     areasTitleContainer.appendChild(areasTitle);
 
     const tagsContainer = document.createElement("div");
-    tagsContainer.style.display = "flex";
-    tagsContainer.style.flexWrap = "wrap";
-    tagsContainer.style.alignItems = "center";
-    tagsContainer.style.gap = "5px";
+    tagsContainer.classList.add("areas-tags");
 
     const rightElement = document.querySelector(".right");
     rightElement.style.marginTop = "0px";
@@ -370,12 +361,12 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
   scrollContainer.style.maxHeight = "100%"; // Altura máxima para el contenedor
   scrollContainer.style.overflowY = "auto"; // Habilitar scroll vertical
   scrollContainer.style.marginTop = "0px"; // Espacio entre el título y el contenido
-  scrollContainer.style.paddingRight = "18px"; // Espacio entre el título y el contenido
+  scrollContainer.style.paddingRight = "var(--space-lg)"; // Espacio entre el título y el contenido
 
   // Crear y agregar el título principal
   const multiPartner = document.createElement("h2");
   multiPartner.style.borderBottom = "2pt solid var(--mode-accent)";
-  multiPartner.style.paddingBottom = "10px"; // Espacio entre el texto y la línea
+  multiPartner.style.paddingBottom = "var(--space-md)"; // Espacio entre el texto y la línea
   multiPartner.style.fontSize = "var(--text-xl)";
   multiPartner.style.fontWeight = "var(--fw-bold)";
 
@@ -418,7 +409,7 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
   // Aplicar estilos al enlace
   blocSource.style.textDecoration = "none"; // Eliminar el subrayado
   blocSource.style.fontSize = "var(--text-md)";
-  blocSource.style.marginLeft = "4px"; // Tamaño de fuente
+  blocSource.style.marginLeft = "var(--space-xs)"; // Tamaño de fuente
   blocSource.style.color = "var(--color-link)";
   blocSource.innerHTML = "View agreement";
 
@@ -481,7 +472,7 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
         tooltipMultiContainer.className = "tooltipMulti-container long-name-tooltip";
         tooltipMultiContainer.style.position = "relative";
         tooltipMultiContainer.style.display = "inline-block";
-        tooltipMultiContainer.style.marginLeft = "5px"; // Margen para separar el ícono del nombre
+        tooltipMultiContainer.style.marginLeft = "var(--space-xs)"; // Margen para separar el ícono del nombre
 
         const infoIcon = document.createElement("img");
         infoIcon.src = `${themeUrl}/img/icons/info.svg`; // Ruta al archivo SVG
@@ -502,7 +493,7 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
 
         const tooltipText = document.createElement("div");
         tooltipText.innerText = "Description";
-        tooltipText.style.marginRight = "15px";
+        tooltipText.style.marginRight = "var(--space-lg)";
 
         tooltipMulti.appendChild(closeBtn);
         tooltipMulti.appendChild(tooltipText);
@@ -543,7 +534,7 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
 
       const tooltipText = document.createElement("div");
       tooltipText.innerText = "Description";
-      tooltipText.style.marginRight = "15px";
+      tooltipText.style.marginRight = "var(--space-lg)";
       tooltipMulti.appendChild(closeBtn);
       tooltipMulti.appendChild(tooltipText);
       tooltipMultiContainer.appendChild(infoIcon);
