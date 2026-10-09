@@ -42,7 +42,11 @@ const partnerNameNormalization = {
   // add others as you find them
 };
 // Colours come from the --seq-teal-* tokens in style.css (0 = no coalitions ... 3 = 3+)
-export const multilateralColorScale = d3.scaleQuantize().domain([0, 3]).range(tealRamp());
+// Built on first use, not at import time: the teal ramp is read from CSS variables,
+// which are not reliably applied yet while modules are still being evaluated.
+let _multilateralScale;
+const getMultilateralScale = () => (_multilateralScale ??= d3.scaleQuantize().domain([0, 3]).range(tealRamp()));
+export const multilateralColorScale = Object.assign((n) => getMultilateralScale()(n), { range: () => getMultilateralScale().range() });
 const getLabelScale = (W) => (isStackedLayout() ? Math.min(Math.max(W / 600, 1), 1.8) : 1);
 const canHover = () => window.matchMedia("(hover: hover)").matches;
 const isAfricaFocus = () => isStackedLayout() && !canHover();
