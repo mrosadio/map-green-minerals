@@ -121,7 +121,7 @@
   transform: translateX(-4%);
   z-index: 9999;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity var(--dur-med) var(--ease-out);
 }
 .lastUpdate {
   font-size: var(--text-lg);
@@ -199,7 +199,7 @@
   font-family: var(--font-sans);
   transform: translateX(-40%);
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity var(--dur-med) var(--ease-out);
   font-size: var(--text-2xs);
 }
 .tooltipMulti.active {
@@ -330,6 +330,14 @@
   --tracking-tight: -0.02em; /* large titles */
   --tracking-caps: 0.06em; /* uppercase labels */
 
+  /* Motion, focus, touch */
+  --dur-fast: 150ms; /* hovers, small state changes */
+  --dur-med: 300ms; /* fades, bars, map transitions */
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --focus-ring: 2px solid var(--mode-accent);
+  --focus-offset: 2px;
+  --tap-min: 40px; /* minimum tap target on touch devices */
+
   --content-gutter: 1rem;
   --nav-btn-font-size: var(--text-md);
   --mode-accent: var(--color-accent);
@@ -414,7 +422,6 @@ h2.title {
   -webkit-appearance: none;
   background: none;
   border: none;
-  outline: none;
   box-shadow: none;
   padding: 4px 10px;
   font-family: inherit;
@@ -424,14 +431,47 @@ h2.title {
   cursor: pointer;
 }
 
-.nav-link-plain:hover {
-  color: var(--mode-accent);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+@media (hover: hover) {
+  .nav-link-plain:hover {
+    color: var(--mode-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 }
-.nav-link-plain:focus-visible {
-  outline: 2px solid var(--mode-accent);
-  outline-offset: 2px;
+/* One focus ring for every interactive element (keyboard focus only) */
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+/* Bootstrap draws its own focus box-shadow on these; use the shared ring instead */
+.btn:focus-visible,
+.btn-close:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+  box-shadow: none;
+}
+/* Programmatically focused containers (modal, dialogs) should not show a ring */
+[tabindex="-1"]:focus-visible {
+  outline: none;
+}
+.dropdown-item:focus-visible {
+  outline-offset: -2px; /* inside the menu, which clips overflow */
+}
+.mode-toggle-btn:focus-visible {
+  position: relative;
+  z-index: 2; /* ring is not hidden under the neighbouring segment */
+}
+/* Colour and background changes animate the same way everywhere */
+.btn,
+.mode-toggle-btn,
+.nav-link-plain,
+.dropdown-item,
+.agreements-toggle,
+a {
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
 }
 /* -- Buttons -- */
 .btn-danger,
@@ -441,10 +481,12 @@ h2.title {
   color: var(--color-on-dark) !important;
 }
 
-.btn-danger:hover,
-.btn-danger.dropdown-toggle:hover {
-  background-color: var(--mode-accent-hover) !important;
-  border-color: var(--mode-accent-hover) !important;
+@media (hover: hover) {
+  .btn-danger:hover,
+  .btn-danger.dropdown-toggle:hover {
+    background-color: var(--mode-accent-hover) !important;
+    border-color: var(--mode-accent-hover) !important;
+  }
 }
 
 .btn-secondary {
@@ -454,9 +496,11 @@ h2.title {
   font-size: var(--text-sm);
 }
 
-.btn-secondary:hover {
-  background-color: var(--color-ink-raised) !important;
-  border-color: var(--color-ink-raised) !important;
+@media (hover: hover) {
+  .btn-secondary:hover {
+    background-color: var(--color-ink-raised) !important;
+    border-color: var(--color-ink-raised) !important;
+  }
 }
 /* -- Multilateral/Bilateral toggle -- */
 .mode-toggle {
@@ -491,8 +535,10 @@ h2.title {
 .mode-toggle .mode-toggle-btn + .mode-toggle-btn {
   margin-left: -1px;
 }
-.mode-toggle .mode-toggle-btn:hover:not(.active) {
-  background: var(--mode-tint);
+@media (hover: hover) {
+  .mode-toggle .mode-toggle-btn:hover:not(.active) {
+    background: var(--mode-tint);
+  }
 }
 .mode-toggle-btn:first-child {
   border-radius: var(--radius-md) 0 0 var(--radius-md);
@@ -537,7 +583,7 @@ h2.title {
   height: 100%;
   background: var(--color-accent);
   border-radius: var(--radius-sm);
-  transition: width 0.4s ease;
+  transition: width var(--dur-med) var(--ease-out);
 }
 
 .transparency-bar-label {
@@ -565,13 +611,17 @@ h2.title {
 .dropdown-item {
   color: var(--color-text-primary);
   padding: 6px 16px;
-  transition: background 0.12s;
 }
 
-.dropdown-item:hover,
 .dropdown-item:focus {
   background-color: var(--mode-tint);
   color: var(--mode-accent-strong);
+}
+@media (hover: hover) {
+  .dropdown-item:hover {
+    background-color: var(--mode-tint);
+    color: var(--mode-accent-strong);
+  }
 }
 
 .dropdown-item.active,
@@ -623,12 +673,14 @@ h2.title {
 .modal-header .close,
 .modal-header .btn-close {
   opacity: 0.5;
-  transition: opacity 0.15s;
+  transition: opacity var(--dur-fast) var(--ease-out);
 }
 
-.modal-header .close:hover,
-.modal-header .btn-close:hover {
-  opacity: 1;
+@media (hover: hover) {
+  .modal-header .close:hover,
+  .modal-header .btn-close:hover {
+    opacity: 1;
+  }
 }
 
 .modal-body .col-12 p {
@@ -669,10 +721,12 @@ h2.title {
   text-decoration: none;
 }
 
-.modal-body a:hover {
-  color: var(--color-link-hover);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+@media (hover: hover) {
+  .modal-body a:hover {
+    color: var(--color-link-hover);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 }
 
 /* -- Legend -- */
@@ -853,7 +907,6 @@ p.card-text .access-icon {
   -webkit-appearance: none;
   background: none;
   border: none;
-  outline: none;
   box-shadow: none;
   padding: 6px 0;
   margin-bottom: 8px;
@@ -876,19 +929,17 @@ p.card-text .access-icon {
   border-right: 2px solid currentColor;
   border-bottom: 2px solid currentColor;
   transform: translateY(-0.2em) rotate(45deg);
-  transition: transform 0.2s ease;
+  transition: transform var(--dur-fast) var(--ease-out);
 }
 .agreements-toggle[aria-expanded="true"]::before {
   transform: translateY(0.14em) rotate(-135deg);
 }
-.agreements-toggle:hover {
-  color: var(--mode-accent);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.agreements-toggle:focus-visible {
-  outline: 2px solid var(--mode-accent);
-  outline-offset: 2px;
+@media (hover: hover) {
+  .agreements-toggle:hover {
+    color: var(--mode-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 }
 .agreements-collapsed {
   display: none;
@@ -924,11 +975,13 @@ a.source-link,
   text-decoration: none;
 }
 
-a.source-link:hover,
-.card a[href]:hover {
-  color: var(--color-link-hover);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+@media (hover: hover) {
+  a.source-link:hover,
+  .card a[href]:hover {
+    color: var(--color-link-hover);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 }
 
 .access-icon {
@@ -1022,8 +1075,38 @@ img[alt="Icono de acceso"] {
 @media (pointer: coarse) {
   .mode-toggle-btn,
   .button-dropdown,
-  .nav-link-plain {
-    min-height: 40px;
+  .nav-link-plain,
+  .agreements-toggle {
+    min-height: var(--tap-min);
+  }
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    min-height: var(--tap-min);
+  }
+  .modal-header .btn-close {
+    min-width: var(--tap-min);
+    min-height: var(--tap-min);
+  }
+  .close-btn {
+    top: 0;
+    right: 0;
+    padding: 12px;
+  }
+  /* Bigger hit area without moving the icon: padding out, negative margin back */
+  .info-icon {
+    box-sizing: content-box;
+    padding: 8px 8px 11px 13px;
+    margin: -8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

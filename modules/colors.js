@@ -33,3 +33,15 @@ export function getMapColors() {
     mapStroke: cssVar("--color-map-stroke"),
   };
 }
+
+// Motion: durations come from --dur-* in style.css and drop to 0 for people
+// who ask their system for reduced motion. Getters, so they are read at call time.
+const ms = (name) => (window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : parseFloat(cssVar(name)));
+export const DUR = {
+  get fast() {
+    return ms("--dur-fast");
+  },
+  get med() {
+    return ms("--dur-med");
+  },
+};

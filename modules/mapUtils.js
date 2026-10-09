@@ -6,7 +6,7 @@
 
 import { svg } from "./globals.js";
 import { isStackedLayout } from "./layout.js";
-import { tealRamp, amberRamp, amberHoverRamp, getMapColors } from "./colors.js";
+import { tealRamp, amberHoverRamp, getMapColors, DUR } from "./colors.js";
 
 let g; // at the module-level container. Reassigned at each draw
 let isPanned = false; // whether the horizontal shift is currently applied
@@ -107,7 +107,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
         return;
       }
       // Highlight hovered African country
-      d3.select(this).transition().duration(200).attr("fill", colorScaleHover(count));
+      d3.select(this).transition().duration(DUR.fast).attr("fill", colorScaleHover(count));
       if (count === 0) {
         tooltip.html(`<h3 class="tip-title mb-0">${countryName}</h3>`).style("display", window.innerWidth > 768 ? "block" : "none");
         return;
@@ -123,7 +123,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
         .filter((p) => individualPartners.has(p.properties?.name))
         .interrupt("partnerHighlight")
         .transition("partnerHighlight")
-        .duration(200)
+        .duration(DUR.fast)
         .attr("fill", PARTNER_FILL);
 
       // Highlight EU as border only
@@ -131,7 +131,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
         g.selectAll("path")
           .filter((p) => euMemberNames.has(p.properties.name))
           .transition()
-          .duration(200)
+          .duration(DUR.fast)
           .attr("fill", EU_FILL);
       }
 
@@ -147,7 +147,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
       d3.select(this)
         .interrupt() // <- cancel any running transition
         .transition()
-        .duration(200)
+        .duration(DUR.fast)
         .attr("fill", colorScale(count));
       // Restore individual partners
       const individualPartners = new Set(rawPartners.map(cleanPartnerName).filter((p) => p !== "European Union" && p !== "EU"));
@@ -169,7 +169,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
         .filter((p) => p?.properties && individualPartners.has(p.properties.name))
         .interrupt("partnerHighlight") // name the transition
         .transition("partnerHighlight") // same name cancels previous
-        .duration(200)
+        .duration(DUR.fast)
         .attr("fill", (p) => {
           const count = partnerLookup.get(p.properties.name)?.partnersNo || 0;
           return count > 0 ? colorScale(count) : DEFAULT_FILL;
@@ -181,7 +181,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
         .filter((p) => euMemberNames.has(p.properties.name))
         .interrupt()
         .transition()
-        .duration(200)
+        .duration(DUR.fast)
         .attr("fill", DEFAULT_FILL)
         .attr("stroke", C.mapStroke)
         .attr("stroke-width", 0.5);
@@ -340,14 +340,14 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
       const blocs = d.properties.blocs || [];
       if (blocs.length === 0) return;
 
-      d3.select(this).interrupt("blocHoverSelf").transition("blocHoverSelf").duration(200).attr("fill", C.tealInk);
+      d3.select(this).interrupt("blocHoverSelf").transition("blocHoverSelf").duration(DUR.fast).attr("fill", C.tealInk);
 
       const hoveredBlocs = new Set(blocs);
       g.selectAll("path")
         .filter((p) => p !== d && p.properties?.blocs?.some((b) => hoveredBlocs.has(b)))
         .interrupt("blocHover")
         .transition("blocHover")
-        .duration(200)
+        .duration(DUR.fast)
         .attr("fill", (p) => (africanCountries.has(p.properties.name) ? C.blocAfrican : C.blocNonAfrican));
 
       tooltip.html(buildBlocTooltipHTML(d.properties.name, blocs)).style("display", window.innerWidth > 768 ? "block" : "none");
@@ -359,11 +359,11 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
       if (!window.matchMedia("(hover: hover)").matches) return;
       if (!africanCountries.has(d.properties.name)) return;
       const count = d.properties.blocs?.length || 0;
-      d3.select(this).interrupt("blocHoverSelf").transition("blocHoverSelf").duration(200).attr("fill", multilateralColorScale(count));
+      d3.select(this).interrupt("blocHoverSelf").transition("blocHoverSelf").duration(DUR.fast).attr("fill", multilateralColorScale(count));
       g.selectAll("path")
         .interrupt("blocHoverOthers")
         .transition("blocHoverOthers")
-        .duration(200)
+        .duration(DUR.fast)
         .attr("fill", (p) => (africanCountries.has(p.properties.name) ? multilateralColorScale(p.properties.blocs?.length || 0) : C.mapDefault));
       tooltip.style("display", "none");
     });
@@ -381,7 +381,7 @@ export function panMapforPartner() {
   if (isPanned) {
     svg.attr("viewBox", target); // already shifted — refresh in place, no slide
   } else {
-    svg.transition("mapPan").duration(400).attr("viewBox", target);
+    svg.transition("mapPan").duration(DUR.med).attr("viewBox", target);
   }
   isPanned = !isStackedLayout();
 }
@@ -396,7 +396,7 @@ export function fitSizeMap(geoJSON) {
 
 // -- public: reset map ---------------------------------------------------------
 export function resetMapPan() {
-  svg.transition("mapPan").duration(400).attr("viewBox", getViewBox());
+  svg.transition("mapPan").duration(DUR.med).attr("viewBox", getViewBox());
   isPanned = false;
 }
 

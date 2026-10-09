@@ -1,6 +1,6 @@
 import { svg, themeUrl } from "./globals.js";
 import { euMemberNames } from "./mapUtils.js";
-import { getMapColors } from "./colors.js";
+import { getMapColors, DUR } from "./colors.js";
 
 const tooltipMap = {
   "Economic linkages and diversification": "Provisions broadly relating to the integration of value chains, fostering economic diversification and creating business models that strengthen trade, governance and infrastructure development.",
@@ -217,7 +217,7 @@ function renderNarrativePanel(container, narrativeEntry, partnershipList) {
 
 export function highlightPartnership(svg, filteredGeoJSON, itemSelected) {
   const C = getMapColors();
-  svg.selectAll("path").interrupt("highlight").transition("highlight").duration(200).attr("fill", C.mapDefault).attr("stroke", C.mapStroke).attr("stroke-width", 0.5);
+  svg.selectAll("path").interrupt("highlight").transition("highlight").duration(DUR.fast).attr("fill", C.mapDefault).attr("stroke", C.mapStroke).attr("stroke-width", 0.5);
   const partnerCountries = new Set(filteredGeoJSON.features.map((f) => f.properties.name));
   // Step 2: then apply new highlights
   svg
@@ -225,13 +225,13 @@ export function highlightPartnership(svg, filteredGeoJSON, itemSelected) {
     .filter((d) => partnerCountries.has(d.properties?.name))
     .interrupt("highlight")
     .transition("highlight")
-    .duration(400)
+    .duration(DUR.med)
     .attr("fill", (d) => (d.properties.name === itemSelected ? C.partnerSelected : C.partnerHighlight));
 }
 
 export function highlightEu(svg, filteredGeoJSON) {
   const C = getMapColors();
-  svg.selectAll("path").interrupt("highlight").transition("highlight").duration(200).attr("fill", C.mapDefault).attr("stroke", C.mapStroke).attr("stroke-width", 0.5);
+  svg.selectAll("path").interrupt("highlight").transition("highlight").duration(DUR.fast).attr("fill", C.mapDefault).attr("stroke", C.mapStroke).attr("stroke-width", 0.5);
 
   const euCountries = new Set(euMemberNames); // eu member states
   const africanPartners = new Set(filteredGeoJSON.features.map((f) => f.properties.name).filter((name) => !euCountries.has(name)));
@@ -241,7 +241,7 @@ export function highlightEu(svg, filteredGeoJSON) {
     .filter((d) => euCountries.has(d.properties?.name))
     .interrupt("highlight")
     .transition("highlight")
-    .duration(400)
+    .duration(DUR.med)
     .attr("fill", C.partnerSelected);
 
   svg
@@ -249,7 +249,7 @@ export function highlightEu(svg, filteredGeoJSON) {
     .filter((d) => africanPartners.has(d.properties?.name))
     .interrupt("highlight")
     .transition("highlight")
-    .duration(400)
+    .duration(DUR.med)
     .attr("fill", C.partnerHighlight);
 }
 
@@ -493,8 +493,6 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
         const closeBtn = document.createElement("button");
         closeBtn.className = "close-btn";
         closeBtn.innerHTML = "✖";
-        closeBtn.style.paddingRight = "5px";
-        closeBtn.style.paddingTop = "2px";
 
         closeBtn.addEventListener("click", (e) => {
           e.stopPropagation(); // Prevenir que el clic afecte a otros eventos
@@ -536,8 +534,6 @@ export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
       const closeBtn = document.createElement("button");
       closeBtn.className = "close-btn";
       closeBtn.innerHTML = "✖";
-      closeBtn.style.paddingRight = "5px";
-      closeBtn.style.paddingTop = "2px";
 
       closeBtn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -595,7 +591,7 @@ export function clearCardContent() {
 }
 export function highlightBloc(svg, filteredGeoJSON, africanCountries) {
   const C = getMapColors();
-  svg.selectAll("path").interrupt("highlight").transition("highlight").duration(200).attr("fill", C.mapDefault).attr("stroke", C.mapStroke).attr("stroke-width", 0.5);
+  svg.selectAll("path").interrupt("highlight").transition("highlight").duration(DUR.fast).attr("fill", C.mapDefault).attr("stroke", C.mapStroke).attr("stroke-width", 0.5);
 
   const blocMembers = new Set(filteredGeoJSON.features.map((f) => f.properties.name));
   const nonAfricanMembers = new Set([...blocMembers].filter((name) => !africanCountries.has(name)));
@@ -606,7 +602,7 @@ export function highlightBloc(svg, filteredGeoJSON, africanCountries) {
     .filter((d) => nonAfricanMembers.has(d.properties?.name))
     .interrupt("highlight")
     .transition("highlight")
-    .duration(400)
+    .duration(DUR.med)
     .attr("fill", C.blocNonAfrican); // darker teal: non-African members, mirrors EU's darker amber
 
   svg
@@ -614,6 +610,6 @@ export function highlightBloc(svg, filteredGeoJSON, africanCountries) {
     .filter((d) => africanMembers.has(d.properties?.name))
     .interrupt("highlight")
     .transition("highlight")
-    .duration(400)
+    .duration(DUR.med)
     .attr("fill", C.blocAfrican); // lighter teal: African members, mirrors partner countries' lighter amber
 }
