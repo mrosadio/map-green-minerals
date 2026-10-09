@@ -3,8 +3,8 @@ import { drawMap, drawMapWithPartnerColors, drawMultilateralOverview, multilater
 import { highlightPartnership, populatePartnerships, populateMultilateral, highlightBloc, highlightEu, clearCardContent } from "./modules/selectionUtils.js";
 import { addLegend } from "./modules/legendUtils.js";
 import { svg, worldGeojsonPath, jsonFilePath, multiJsonFilePath, noPartnerFilePath } from "./modules/globals.js";
-import { showThirdColumn, removeThirdColumn, isPhone } from "./modules/layout.js";
-import { showPickerBilateral, showPickerMultilateral } from "./modules/picker.js";
+import { showThirdColumn, removeThirdColumn, isPickerLayout, PICKER_QUERY } from "./modules/layout.js";
+import { showPickerBilateral, showPickerMultilateral, closePicker } from "./modules/picker.js";
 import { initRotatePrompt } from "./modules/rotatePrompt.js";
 import { amberRamp } from "./modules/colors.js";
 const euGeojsonPath = `./db/eu.geojson`;
@@ -66,14 +66,14 @@ if (navEl) {
     document.documentElement.style.setProperty("--nav-h", `${entry.target.getBoundingClientRect().height}px`);
   }).observe(navEl);
 }
-// Phone/touch: route Partner/Coalition taps to the wheel picker instead of
+// Phones only (up to 600px): route Partner/Coalition taps to the wheel picker instead of
 // Bootstrap's dropdown. Bootstrap 5 registers its delegated click handler on
 // `document` in the capture phase, so a listener on the button (bubble phase)
 // always fires too late to stop it. `window` capture runs earlier.
 window.addEventListener(
   "click",
   (e) => {
-    if (!isPhone()) return;
+    if (!isPickerLayout()) return;
     const btn = e.target.closest("#bilateralToggle, #multilateralToggle");
     if (!btn) return;
     e.preventDefault();
@@ -83,6 +83,11 @@ window.addEventListener(
   },
   true,
 );
+// If the picker is open and the window grows past the phone breakpoint (rotation,
+// resize), close it: the picker's styles only exist for phone widths
+window.matchMedia(PICKER_QUERY).addEventListener("change", (e) => {
+  if (!e.matches) closePicker();
+});
 // Fetch the world GeoJSON once, up front - previously loadAndMergeData,
 // mergeMulti, and createBlocGeoJSON each fetched it independently, meaning
 // every page load re-downloaded the same large file two or three times.

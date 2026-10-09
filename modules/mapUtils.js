@@ -109,7 +109,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
       // Highlight hovered African country
       d3.select(this).transition().duration(DUR.fast).attr("fill", colorScaleHover(count));
       if (count === 0) {
-        tooltip.html(`<h3 class="tip-title mb-0">${countryName}</h3>`).style("display", "block");
+        tooltip.html(`<h3 class="tip-title mb-0">${countryName}</h3>`).style("display", window.innerWidth > 768 ? "block" : "none");
         return;
       }
       const rawPartners = countryData?.partners || [];
@@ -135,7 +135,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
           .attr("fill", EU_FILL);
       }
 
-      tooltip.html(buildTooltipHTML(countryName, count, rawPartners)).style("display", "block");
+      tooltip.html(buildTooltipHTML(countryName, count, rawPartners)).style("display", window.innerWidth > 768 ? "block" : "none");
     })
     .on("mouseout", function (event, d) {
       if (!window.matchMedia("(hover: hover)").matches) return;
@@ -271,7 +271,7 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
       if (!window.matchMedia("(hover: hover)").matches) return;
       const hasData = filteredCountryGeoJSON.features.some((f) => f.properties.name === d.properties.name);
       if (!hasData) return; // no tooltip for countries with no data
-      tooltip.html(`<h3 class="tip-title mb-0">${d.properties.name}</h3>`).style("display", "block");
+      tooltip.html(`<h3 class="tip-title mb-0">${d.properties.name}</h3>`).style("display", window.innerWidth > 768 ? "block" : "none");
     })
     .on("mousemove", function (event) {
       positionTooltip(event, tooltip);
@@ -350,7 +350,7 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
         .duration(DUR.fast)
         .attr("fill", (p) => (africanCountries.has(p.properties.name) ? C.blocAfrican : C.blocNonAfrican));
 
-      tooltip.html(buildBlocTooltipHTML(d.properties.name, blocs)).style("display", "block");
+      tooltip.html(buildBlocTooltipHTML(d.properties.name, blocs)).style("display", window.innerWidth > 768 ? "block" : "none");
     })
     .on("mousemove", function (event) {
       positionTooltip(event, tooltip);
