@@ -92,6 +92,13 @@ window.matchMedia(PICKER_QUERY).addEventListener("change", (e) => {
 // mergeMulti, and createBlocGeoJSON each fetched it independently, meaning
 // every page load re-downloaded the same large file two or three times.
 initRotatePrompt();
+
+// Bootstrap sets aria-hidden on the modal while its Close button still has focus,
+// which browsers flag as "blocked aria-hidden on an element whose descendant retained focus".
+// Blurring first lets the attribute apply cleanly; focus returns to the opener afterwards.
+document.querySelector("#aboutModal")?.addEventListener("hide.bs.modal", () => {
+  if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+});
 Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerNarratives.json").then((r) => r.json())])
   .then(([worldGeoJSON, partnerNarrativesData]) => {
     partnerNarratives = partnerNarrativesData;
