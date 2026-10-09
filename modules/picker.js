@@ -171,5 +171,5 @@ wheelList.addEventListener("touchend", () => {
 window.cancel = cancel;
 window.confirmPicker = confirmPicker;
 
-export { showPickerBilateral, showPickerMultilateral, confirmPicker };
+export { showPickerBilateral, showPickerMultilateral, confirmPicker, cancel as closePicker };
 
