@@ -95,7 +95,7 @@
   background-color: #e0f7fa;
   padding: 1px 10px;
   margin: 0.5px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   color: #00796b;
   font-size: 0.7em;
   cursor: pointer;
@@ -106,7 +106,7 @@
   padding: 5px;
   background-color: rgba(0, 0, 0, 0.7);
   color: white;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   font-size: 10pt;
 }
 .tag.tooltip,
@@ -120,7 +120,7 @@
   font-size: 8pt;
   background-color: #333;
   color: #fff;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   width: 250px;
   position: absolute;
   bottom: 125%;
@@ -181,13 +181,22 @@
   font-size: 11pt;
   display: inline-block;
 }
+.country-label {
+  fill: var(--color-text-primary);
+  stroke: #fff; /* halo: readable on any fill */
+  stroke-width: 0.35em; /* scales with the label size */
+  stroke-linejoin: round;
+  paint-order: stroke;
+  pointer-events: none;
+  text-anchor: middle;
+}
 .tooltipMulti {
   visibility: hidden;
   width: 150px;
   background-color: #333;
   color: #fff;
   text-align: center;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   padding: 10px;
   position: absolute;
   z-index: 1000;
@@ -276,6 +285,11 @@
   --mode-accent: var(--color-accent);
   --mode-accent-strong: color-mix(in srgb, var(--mode-accent) 82%, black); /* darker, for text on the tint */
   --mode-tint: color-mix(in srgb, var(--mode-accent) 12%, transparent);
+  --radius-sm: 4px;  /* tags, tooltips, bars */
+  --radius-md: 6px;  /* buttons, toggle, dropdown menu, legend, modal, rotate card */
+  --radius-lg: 16px; /* bottom sheet */
+  --bs-border-radius: var(--radius-md);    /* Bootstrap buttons and dropdowns */
+  --bs-border-radius-lg: var(--radius-md); /* Bootstrap modal */
 }
 html[data-mode="multilateral"] {
   --mode-accent: #0f6e56; /* the multilateral map's teal */
@@ -433,11 +447,11 @@ h2.title {
   background: var(--mode-tint);
 }
 .mode-toggle-btn:first-child {
-  border-radius: 4px 0 0 4px;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
   /* border-right: none; */
 }
 .mode-toggle-btn:last-child {
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 .mode-toggle-btn.active {
   background: var(--color-accent);
@@ -473,7 +487,7 @@ h2.title {
 .transparency-bar-track {
   width: 100%;
   height: 6px;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   background: var(--color-border);
   overflow: hidden;
   margin-bottom: 6px;
@@ -482,7 +496,7 @@ h2.title {
 .transparency-bar-fill {
   height: 100%;
   background: var(--color-accent);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   transition: width 0.4s ease;
 }
 
@@ -499,7 +513,7 @@ h2.title {
 /* -- Dropdowns options -- */
 .dropdown-menu {
   border: 0.5px solid var(--color-border);
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   padding: 4px 0;
   font-size: 0.875rem;
@@ -532,7 +546,7 @@ h2.title {
 
 .modal-content {
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
 
@@ -630,7 +644,7 @@ h2.title {
   -webkit-backdrop-filter: blur(var(--scrim-blur));
   backdrop-filter: blur(var(--scrim-blur));
   padding: 10px 14px;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   border: 0.5px solid var(--color-border);
   /* border: 0.5px solid var(--color-border); */
@@ -857,7 +871,7 @@ p.card-text .access-icon {
   border: 0.5px solid var(--color-accent-border) !important;
   font-size: 0.75rem !important;
   padding: 3px 10px !important;
-  border-radius: 20px !important;
+  /* border-radius: 20px !important; */
   font-weight: 500;
 }
 
@@ -918,7 +932,7 @@ img[alt="Icono de acceso"] {
   padding: 8px 12px;
   background: var(--color-accent-light);
   border-left: 3px solid var(--color-accent);
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 
 /* -- Tooltip -- */
@@ -1316,7 +1330,7 @@ img[alt="Icono de acceso"] {
   background: rgba(255, 255, 255, 0.92);
   -webkit-backdrop-filter: blur(var(--scrim-blur));
   backdrop-filter: blur(var(--scrim-blur));
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 .rotate-prompt-icon {

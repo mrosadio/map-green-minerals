@@ -212,19 +212,7 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
   // Labels - only for African countries with partnerships
   const featuresWithData = geojsonData.features.filter((d) => (partnerLookup.get(d.properties.name)?.partnersNo || 0) > 0);
   const labelScale = getLabelScale(W);
-  g.selectAll("text.country-label")
-    .data(featuresWithData)
-    .enter()
-    .append("text")
-    .attr("class", "country-label")
-    .attr("text-anchor", "middle")
-    .attr("font-size", `${5 * labelScale}pt`)
-    .attr("fill", "black")
-    .attr("pointer-events", "none")
-    .attr("opacity", 1)
-    .each(function (d) {
-      renderLabel(d3.select(this), d, path, labelScale);
-    });
+  addCountryLabels(g, featuresWithData, path, labelScale);
 }
 // -- Public: bilateral / multilateral map --------------------------------------------
 export function drawMap(geojson, filteredCountryGeoJSON, partner) {
@@ -312,23 +300,12 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
   if (!canHover()) {
     const labelScale = getLabelScale(W);
     const MIN_AREA = 700 * labelScale ** 2; // px²: countries too small for a label are skipped
-    const labelled = filteredCountryGeoJSON.features.filter((f) => !(partner === "EU" && euMemberNames.has(f.properties.name)) && path.area(f) > MIN_AREA);
-    g.selectAll("text.country-label")
-      .data(labelled)
-      .enter()
-      .append("text")
-      .attr("class", "country-label")
-      .attr("text-anchor", "middle")
-      .attr("font-size", `${5 * labelScale}pt`)
-      .attr("fill", "black")
-      .attr("stroke", "white") // white halo: readable on any fill, including the dark teal
-      .attr("stroke-width", 2.5)
-      .attr("stroke-linejoin", "round")
-      .attr("paint-order", "stroke")
-      .attr("pointer-events", "none")
-      .each(function (d) {
-        renderLabel(d3.select(this), d, path, labelScale);
-      });
+    addCountryLabels(
+      g,
+      filteredCountryGeoJSON.features.filter((f) => !(partner === "EU" && euMemberNames.has(f.properties.name)) && path.area(f) > MIN_AREA),
+      path,
+      labelScale
+    );
   }
 }
 // -- Public: multilateral map -----------------------------------------------
@@ -409,19 +386,7 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
   // same pattern as the bilateral overview's featuresWithData filter
   const featuresWithData = multiGeoData.features.filter((d) => africanCountries.has(d.properties.name) && (d.properties.blocs?.length || 0) > 0);
   const labelScale = getLabelScale(W);
-  g.selectAll("text.country-label")
-    .data(featuresWithData)
-    .enter()
-    .append("text")
-    .attr("class", "country-label")
-    .attr("text-anchor", "middle")
-    .attr("font-size", `${5 * labelScale}pt`)
-    .attr("fill", "black")
-    .attr("pointer-events", "none")
-    .attr("opacity", 1)
-    .each(function (d) {
-      renderLabel(d3.select(this), d, path, labelScale);
-    });
+  addCountryLabels(g, featuresWithData, path, labelScale);
 }
 
 // -- Public: registers is map is already shifted ------------------------------
@@ -455,6 +420,19 @@ export function resetMapPan() {
 function cleanPartnerName(name) {
   const cleaned = name.replace(/\s*\([^)]*\)\s*$/, "").trim();
   return partnerNameNormalization[cleaned] || cleaned;
+}
+
+// -- Private: One label routine for every map view to homogenize styling ------
+function addCountryLabels(g, features, path, labelScale = 1) {
+  g.selectAll("text.country-label")
+    .data(features)
+    .enter()
+    .append("text")
+    .attr("class", "country-label")
+    .attr("font-size", `${5 * labelScale}pt`)
+    .each(function (d) {
+      renderLabel(d3.select(this), d, path, labelScale);
+    });
 }
 // -- Private: label rendering --------------------------------------------------
 function renderLabel(textEl, feature, path, labelScale = 1) {

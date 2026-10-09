@@ -36,7 +36,7 @@ function createAreaTag(area, colorMap, tooltipMap) {
   tag.style.backgroundColor = colorMap[area] || "#000000";
   tag.style.color = "black";
   tag.style.padding = "2px 10px";
-  tag.style.borderRadius = "4px";
+  tag.style.borderRadius = "var(--radius-sm)";
   tag.style.fontSize = "9pt";
 
   tag.addEventListener("mouseover", function () {
