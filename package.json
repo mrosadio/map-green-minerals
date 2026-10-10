@@ -1,6 +1,8 @@
 {
   "name": "map-green-minerals",
+  "description": "Interactive map of African countries' green-mineral partnerships (D3, vanilla JS)",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
