@@ -67,27 +67,7 @@
   font-size: var(--text-xs);
   font-family: var(--font-sans);
 }
-/* TODO(cleanup): the two .tag.tooltip rules never match (the tooltip span only has class "tooltip").
-   Check an area-tag tooltip on hover: if it looks fine delete them, otherwise change to ".tag .tooltip" */
-.tag.tooltip {
-  position: absolute;
-  font-family: var(--font-sans);
-  visibility: hidden;
-  line-height: 1;
-  text-align: left;
-  padding: var(--space-sm) var(--space-md);
-  font-size: var(--text-2xs);
-  background-color: var(--color-ink-raised);
-  color: var(--color-on-dark);
-  border-radius: var(--radius-sm);
-  width: 250px;
-  position: absolute;
-  bottom: 125%;
-  transform: translateX(-4%);
-  z-index: var(--z-raised);
-  opacity: 0;
-  transition: opacity var(--dur-med) var(--ease-out);
-}
+
 .tag:hover.tooltip {
   visibility: visible;
   opacity: 1;
