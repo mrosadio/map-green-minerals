@@ -28,6 +28,17 @@
   color: var(--color-text-secondary);
   margin: var(--space-2xs) 0 0 0;
 }
+.hint-hover {
+  display: none;
+}
+@media (hover: hover) {
+  .hint-hover {
+    display: inline;
+  }
+  .hint-touch {
+    display: none;
+  }
+}
 .custom-scroll {
   overflow-x: hidden;
 }
@@ -506,7 +517,6 @@ a {
   display: block;
   width: 48px;
   height: 3px;
-  /* background: var(--color-accent); */
   margin-top: var(--space-md);
 }
 
@@ -525,11 +535,8 @@ a {
 }
 
 .modal-body .col-12 p {
-  /* padding: 16px 28px 28px 28px; */
-  /* max-height: 70vh; */
   overflow-y: auto;
-  text-align: justify;
-  hyphens: auto;
+  text-align: left;
 }
 
 .modal-body p {
@@ -556,7 +563,13 @@ a {
   font-size: var(--text-sm);
   color: var(--color-text-secondary);
 }
-
+.how-to-list {
+  padding-left: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+.how-to-list li + li {
+  margin-top: var(--space-xs);
+}
 .modal-body a {
   color: var(--color-link);
   text-decoration: none;
