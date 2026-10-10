@@ -1,5 +1,5 @@
-import { loadAndMergeData, mergeMulti, createBlocGeoJSON, mergeWorldWithPartnerData, filterCountriesByPartner, filterEUandPartners } from "./modules/dataUtils.js";
-import { drawMap, drawMapWithPartnerColors, drawMultilateralOverview, multilateralColorScale, fitSizeMap, resetMapPan, panMapforPartner } from "./modules/mapUtils.js";
+import { loadAndMergeData, mergeMulti, createBlocGeoJSON, filterCountriesByPartner, filterEUandPartners } from "./modules/dataUtils.js";
+import { drawMap, drawMapWithPartnerColors, drawMultilateralOverview, multilateralColorScale } from "./modules/mapUtils.js";
 import { highlightPartnership, populatePartnerships, populateMultilateral, highlightBloc, highlightEu, clearCardContent } from "./modules/selectionUtils.js";
 import { addLegend } from "./modules/legendUtils.js";
 import { svg, worldGeojsonPath, jsonFilePath, multiJsonFilePath, noPartnerFilePath } from "./modules/globals.js";
@@ -9,10 +9,7 @@ import { initRotatePrompt } from "./modules/rotatePrompt.js";
 import { amberRamp } from "./modules/colors.js";
 const euGeojsonPath = `./db/eu.geojson`;
 
-let partnerMap = {};
-let multilateralMap = {};
 let partnerNarratives = [];
-let filteredGeoJSON;
 let mergedBiData;
 let numberData;
 let colorScale;
@@ -20,21 +17,13 @@ let multiGeoDataRef; // set once loaded — needed by the mode toggle's multilat
 let currentMode = "bilateral"; // "bilateral" , "multilateral"
 let currentView = { type: "overview" }; // "overview" | "partner" | "bloc" — what redraw() should redraw
 
-// The map is a picture, so give it one text description (updated on every redraw).
-// The detail panel holds the full content; the label only says what the map shows and where to look.
-function describeMap(text) {
-  svg.attr("role", "img").attr("aria-label", text);
-}
-
 function resetToInitialView() {
   currentView = { type: "overview" };
   document.querySelector("#legend-container").classList.remove("legend-hidden");
   removeThirdColumn();
-  filteredGeoJSON = mergeWorldWithPartnerData(mergedBiData, numberData);
-  drawMapWithPartnerColors(svg, filteredGeoJSON, numberData);
+  drawMapWithPartnerColors(svg, mergedBiData, numberData);
   clearCardContent();
   addLegend(svg, colorScale);
-  describeMap(`Map of Africa shaded by the number of bilateral partners each African country has, from 1 to ${colorScale.domain()[1]} or more. Select a partner from the Partner menu to see details.`);
 }
 function resetToMultilateralOverview() {
   currentView = { type: "overview" };
@@ -43,7 +32,6 @@ function resetToMultilateralOverview() {
   drawMultilateralOverview(svg, multiGeoDataRef, numberData);
   clearCardContent();
   addLegend(svg, multilateralColorScale, "Number of coalitions", ["1", "3+"]);
-  describeMap("Map of Africa shaded by the number of mineral coalitions each African country belongs to, from 1 to 3 or more. Select a coalition from the Coalition menu to see details.");
 }
 // Resets to whichever mode is currently active used by the "Overview"
 // button, so both respect the toggle state instead of always assuming bilateral
@@ -65,7 +53,6 @@ function setMode(mode) {
   document.getElementById("bilateralDropdownGroup").classList.toggle("d-none", !isBilateral);
   document.getElementById("multilateralDropdownGroup").classList.toggle("d-none", isBilateral);
   resetToCurrentOverview();
-  resetMapPan();
 }
 // Publish the nav's real height as --nav-h so overlays can sit below it
 // It changes with title wrapping, fonts and breakpoints, so it can't be hardcoded
@@ -122,50 +109,16 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
         multiGeoDataRef = multiGeoData;
         const multiJsonData = multiData.multiJsonData;
 
-        mergedBiData.features.forEach((feature) => {
-          const country = feature.properties.name;
-          if (feature.properties.partners) {
-            feature.properties.partners.forEach((partner) => {
-              if (!partnerMap[country]) partnerMap[country] = [];
-              partnerMap[country].push(partner);
-            });
-          }
-        });
-
-        multiGeoData.features.forEach((bloc) => {
-          const blocName = bloc.properties.blocs;
-          blocName.forEach((name) => {
-            if (!multilateralMap[name]) multilateralMap[name] = [];
-            bloc.properties.blocs.forEach((member) => {
-              if (!multilateralMap[name].includes(member)) multilateralMap[name].push(member);
-            });
-          });
-        });
-
         colorScale = d3
           .scaleQuantize()
           .domain([0, d3.max(numberData, (d) => d.partnersNo)])
           .range(amberRamp()); // --seq-amber-* tokens in style.css
 
         resetToInitialView();
-        document.querySelector("#africaButton").addEventListener("click", () => {
-          resetToCurrentOverview();
-          resetMapPan();
-        });
-        document.addEventListener("overview:selected", () => {
-          resetToCurrentOverview();
-          resetMapPan();
-        });
-        document.addEventListener("panel:toggled", () => {
-          fitSizeMap(filteredGeoJSON);
-        });
+        document.querySelector("#africaButton").addEventListener("click", resetToCurrentOverview);
+        document.addEventListener("overview:selected", resetToCurrentOverview);
         document.getElementById("bilateralModeBtn").addEventListener("click", () => setMode("bilateral"));
         document.getElementById("multilateralModeBtn").addEventListener("click", () => setMode("multilateral"));
-        const africanNames = new Set(numberData.map((d) => d.africanCountry));
-        function describePartner(name, filtered) {
-          const n = filtered.features.filter((f) => africanNames.has(f.properties.name)).length;
-          describeMap(`Map highlighting ${name} and the ${n} African countries it has green-mineral partnerships with. Details are in the panel.`);
-        }
         function drawPartnerMap(item) {
           const selectedCountry = item.textContent.trim();
           let internalSelectedCountry = selectedCountry;
@@ -176,16 +129,12 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
           if (item.textContent.includes("EU") || item.textContent.includes("European Union")) {
             return filterEUandPartners(mergedBiData, biData).then((filtered) => {
               drawMap(mergedBiData, filtered, "EU");
-              describePartner(selectedCountry, filtered);
               highlightEu(svg, filtered);
-              panMapforPartner(selectedCountry);
             });
           }
           const filtered = filterCountriesByPartner(mergedBiData, internalSelectedCountry);
           drawMap(mergedBiData, filtered, internalSelectedCountry);
-          describePartner(selectedCountry, filtered);
           highlightPartnership(svg, filtered, item.textContent);
-          panMapforPartner(selectedCountry);
           return Promise.resolve();
         }
 
@@ -206,9 +155,7 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
               if (!existingNames.has(feature.properties.name)) mergedMapData.features.push(feature);
             });
             drawMap(mergedMapData, filtered, selectedBloc);
-            describeMap(`Map highlighting the member countries of ${selectedBloc}. Details are in the panel.`);
             highlightBloc(svg, filtered, new Set(numberData.map((d) => d.africanCountry)));
-            panMapforPartner();
             return filtered;
           });
         }
@@ -218,7 +165,7 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
           document.querySelector("#legend-container").classList.add("legend-hidden");
           showThirdColumn();
           drawBlocMap(item)
-            .then((filtered) => populateMultilateral(filtered, item.textContent.trim(), multiJsonData))
+            .then(() => populateMultilateral(item.textContent.trim(), multiJsonData))
             .catch((error) => console.error("Error processing filtered GeoJSON:", error));
         }
 

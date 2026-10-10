@@ -1,4 +1,3 @@
-import { svg, themeUrl } from "./globals.js";
 import { euMemberNames } from "./mapUtils.js";
 import { getMapColors, DUR } from "./colors.js";
 
@@ -110,7 +109,6 @@ function renderAgreementDetails(agreement, partnershipCard, needsSeparator = fal
   const partnerAgreement = document.createElement("h5");
   partnerAgreement.classList.add("card-subtitle", "agreement");
   if (needsSeparator) partnerAgreement.classList.add("agreement-separator");
-  partnerAgreement.style.paddingBottom = "0px";
   partnerAgreement.innerHTML = agreement.typeAgreement ? `${agreement.typeAgreement}` : "";
   partnershipCard.appendChild(partnerAgreement);
 
@@ -141,9 +139,6 @@ function renderAgreementDetails(agreement, partnershipCard, needsSeparator = fal
 
     const tagsContainer = document.createElement("div");
     tagsContainer.classList.add("areas-tags");
-
-    const rightElement = document.querySelector(".right");
-    rightElement.style.marginTop = "0px";
 
     const firstShortElement = areasCoop.find((area) => area.length <= 60);
     const remainingAreas = areasCoop.filter((area) => area !== firstShortElement);
@@ -257,7 +252,7 @@ export function populatePartnerships(biData, selectedCountry, partnerNarratives 
   const infoPartnerContainer = document.querySelector(".card.partnership");
   infoPartnerContainer.innerHTML = "";
   const bilateralPartner = document.createElement("h2");
-  bilateralPartner.classList.add("card-title", "card-title-fixed", "partner-select");
+  bilateralPartner.classList.add("card-title", "partner-select");
 
   let displayName;
   if (internalSelected === "EU") {
@@ -292,7 +287,6 @@ export function populatePartnerships(biData, selectedCountry, partnerNarratives 
 
   const scrollContainer = document.createElement("div");
   scrollContainer.classList.add("custom-scroll", "agreements-collapsed", "agreements-list");
-  scrollContainer.style.marginTop = "0px";
   infoPartnerContainer.appendChild(scrollContainer);
 
   toggleButton.addEventListener("click", () => {
@@ -342,242 +336,52 @@ export function populatePartnerships(biData, selectedCountry, partnerNarratives 
       renderAgreementDetails(partner, partnershipCard);
     }
     scrollContainer.appendChild(partnershipCard);
-    infoPartnerContainer.appendChild(scrollContainer);
   });
 }
 
-export function populateMultilateral(multiData, selectedBloc, multiJsonData) {
-  selectedBloc = selectedBloc.replace(/\s+/g, " ");
-  let blocCountries = multiData.features;
-  const infoMultiContainer = document.querySelector(".card");
-  infoMultiContainer.innerHTML = "";
-  const rightElement = document.querySelector(".right");
-  rightElement.style.marginTop = "0px"; // Ajusta el valor según lo que necesites
-
-  // Crear y agregar el contenedor con scroll para todo el contenido relacionado
-  const scrollContainer = document.createElement("div");
-  scrollContainer.classList.add("custom-scroll"); // Se añade la clase para estilos personalizados
-
-  scrollContainer.style.maxHeight = "100%"; // Altura máxima para el contenedor
-  scrollContainer.style.overflowY = "auto"; // Habilitar scroll vertical
-  scrollContainer.style.marginTop = "0px"; // Espacio entre el título y el contenido
-  scrollContainer.style.paddingRight = "var(--space-lg)"; // Espacio entre el título y el contenido
-
-  // Crear y agregar el título principal
-  const multiPartner = document.createElement("h2");
-  multiPartner.style.borderBottom = "2pt solid var(--mode-accent)";
-  multiPartner.style.paddingBottom = "var(--space-md)"; // Espacio entre el texto y la línea
-  multiPartner.style.fontSize = "var(--text-xl)";
-  multiPartner.style.fontWeight = "var(--fw-bold)";
-
-  multiPartner.classList.add("card-title", "card-title-fixed", "partner-select", "mt-3");
-  multiPartner.innerHTML = `${selectedBloc}`;
-  infoMultiContainer.appendChild(multiPartner);
-
-  //  scrollContainer.appendChild(); // Agregar el título al contenedor con scroll
-
-  // Agregar el texto Lorem Ipsum debajo del título
-  const loremText = document.createElement("p");
-  loremText.classList.add("card-text", "mt-2");
-  loremText.style.fontSize = "var(--text-md)";
-  loremText.style.paddingLeft = "0rem"; // Aplicar la fuente personalizada
-
-  let nombre = selectedBloc.replace(/\s+/g, " ");
-
-  let des = multiJsonData.find((item) => item.blocName === nombre).description;
-  loremText.innerHTML = des;
-  scrollContainer.appendChild(loremText);
-
-  // Crear el contenedor para el ícono y el enlace
-  const iconLinkContainer = document.createElement("div");
-  iconLinkContainer.style.display = "flex";
-  iconLinkContainer.style.alignItems = "center";
-  iconLinkContainer.style.justifyContent = "flex-start"; 
-
-
-  const icon = document.createElement("img");
-  icon.src = `${themeUrl}/img/icons/web.svg`; 
-  icon.alt = "Icono de acceso"; 
-  icon.style.height = "20px";
-  iconLinkContainer.appendChild(icon);
-
-  // Crear el enlace de "Source"
-  const blocSource = document.createElement("a");
-  blocSource.classList.add("card-link");
-  blocSource.href = multiJsonData.find((item) => item.blocName === nombre).link;
-  blocSource.target = "_blank";
-  // Aplicar estilos al enlace
-  blocSource.style.textDecoration = "none"; // Eliminar el subrayado
-  blocSource.style.fontSize = "var(--text-md)";
-  blocSource.style.marginLeft = "var(--space-xs)"; // Tamaño de fuente
-  blocSource.style.color = "var(--color-link)";
-  blocSource.innerHTML = "View agreement";
-
-  iconLinkContainer.appendChild(blocSource); // Añadir el enlace al contenedor
-
-  // Añadir el contenedor de icono y enlace al contenedor principal
-  scrollContainer.appendChild(iconLinkContainer);
-
-  // Variable global para rastrear el tooltip activo
-  let activeTooltip = null;
-
-  // Check if EU exists in the original data and filter display accordingly
-  const blocData = multiJsonData.find((item) => item.blocName === nombre);
-  let displayCountries = blocCountries;
-
-  if (blocData && blocData.members && typeof blocData.members === "object" && !Array.isArray(blocData.members)) {
-    if (blocData.members.EU && blocData.members.countries) {
-      // Get list of countries that are explicitly in the "countries" array
-      const explicitCountries = blocData.members.countries;
-      const euCountriesList = blocData.members.EU;
-
-      // Display: countries from "countries" array + EU, but exclude EU countries that are NOT in "countries" array
-      displayCountries = blocCountries.filter((country) => {
-        const name = country.properties.name;
-        // Keep if it's EU
-        if (name === "EU") return true;
-        // Keep if it's in the explicit countries list
-        if (explicitCountries.includes(name)) return true;
-        // Keep if it's NOT an EU country (e.g., non-EU countries)
-        if (!euCountriesList.includes(name)) return true;
-        // Exclude EU countries that are NOT explicitly in the countries list
-        return false;
-      });
-    }
+export function populateMultilateral(selectedBloc, multiJsonData) {
+  const blocName = selectedBloc.replace(/\s+/g, " ");
+  const bloc = multiJsonData.find((item) => item.blocName === blocName);
+  if (!bloc) {
+    console.error(`populateMultilateral: no data for coalition "${blocName}"`);
+    return;
   }
+  const card = document.querySelector(".card.partnership");
+  card.innerHTML = "";
 
-  // Crear la lista de países con íconos y tooltips
-  displayCountries.forEach((country, index) => {
-    // Crear el contenedor del país
-    const countryItem = document.createElement("div");
-    countryItem.className = "country-item";
+  // Pinned title; its look comes from .card-title.partner-select in style.css
+  const title = document.createElement("h2");
+  title.classList.add("card-title", "partner-select");
+  title.textContent = blocName;
+  card.appendChild(title);
 
-    const countryName = document.createElement("p");
-    // Normalize display name for special programmatic keys
-    let displayName = country.properties.name;
-    if (displayName === "England") displayName = "United Kingdom";
-    if (displayName === "EU") displayName = "European Union";
-    if (displayName === "USA") displayName = "United States";
+  // Scrollable body: description and a link to the source
+  const body = document.createElement("div");
+  body.classList.add("custom-scroll");
+  body.style.maxHeight = "100%";
+  body.style.overflowY = "auto";
+  body.style.paddingRight = "var(--space-lg)";
 
-    if (displayName.length > 15) {
-      countryName.className = "country-name2 long-name";
-      const parts = displayName.split(" ");
-      if (parts.length > 1) {
-        const firstPart = parts.slice(0, Math.ceil(parts.length / 2.5)).join(" ");
-        const secondPart = parts.slice(Math.ceil(parts.length / 2.5)).join(" ");
-        countryName.innerHTML = `• ${firstPart}<br>&nbsp;&nbsp;&nbsp;${secondPart}`;
+  const description = document.createElement("p");
+  description.classList.add("card-text", "mt-2");
+  description.style.fontSize = "var(--text-md)";
+  description.innerHTML = bloc.description; // trusted: comes from our own multiPartner.json
+  body.appendChild(description);
 
-        const tooltipMultiContainer = document.createElement("div");
-        tooltipMultiContainer.className = "tooltipMulti-container long-name-tooltip";
-        tooltipMultiContainer.style.position = "relative";
-        tooltipMultiContainer.style.display = "inline-block";
-        tooltipMultiContainer.style.marginLeft = "var(--space-xs)"; // Margen para separar el ícono del nombre
+  const source = document.createElement("a");
+  source.classList.add("card-link");
+  source.href = bloc.link;
+  source.target = "_blank";
+  source.style.fontSize = "var(--text-md)";
+  source.textContent = "View agreement";
+  body.appendChild(source);
 
-        const infoIcon = document.createElement("img");
-        infoIcon.src = `${themeUrl}/img/icons/info.svg`; // Ruta al archivo SVG
-        infoIcon.className = "info-icon";
-
-        const tooltipMulti = document.createElement("div");
-        tooltipMulti.className = "tooltipMulti";
-
-        const closeBtn = document.createElement("button");
-        closeBtn.className = "close-btn";
-        closeBtn.innerHTML = "✖";
-
-        closeBtn.addEventListener("click", (e) => {
-          e.stopPropagation(); // Prevenir que el clic afecte a otros eventos
-          tooltipMulti.classList.remove("active");
-          activeTooltip = null;
-        });
-
-        const tooltipText = document.createElement("div");
-        tooltipText.innerText = "Description";
-        tooltipText.style.marginRight = "var(--space-lg)";
-
-        tooltipMulti.appendChild(closeBtn);
-        tooltipMulti.appendChild(tooltipText);
-
-        tooltipMultiContainer.appendChild(infoIcon);
-        tooltipMultiContainer.appendChild(tooltipMulti);
-      } else {
-        countryName.innerHTML = `• ${displayName}`;
-      }
-    } else {
-      countryName.className = "country-name";
-      countryName.innerHTML = `• ${displayName}`;
-
-      // Crear el contenedor del tooltip para nombres cortos
-      const tooltipMultiContainer = document.createElement("div");
-      tooltipMultiContainer.className = "tooltipMulti-container";
-      tooltipMultiContainer.style.position = "relative";
-
-      // Ícono de información
-      const infoIcon = document.createElement("img");
-      infoIcon.src = `${themeUrl}/img/icons/info.svg`; // Ruta al archivo SVG
-      infoIcon.className = "info-icon";
-
-      // Crear el tooltip
-      const tooltipMulti = document.createElement("div");
-      tooltipMulti.className = "tooltipMulti";
-
-      // Botón "X" para cerrar el tooltip
-      const closeBtn = document.createElement("button");
-      closeBtn.className = "close-btn";
-      closeBtn.innerHTML = "✖";
-
-      closeBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        tooltipMulti.classList.remove("active");
-        activeTooltip = null;
-      });
-
-      const tooltipText = document.createElement("div");
-      tooltipText.innerText = "Description";
-      tooltipText.style.marginRight = "var(--space-lg)";
-      tooltipMulti.appendChild(closeBtn);
-      tooltipMulti.appendChild(tooltipText);
-      tooltipMultiContainer.appendChild(infoIcon);
-      tooltipMultiContainer.appendChild(tooltipMulti);
-    }
-    // Agregar evento de clic al ícono
-    const infoIcon = countryItem.querySelector(".info-icon");
-    if (infoIcon) {
-      infoIcon.addEventListener("click", (e) => {
-        e.stopPropagation(); // Evitar cerrar el tooltip al hacer clic en el ícono
-        const tooltipMulti = infoIcon.nextElementSibling;
-
-        if (activeTooltip && activeTooltip !== tooltipMulti) {
-          // Cerrar el tooltip activo si es diferente
-          activeTooltip.classList.remove("active");
-        }
-
-        if (tooltipMulti.classList.contains("active")) {
-          tooltipMulti.classList.remove("active");
-          activeTooltip = null;
-        } else {
-          tooltipMulti.classList.add("active");
-          activeTooltip = tooltipMulti;
-        }
-      });
-    }
-  });
-  document.addEventListener("click", () => {
-    if (activeTooltip) {
-      activeTooltip.classList.remove("active");
-      activeTooltip = null;
-    }
-  });
-  // Finalmente, agregar el contenedor con scroll al DOM
-  infoMultiContainer.appendChild(scrollContainer);
+  card.appendChild(body);
 }
 export function clearCardContent() {
   const infoMultiContainer = document.querySelector(".card.partnership");
 
-  if (infoMultiContainer) {
-    infoMultiContainer.innerHTML = ""; // Elimina todo el contenido
-  } else {
-    ////console.warn("Elemento con clase 'card' no encontrado.");
-  }
+  if (infoMultiContainer) infoMultiContainer.innerHTML = "";
 }
 export function highlightBloc(svg, filteredGeoJSON, africanCountries) {
   const C = getMapColors();

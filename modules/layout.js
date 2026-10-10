@@ -13,10 +13,8 @@ export const LANDSCAPE_PHONE_QUERY = "(orientation: landscape) and (max-height: 
 export const isStackedLayout = () => window.matchMedia(STACKED_QUERY).matches;
 export function removeThirdColumn() {
   document.querySelector('.right')?.classList.replace('d-block', 'd-none');
-  document.dispatchEvent(new CustomEvent("panel:toggled"));
 }
 
 export function showThirdColumn() {
   document.querySelector('.right')?.classList.replace('d-none', 'd-block');
-  document.dispatchEvent(new CustomEvent("panel:toggled"));
 }
