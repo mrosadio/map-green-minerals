@@ -13,8 +13,6 @@ export async function loadAndMergeData(
 
     // Create a Map to hold the partnership data by country
     const partnershipMap = new Map();
-    const centerMap = new Map();
-    const zoomMap = new Map();
     const partnersNoMap = new Map();
 
     // Map each bilateral partnership in a object
@@ -39,16 +37,6 @@ export async function loadAndMergeData(
         }
       });
     });
-    jsonData.forEach((partner) => {
-      if (partner.center) {
-        centerMap.set(partner.nonafrican, partner.center);
-      }
-    });
-    jsonData.forEach((partner) => {
-      if (partner.zoom) {
-        zoomMap.set(partner.nonafrican, partner.zoom);
-      }
-    });
     nojsonData.forEach((entry) => {
       partnersNoMap.set(entry.africanCountry, entry.partnersNo);
     });
@@ -63,8 +51,6 @@ export async function loadAndMergeData(
         properties: {
           ...feature.properties,
           partners: partnershipMap.get(countryName),
-          center: centerMap.get(countryName),
-          zoom: zoomMap.get(countryName),
           partnersNo: partnersNoMap.get(countryName),
         },
       };
@@ -74,6 +60,7 @@ export async function loadAndMergeData(
 
     return { geojsonData, jsonData, nojsonData, partnershipMap };
   } catch (error) {
+    console.error("loadAndMergeData failed:", error);
     return null;
   }
 }
@@ -129,6 +116,7 @@ export async function mergeMulti(worldGeoJSON, multiJsonFilePath) {
     const geojsonMultiData = { ...worldGeoJSON, features: mergedFeatures };
     return { geojsonMultiData, multiJsonData };
   } catch (error) {
+    console.error("mergeMulti failed:", error);
     return null;
   }
 }
@@ -184,8 +172,6 @@ export async function createBlocGeoJSON(worldGeoJSON, multiJsonFilePath, targetB
       } catch (euError) {
         console.error("Could not load EU GeoJSON:", euError);
       }
-    } else {
-      console.log("Not loading EU GeoJSON. hasEUKey:", hasEUKey, "euGeojsonPath:", euGeojsonPath);
     }
     // Set for O(1) membership checks instead of .includes() (O(n)) inside filter.
     const targetSet = new Set(targetMembers);
@@ -196,30 +182,10 @@ export async function createBlocGeoJSON(worldGeoJSON, multiJsonFilePath, targetB
     };
     return filteredGeoJSON;
   } catch (error) {
+    console.error("createBlocGeoJSON failed:", error);
     return null;
   }
 }
-export function mergeWorldWithPartnerData(geojsonData, partnersNoData) {
-  const partnerLookup = new Map(partnersNoData.map((d) => [d.africanCountry, d]));
-
-  // Keep ALL world features, but attach partnership data where it exists
-  const mergedFeatures = geojsonData.features.map((feature) => {
-    const countryName = feature.properties.name;
-    const partnerData = partnerLookup.get(countryName);
-
-    return {
-      ...feature,
-      properties: {
-        ...feature.properties,
-        partnerCount: partnerData ? partnerData.partnerCount : null,
-        isAfricanPartner: !!partnerData,
-      },
-    };
-  });
-
-  return { ...geojsonData, features: mergedFeatures };
-}
-
 export function filterCountriesByPartner(mergedBiData, selectedCountry) {
   if (selectedCountry === "United Kingdom") {
     selectedCountry = "England";

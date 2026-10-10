@@ -2,14 +2,13 @@
 // Public:
 //   drawMapWithPartnerColors(svg, geojsonData, numberData)  -> overview map
 //   drawMap(geojson, filteredGeoJSON, partner)              -> bilateral/multilateral map
-//   fitSizeMap(geoJSON)                                     -> returns path generator
+//   drawMultilateralOverview(svg, multiGeoData, numberData) -> coalition overview map
 
 import { svg } from "./globals.js";
 import { isStackedLayout } from "./layout.js";
 import { tealRamp, amberHoverRamp, getMapColors, DUR } from "./colors.js";
 
 let g; // at the module-level container. Reassigned at each draw
-let isPanned = false; // whether the horizontal shift is currently applied
 
 // Per-country label position overrides.
 // dx/dy: pixel offset from centroid. lines: override text split.
@@ -112,10 +111,6 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
       }
       // Highlight hovered African country
       d3.select(this).transition().duration(DUR.fast).attr("fill", colorScaleHover(count));
-      if (count === 0) {
-        tooltip.html(`<h3 class="tip-title mb-0">${countryName}</h3>`).style("display", "block");
-        return;
-      }
       const rawPartners = countryData?.partners || [];
       const hasEU = rawPartners.some((p) => cleanPartnerName(p) === "European Union" || cleanPartnerName(p) === "EU");
 
@@ -156,17 +151,6 @@ export function drawMapWithPartnerColors(svg, geojsonData, numberData) {
       // Restore individual partners
       const individualPartners = new Set(rawPartners.map(cleanPartnerName).filter((p) => p !== "European Union" && p !== "EU"));
 
-      // Check how many paths match
-      const matched = svg.selectAll("path").filter((p) => p?.properties && individualPartners.has(p.properties.name));
-      matched.each(function (p) {
-        setTimeout(() => {
-          const austriaFill = svg
-            .selectAll("path")
-            .filter((p) => p?.properties?.name === "Austria")
-            .attr("fill");
-          //console.log("Austria fill 500ms after mouseout:", austriaFill);
-        }, 500);
-      });
       // Restore partner countries — use their original fill, not DEFAULT_FILL
       svg
         .selectAll("path")
@@ -210,6 +194,7 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
   }
 
   svg.selectAll("*").remove();
+  svg.attr("viewBox", getViewBox(mapEl)); // keeps the viewBox in step with the container after a resize or rotation
 
   const svgNode = svg.node();
   const W = svgNode.clientWidth;
@@ -225,9 +210,7 @@ export function drawMap(geojson, filteredCountryGeoJSON, partner) {
 
   // Zoom/pan to fit just the selected partner + its African partners,
   // rather than fitting the projection to the whole world every time.
-  // panMapforPartner()'s viewBox shift (called separately, after this)
-  // is a different concern — it nudges the view to clear the detail
-  // panel, and still runs regardless of how tightly we've zoomed here.
+  // The padding below reserves room for the detail panel (side panel or bottom sheet).
   const isSheetLayout = isStackedLayout();
   const ZOOM_PADDING = isSheetLayout ? 12 : 28;
   const navEl = document.querySelector("#nav");
@@ -376,32 +359,6 @@ export function drawMultilateralOverview(svg, multiGeoData, numberData) {
   const featuresWithData = multiGeoData.features.filter((d) => africanCountries.has(d.properties.name) && (d.properties.blocs?.length || 0) > 0);
   const labelScale = getLabelScale(W);
   addCountryLabels(g, featuresWithData, path, labelScale);
-}
-
-// -- Public: registers is map is already shifted ------------------------------
-// Module-level flag in mapUtils.js
-export function panMapforPartner() {
-  const target = computeShiftedViewBox();
-  if (isPanned) {
-    svg.attr("viewBox", target); // already shifted — refresh in place, no slide
-  } else {
-    svg.transition("mapPan").duration(DUR.med).attr("viewBox", target);
-  }
-  isPanned = !isStackedLayout();
-}
-// -- Public: path generator helper ---------------------------------------------
-export function fitSizeMap(geoJSON) {
-  const mapEl = document.querySelector("#map");
-  const W = mapEl?.clientWidth || 800;
-  const H = mapEl?.clientHeight || 500;
-  const projection = d3.geoEqualEarth().fitSize([W, H], geoJSON);
-  return d3.geoPath().projection(projection);
-}
-
-// -- public: reset map ---------------------------------------------------------
-export function resetMapPan() {
-  svg.transition("mapPan").duration(DUR.med).attr("viewBox", getViewBox());
-  isPanned = false;
 }
 
 // -- Private: Strip year annotation from partner name  -------------------------
@@ -591,17 +548,6 @@ function wrapText(text, maxLength) {
   });
   if (currentLine) lines.push(currentLine);
   return lines;
-}
-
-// -- Private ------------------------------------------------------------------
-function computeShiftedViewBox() {
-  // const vb = getViewBox().split(" ").map(Number);
-  // if (!isStackedLayout()) {
-  //   vb[0] += 150;
-  // }
-  // return vb.join(" ");
-  // drawMap now reserves room for the detail panel itself, so no extra shift is needed
-  return getViewBox();
 }
 
 // -- Private: refit map for mobile view ---------------------------------------

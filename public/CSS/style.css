@@ -17,10 +17,6 @@
   width: 100%;
   height: 100%;
 }
-.second-col {
-  height: 600px !important;
-  min-height: 600px !important;
-}
 
 .partner-select {
   font-size: var(--text-xl);
@@ -49,39 +45,6 @@
 .custom-scroll::-webkit-scrollbar-track {
   background: var(--color-border);
 }
-.hidden {
-  display: none;
-}
-.card-title.tooltip-title {
-  color: var(--color-on-dark);
-}
-.card-title.list-partners {
-  font-weight: var(--fw-bold);
-  font-family: var(--font-sans);
-  font-size: var(--text-lg);
-}
-.tooltip-text {
-  color: var(--color-on-dark);
-}
-.allview {
-  display: flex;
-  box-sizing: border-box;
-  border: 0.5px solid var(--color-border);
-  border-radius: 10px;
-  /* padding: 20px; */
-  justify-content: space-between;
-  /* margin: 0 60px 0 60px; */
-  box-sizing: border-box;
-  height: 100%;
-  width: 100%;
-}
-.accordion-item {
-  border: none;
-  margin-top: var(--space-xs);
-}
-.divAfrican {
-  margin-top: 0px !important;
-}
 
 .tag {
   position: relative;
@@ -101,10 +64,12 @@
   background-color: var(--color-ink-raised);
   color: var(--color-on-dark);
   border-radius: var(--radius-sm);
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
+  font-family: var(--font-sans);
 }
-.tag.tooltip,
-.tag.tooltipMulti {
+/* TODO(cleanup): the two .tag.tooltip rules never match (the tooltip span only has class "tooltip").
+   Check an area-tag tooltip on hover: if it looks fine delete them, otherwise change to ".tag .tooltip" */
+.tag.tooltip {
   position: absolute;
   font-family: var(--font-sans);
   visibility: hidden;
@@ -123,57 +88,10 @@
   opacity: 0;
   transition: opacity var(--dur-med) var(--ease-out);
 }
-.lastUpdate {
-  font-size: var(--text-lg);
-  font-family: var(--font-sans);
-  text-align: right;
-  padding-right: 4rem;
-  padding-top: var(--space-lg);
-}
 .tag:hover.tooltip {
   visibility: visible;
   opacity: 1;
   font-family: var(--font-sans);
-}
-.label {
-  font-size: var(--text-md);
-  color: var(--color-text-primary);
-  margin: 0px;
-  margin-right: var(--space-md);
-  font-family: var(--font-sans);
-  margin-left: var(--space-md);
-}
-.tooltip {
-  font-family: var(--font-sans);
-  font-size: var(--text-xs);
-}
-.tooltip h3 {
-  font-size: var(--text-md);
-  margin: 0;
-}
-.tooltip ul {
-  list-style: none;
-  padding: 0;
-}
-.tooltip ul li {
-  font-size: var(--text-2xs);
-  line-height: var(--lh-snug);
-}
-.country-item {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin-bottom: var(--space-xs);
-}
-.country-name {
-  margin: 0;
-  font-size: var(--text-md);
-  display: flex;
-}
-.country-name2 {
-  margin: 0;
-  font-size: var(--text-md);
-  display: inline-block;
 }
 .label-leader {
   stroke: var(--color-text-muted);
@@ -189,80 +107,17 @@
   pointer-events: none;
   text-anchor: middle;
 }
-.tooltipMulti {
-  visibility: hidden;
-  width: 150px;
-  background-color: var(--color-ink-raised);
-  color: var(--color-on-dark);
-  text-align: center;
-  border-radius: var(--radius-sm);
-  padding: var(--space-md);
-  position: absolute;
-  z-index: var(--z-raised);
-  bottom: 125%;
-  left: 1%;
-  font-family: var(--font-sans);
-  transform: translateX(-40%);
-  opacity: 0;
-  transition: opacity var(--dur-med) var(--ease-out);
-  font-size: var(--text-2xs);
-}
-.tooltipMulti.active {
-  visibility: visible;
-  opacity: 1;
-  font-size: var(--text-2xs);
-  padding: var(--space-sm) var(--space-md);
-}
-.tooltipMulti::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 5px;
-  border-style: solid;
-  border-color: var(--color-ink-raised) transparent transparent transparent;
-}
-.tooltipMulti,
-.tooltipMulti.active {
-  font-family: var(--font-sans);
-}
-.info-icon {
-  cursor: pointer;
-  width: 20px;
-  height: 25px;
-  display: inline-block;
-  margin: 0;
-  padding-left: var(--space-xs);
-  padding-bottom: var(--space-xs);
-}
-.close-btn {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background-color: transparent;
-  border: none;
-  color: var(--color-on-dark);
-  font-size: var(--text-xs);
-  cursor: pointer;
-}
 .partner-header {
   border-bottom: 2px solid var(--mode-accent);
   padding-bottom: var(--space-md);
   margin-top: 0;
 }
 
-.agreement-time,
-.agreement-access {
-  font-size: var(--text-md);
-  padding-bottom: 0;
-  margin-bottom: 0;
-}
 
 /* ============================================================
-   DESIGN SYSTEM — Green Minerals Map
-   Add these rules to the bottom of style.css
-   They override existing rules via specificity
+   Design tokens and components
+   Tokens first (colour, type, spacing, shadows, layers, motion);
+   every rule below uses them instead of raw values.
    ============================================================ */
 
 /* ── CSS Variables ── */
@@ -274,7 +129,7 @@
   --color-text-primary: #1c1c1a;
   --color-text-secondary: #4a4a47;
   --color-text-muted: #5f5e5a; /* AA contrast on white; was #b4b2a9 */
-  --color-text-faint: #9a998f; /* decorative only (idle picker items, scrollbar thumb) */
+  --color-text-faint: #9a998f; /* decorative only (scrollbar thumb); too light for text */
   --color-ink-raised: #333331; /* tooltips, secondary button hover */
   --color-on-dark: #ffffff; /* text on accent, dark and tooltip surfaces */
 
@@ -382,9 +237,6 @@ html[data-mode="multilateral"] {
   --mode-accent: var(--seq-teal-3); /* the multilateral map's teal */
 }
 
-.content-gutter-left {
-  margin-left: var(--content-gutter);
-}
 /* -- Global base -- */
 body {
   background: var(--color-bg-subtle);
@@ -515,19 +367,7 @@ a {
   }
 }
 
-.btn-secondary {
-  background-color: var(--color-text-secondary) !important;
-  border-color: var(--color-text-secondary) !important;
-  color: var(--color-on-dark) !important;
-  font-size: var(--text-sm);
-}
 
-@media (hover: hover) {
-  .btn-secondary:hover {
-    background-color: var(--color-ink-raised) !important;
-    border-color: var(--color-ink-raised) !important;
-  }
-}
 /* -- Multilateral/Bilateral toggle -- */
 .mode-toggle {
   margin-right: var(--space-sm);
@@ -669,11 +509,6 @@ a {
 
 .modal-header {
   padding: 0 0 0 var(--space-xl);
-}
-
-/* Hide the redundant "About" header label */
-.modal-header .modal-title:first-of-type:not(#aboutModalLabel) {
-  display: none;
 }
 
 /* The real title */
@@ -886,6 +721,7 @@ a {
 
 /* African country headings in panel */
 .card-title.list-partners {
+  font-family: var(--font-sans);
   font-size: var(--text-lg);
   font-weight: var(--fw-semibold);
   color: var(--color-text-primary);
@@ -899,9 +735,6 @@ a {
   color: var(--color-text-primary);
   margin-bottom: var(--space-2xs);
   padding-bottom: 0 !important;
-}
-.card-text {
-  text-align: justify;
 }
 /* Signed / Access lines */
 .card-text.mb-1 {
@@ -996,20 +829,7 @@ p.card-text .access-icon {
   align-items: center;
   gap: var(--space-xs);
 }
-/* Unify all tag colors to terracotta light */
-.areas-tag,
-[class*="btn"][style*="background"] {
-  background-color: var(--color-accent-light) !important;
-  color: var(--color-accent) !important;
-  border: 0.5px solid var(--color-accent-border) !important;
-  font-size: var(--text-xs) !important;
-  padding: var(--space-xs) var(--space-sm) !important;
-  /* border-radius: 20px !important; */
-  font-weight: var(--fw-medium);
-}
-
 /* -- View source link -- */
-a.source-link,
 .card a[href] {
   color: var(--color-link);
   font-size: var(--text-sm);
@@ -1017,7 +837,6 @@ a.source-link,
 }
 
 @media (hover: hover) {
-  a.source-link:hover,
   .card a[href]:hover {
     color: var(--color-link-hover);
     text-decoration: underline;
@@ -1043,33 +862,6 @@ a.source-link,
   flex-wrap: wrap;
   gap: var(--space-xs);
 }
-/* -- Fix broken icon image -- */
-/* Hide alt text when image fails to load */
-img[alt="Icono de acceso"] {
-  display: none;
-}
-
-/* -- Multilateral panel -- */
-/* Description text */
-.bloc-description {
-  font-size: var(--text-md);
-  line-height: var(--lh-body);
-  color: var(--color-text-secondary);
-  margin-bottom: var(--space-lg);
-}
-
-/* EU note in multilateral view */
-.eu-note {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  font-style: italic;
-  margin-top: var(--space-md);
-  padding: var(--space-sm) var(--space-md);
-  background: var(--color-accent-light);
-  border-left: 3px solid var(--color-accent);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-}
-
 /* -- Tooltip -- */
 .tooltip2 {
   position: absolute;
@@ -1104,14 +896,6 @@ img[alt="Icono de acceso"] {
   color: var(--color-text-muted);
 }
 
-/* -- Instructions bar -- */
-.instruccions {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  padding: var(--space-sm) var(--space-lg);
-  border-top: 0.5px solid var(--color-border);
-  background: var(--color-bg);
-}
 /* Touch devices: comfortable tap targets */
 @media (pointer: coarse) {
   .mode-toggle-btn,
@@ -1128,17 +912,6 @@ img[alt="Icono de acceso"] {
   .modal-header .btn-close {
     min-width: var(--tap-min);
     min-height: var(--tap-min);
-  }
-  .close-btn {
-    top: 0;
-    right: 0;
-    padding: var(--space-md);
-  }
-  /* Bigger hit area without moving the icon: padding out, negative margin back */
-  .info-icon {
-    box-sizing: content-box;
-    padding: var(--space-sm) var(--space-sm) var(--space-md) var(--space-md);
-    margin: -8px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1159,11 +932,6 @@ img[alt="Icono de acceso"] {
     padding: var(--space-md) var(--space-lg);
   }
 
-  #nav > .d-flex.align-items-center.col {
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-  }
   .nav-main-group {
     flex-direction: column;
     align-items: flex-start;
@@ -1228,38 +996,10 @@ img[alt="Icono de acceso"] {
     margin-top: var(--space-sm);
     justify-content: flex-start;
   }
-  .print-div {
-    display: none;
-  }
-  .allview {
-    border: 0px;
-    border-radius: 0px;
-    padding: 0px;
-    justify-content: space-between;
-    margin: 0 0px 0 0px;
-    box-sizing: border-box;
-    height: 100%;
-    width: 100%;
-    display: grid;
-    grid-template-rows: auto auto auto;
-    gap: var(--space-sm);
-  }
-  .first-col,
-  .second-col,
   .right {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-  }
-  .second-col {
-    border-bottom: 1px solid var(--color-border);
-    border-top: 1px solid var(--color-border);
-  }
-  .second-col {
-    justify-content: center;
-    /* Centrar contenido si es necesario */
-    align-items: center;
-    /* Alinea horizontalmente */
   }
   .third-col {
     width: 100%;
@@ -1267,7 +1007,6 @@ img[alt="Icono de acceso"] {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    /* Centrado de los elementos dentro de la tercera columna */
     padding: 0 0 var(--space-lg) 0;
   }
   #map {
@@ -1280,20 +1019,13 @@ img[alt="Icono de acceso"] {
   }
   .card.partnership {
     width: 100%;
-    padding: 0px 0px 0px 0px;
-    margin: 0px;
+    margin: 0;
     padding: 0 var(--content-gutter);
     border-radius: 5px !important;
     border: 0px solid var(--color-border);
   }
   .card.partnership > .partner-select {
     padding-top: 0; /* the phone card never had top padding */
-  }
-  .right.bilateral {
-    margin-left: 0px;
-    width: 100vw;
-    padding: 0 0px 0 0px;
-    /*margin: 10px;*/
   }
   ul {
     list-style: none;
@@ -1324,15 +1056,6 @@ img[alt="Icono de acceso"] {
   .picker-choose {
     position: relative;
     height: 60px;
-    color: var(--color-text-faint);
-  }
-  .picker-title {
-    margin: 0;
-    line-height: 60px;
-    font-weight: var(--fw-regular);
-    text-align: center;
-    font-size: var(--text-lg);
-    color: var(--color-ink-raised);
   }
   .confirm,
   .cancel {
@@ -1355,13 +1078,6 @@ img[alt="Icono de acceso"] {
     position: relative;
     top: 20px;
     padding-right: 10px;
-  }
-  .mask-top,
-  .mask-bottom {
-    width: 100%;
-    height: 68px;
-    pointer-events: none;
-    position: absolute;
   }
   .wheel-wrapper {
     position: relative;
@@ -1398,25 +1114,17 @@ img[alt="Icono de acceso"] {
     list-style: circle;
     padding: 0;
   }
-  .wheel {
-    flex: 1;
-    height: 173px;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-  }
   .wheel-scrollbar {
     position: absolute;
     top: 0;
     right: 0;
     width: 8px;
-    /* Ancho del scrollbar */
     height: 100%;
     background: var(--color-border);
     border-radius: 4px;
   }
   .wheel::-webkit-scrollbar {
-    width: 0;
-    /* Ocultar el scrollbar predeterminado */
+    width: 0; /* hide the native scrollbar; .wheel-scrollbar is the visual stand-in */
   }
   .wheel-item {
     height: 36px;
@@ -1433,32 +1141,6 @@ img[alt="Icono de acceso"] {
     color: var(--color-text-primary);
     font-weight: var(--fw-semibold); /* idle and selected were told apart by colour alone; weight makes it clear */
     text-decoration: underline;
-  }
-  .instruccions {
-    display: block;
-    align-items: center;
-    font-family: var(--font-sans);
-    margin-top: 0px;
-    width: 100%;
-    padding: var(--space-sm) var(--space-lg);
-    font-size: var(--text-xs);
-    text-align: justify;
-  }
-  .hidden {
-    display: none;
-  }
-  .divAfrican {
-    margin-top: var(--space-xs) !important;
-  }
-  .ms-2 {
-    margin-left: var(--space-xs) !important;
-  }
-  .lastUpdate {
-    font-size: var(--text-xs);
-    font-family: var(--font-sans);
-    text-align: left;
-    padding-left: var(--space-lg);
-    padding-top: var(--space-sm);
   }
   #legend-container {
     margin-left: var(--content-gutter); /* same as the nav's horizontal padding on phone */
