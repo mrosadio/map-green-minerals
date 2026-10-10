@@ -116,7 +116,6 @@ Promise.all([fetch(worldGeojsonPath).then((r) => r.json()), fetch("./db/partnerN
 
         resetToInitialView();
         document.querySelector("#africaButton").addEventListener("click", resetToCurrentOverview);
-        document.addEventListener("overview:selected", resetToCurrentOverview);
         document.getElementById("bilateralModeBtn").addEventListener("click", () => setMode("bilateral"));
         document.getElementById("multilateralModeBtn").addEventListener("click", () => setMode("multilateral"));
         function drawPartnerMap(item) {
